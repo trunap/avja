@@ -1,34 +1,81 @@
+/* ====== Theme ====== */
 :root{
-  --bg:#f7f8fa; --card:#ffffff; --text:#0f172a; --muted:#64748b; --line:#e5e9f0;
-  --brand:#111827; --brand-2:#334155;
-  --audio:#a9cbea; --video:#9ad7b5; --stage:#f2c389;
+  --bg:#0b0f14;        /* background gelap */
+  --panel:#151a22;     /* panel/card */
+  --text:#e5e7eb;      /* teks utama */
+  --muted:#94a3b8;     /* teks sekunder */
+  --line:#253141;      /* garis/border */
+  --brand:#e5e7eb;     /* teks brand */
+  --accent:#22c55e;    /* aksen kecil */
+
+/* warna tim */
+  --audio:#a9cbea;
+  --video:#9ad7b5;
+  --stage:#f2c389;
 }
+
+/* ====== Reset & Base ====== */
 *{box-sizing:border-box}
-html,body{margin:0;padding:0;font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans",Arial,sans-serif;color:var(--text);background:var(--bg)}
-.container{max-width:980px;margin:0 auto;padding:28px 20px}
-header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:24px}
-.brand{font-weight:800;letter-spacing:.02em}
-.brand a{color:var(--text);text-decoration:none}
-nav{display:flex;gap:10px;flex-wrap:wrap}
-.nav a{padding:8px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;color:#1f2937;text-decoration:none;font-weight:700}
-.nav a:hover{box-shadow:0 2px 10px rgba(0,0,0,.06)}
-h1{font-size:26px;margin:8px 0 14px}
-.sub{color:var(--muted);margin:0 0 22px 0;font-weight:600}
-.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;box-shadow:0 6px 20px rgba(16,24,40,.06)}
-.cta{display:flex;flex-direction:column;gap:10px}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;
-     padding:12px 14px;border-radius:12px;color:#0f172a;font-weight:800;text-decoration:none;border:1px solid var(--line);background:#fff}
-.btn:hover{box-shadow:0 6px 16px rgba(0,0,0,.08)}
-.btn.audio{background:rgba(169,203,234,.25)}
-.btn.video{background:rgba(154,215,181,.25)}
-.btn.stage{background:rgba(242,195,137,.25)}
-.btn.all{background:#f8fafc}
-.table{width:100%;border-collapse:collapse}
-.table th,.table td{padding:10px 12px;border-top:1px solid var(--line);vertical-align:middle}
-.badge{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;border:1px solid var(--line);background:#f8fafc;font-weight:700}
-.badge.audio{border-color:#d6e6f7}
-.badge.video{border-color:#caeada}
-.badge.stage{border-color:#f6e1bf}
-footer{margin-top:24px;color:var(--muted);font-size:13px}
-@media (max-width:720px){.grid{grid-template-columns:1fr}}
+html,body{margin:0;padding:0}
+body{
+  font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans",Arial,sans-serif;
+  color:var(--text); background:var(--bg);
+}
+
+/* ====== Layout ====== */
+.container{max-width:1100px;margin:0 auto;padding:24px 18px}
+.section{margin:22px 0}
+
+/* ====== Navbar ====== */
+.navbar{
+  position:sticky; top:0; z-index:50;
+  background:rgba(11,15,20,.85); backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--line);
+}
+.navbar-inner{max-width:1100px;margin:0 auto;padding:10px 14px;display:flex;align-items:center;gap:14px}
+.brand{font-weight:900; letter-spacing:.06em; color:var(--brand); text-decoration:none}
+.nav{margin-left:auto; display:flex; gap:8px; flex-wrap:wrap}
+.nav a{
+  text-decoration:none; color:var(--text);
+  padding:6px 10px; border:1px solid var(--line); border-radius:10px;
+  background:#0d131a; font-weight:700; font-size:14px;
+}
+.nav a.active{background:#111827; border-color:#334155}
+.nav a:hover{border-color:#3b495a}
+
+/* ====== Hero ====== */
+.hero-title{font-size:28px; font-weight:900; letter-spacing:.04em; margin:18px 0 4px}
+.hero-sub{color:var(--muted); font-weight:600; margin:0 0 16px}
+
+/* ====== Cards ====== */
+.grid{display:grid; grid-template-columns:repeat(1,minmax(0,1fr)); gap:16px}
+@media (min-width:720px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.card{
+  background:var(--panel); border:1px solid var(--line); border-radius:14px;
+  overflow:hidden; box-shadow:0 8px 24px rgba(0,0,0,.25);
+}
+.card-hero{
+  position:relative; min-height:220px; display:flex; align-items:flex-end; padding:18px;
+  background:linear-gradient(180deg,rgba(0,0,0,.05),rgba(0,0,0,.45));
+  isolation:isolate;
+}
+.card-hero img{
+  position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:-1; filter:saturate(1.1);
+}
+.card-hero .label{
+  font-size:42px; font-weight:900; line-height:1; text-transform:lowercase; letter-spacing:.02em;
+  color:white; text-shadow:0 2px 12px rgba(0,0,0,.6);
+}
+.badge{display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border-radius:999px;
+  border:1px solid var(--line); background:#0f1620; font-weight:700; color:var(--text)}
+.badge.audio{border-color:#3a4e6a; background:rgba(169,203,234,.15)}
+.badge.video{border-color:#325a4b; background:rgba(154,215,181,.15)}
+.badge.stage{border-color:#5a4a32; background:rgba(242,195,137,.15)}
+
+/* ====== Tables (buat halaman detail & ringkasan) ====== */
+.table{width:100%; border-collapse:collapse}
+.table th,.table td{padding:10px 12px; border-top:1px solid var(--line); vertical-align:middle}
+.table th{color:var(--muted); font-weight:800; text-align:left}
+
+/* ====== Footer ====== */
+footer{margin:28px 0 10px; color:var(--muted); font-size:12px; text-align:center}
