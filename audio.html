@@ -4,7 +4,15 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Panduan Teknis — Audio</title>
+  <!-- CSS global -->
   <link rel="stylesheet" href="assets/style.css" />
+  <style>
+    /* Navigasi dalam halaman (TOC) */
+    .toc{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 16px}
+    .toc a{text-decoration:none;color:var(--text);padding:6px 10px;border:1px solid var(--line);border-radius:999px;background:#0f1620;font-weight:700;font-size:13px}
+    .toc a:hover{border-color:#3b495a}
+    .section-anchor{scroll-margin-top:80px}
+  </style>
 </head>
 <body>
   <!-- NAVBAR -->
@@ -22,58 +30,66 @@
   </div>
 
   <main class="container">
+    <!-- Header -->
     <section class="section">
       <h1 class="hero-title">Audio</h1>
       <p class="hero-sub">Booth • Kabel • Speaker • Inventaris</p>
+      <!-- TOC -->
+      <div class="toc">
+        <a href="#booth">Booth</a>
+        <a href="#kabel">Kabel</a>
+        <a href="#speaker">Speaker</a>
+        <a href="#inventaris">Inventaris</a>
+      </div>
     </section>
 
     <!-- BOOTH -->
-    <section class="card" style="padding:16px">
+    <section id="booth" class="card section-anchor" style="padding:16px">
       <h3 style="margin:0 0 8px"><span class="badge audio">Booth</span></h3>
       <table class="table" aria-label="Audio - Booth">
         <thead><tr><th>Item</th><th>Checklist</th></tr></thead>
         <tbody>
-          <tr><td>Console/Mixer</td><td>Recall scene; cek patch input; sample rate/clock; talkback OK.</td></tr>
-          <tr><td>Outboard/Plugin</td><td>Insert aktif; preset dimuat; latency aman.</td></tr>
-          <tr><td>Recorder</td><td>Arm track; level -12 s/d -6 dBFS; test 30 detik; storage cukup.</td></tr>
-          <tr><td>Monitor Booth</td><td>PFL/Solo routing; volume aman; tidak bocor ke FOH.</td></tr>
+          <tr><td>Console/Mixer</td><td>Recall scene; cek input patch; sample rate; clock; talkback.</td></tr>
+          <tr><td>Outboard/Plugin</td><td>Insert aktif; latency aman; preset dimuat.</td></tr>
+          <tr><td>Recorder</td><td>Arm track; level -12 s/d -6 dBFS; tes 30 detik; storage cukup.</td></tr>
+          <tr><td>Monitor Booth</td><td>Routings PFL/Solo; volume aman; tidak bocor ke FOH.</td></tr>
           <tr><td>Comms</td><td>HT/Intercom berfungsi; channel & call‑sign disepakati.</td></tr>
         </tbody>
       </table>
     </section>
 
     <!-- KABEL -->
-    <section class="card" style="padding:16px">
+    <section id="kabel" class="card section-anchor" style="padding:16px">
       <h3 style="margin:0 0 8px"><span class="badge audio">Kabel</span></h3>
       <table class="table" aria-label="Audio - Kabel">
         <thead><tr><th>Jenis</th><th>Checklist</th></tr></thead>
         <tbody>
           <tr><td>XLR (Mic)</td><td>Pin utuh; tidak dengung; label channel; jalur rapi + tape.</td></tr>
-          <tr><td>TRS/TS</td><td>Instrumen/insert; uji continuity; cadangan tersedia.</td></tr>
-          <tr><td>EtherCON/Dante</td><td>Link up; IP sesuai; nama device terbaca.</td></tr>
-          <tr><td>Power</td><td>Distribusi beban; ground baik; tidak crossing kabel mic.</td></tr>
-          <tr><td>RF Antenna</td><td>Koaksial aman; gain sesuai; scanning frekuensi.</td></tr>
+          <tr><td>TRS/TS</td><td>Untuk instrumen/insert; uji continuity; cadangan tersedia.</td></tr>
+          <tr><td>EtherCON/Dante</td><td>Link up (LED); IP sesuai; nama device terbaca.</td></tr>
+          <tr><td>Power</td><td>Distribusi beban; earth baik; tidak crossing sinyal kecil.</td></tr>
+          <tr><td>RF Antenna</td><td>Koaksial aman; gain/power sesuai; scanning frekuensi.</td></tr>
         </tbody>
       </table>
     </section>
 
     <!-- SPEAKER -->
-    <section class="card" style="padding:16px">
+    <section id="speaker" class="card section-anchor" style="padding:16px">
       <h3 style="margin:0 0 8px"><span class="badge audio">Speaker</span></h3>
       <table class="table" aria-label="Audio - Speaker">
         <thead><tr><th>Bagian</th><th>Checklist</th></tr></thead>
         <tbody>
-          <tr><td>FOH (Main L/R)</td><td>Polarity benar; alignment; noise floor rendah.</td></tr>
-          <tr><td>Front/Out‑Fill</td><td>Level seimbang; coverage depan & samping tercapai.</td></tr>
-          <tr><td>Sub</td><td>Crossover & phase dengan main; hum/buzz nihil.</td></tr>
-          <tr><td>Monitor Panggung</td><td>Aux sesuai artis; anti‑feedback; posisi aman.</td></tr>
+          <tr><td>FOH (Main L/R)</td><td>Polarity benar; delay/processing OK; noise floor rendah.</td></tr>
+          <tr><td>Front‑Fill/Out‑Fill</td><td>Level seimbang; coverage depan & samping tercapai.</td></tr>
+          <tr><td>Sub</td><td>Alignment dengan main; crossover tepat; hum/buzz nihil.</td></tr>
+          <tr><td>Monitor Panggung</td><td>Aux sesuai artis; anti‑feedback; positioning aman.</td></tr>
           <tr><td>Amplifier/Processor</td><td>Preset venue; limiter; suhu & ventilasi aman.</td></tr>
         </tbody>
       </table>
     </section>
 
     <!-- INVENTARIS -->
-    <section class="card" style="padding:16px">
+    <section id="inventaris" class="card section-anchor" style="padding:16px">
       <h3 style="margin:0 0 8px"><span class="badge audio">Inventaris</span></h3>
       <table class="table" aria-label="Audio - Inventaris">
         <thead><tr><th>Kategori</th><th>Rincian</th></tr></thead>
