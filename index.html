@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>AV Crew Schedule - Friday / Saturday / Sunday</title>
+<style>
+  :root{
+    --bg:#f5f6f8; --card:#ffffff; --text:#27323f; --muted:#6b7280; --line:#eef0f3;
+    --video:#9ad7b5; --audio:#a9cbea; --stage:#f2c389;
+    --video-dark:#3d8d6d; --audio-dark:#2b6aa7; --stage-dark:#a06719;
+    --tab-bg:#ffffff; --chip-bg:#f8fafc;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; padding:28px 20px; background:var(--bg);
+    font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Helvetica Neue", sans-serif;
+    color:var(--text);
+  }
+  .wrap{max-width:980px; margin:0 auto}
+  .title{font-weight:800; font-size:28px; text-align:center; letter-spacing:.04em}
+  .subtitle{margin-top:4px; text-align:center; color:var(--muted); font-weight:600}
+
+  .tabs{display:flex; gap:8px; justify-content:center; margin:18px auto 22px; flex-wrap:wrap}
+  .tab-btn{
+    background:var(--tab-bg); border:1px solid var(--line); color:#374151;
+    padding:8px 14px; border-radius:999px; font-weight:700; cursor:pointer; transition:all .15s ease;
+  }
+  .tab-btn:hover{box-shadow:0 2px 10px rgba(0,0,0,.06)}
+  .tab-btn.active{color:#111827; border-color:#cbd5e1; background:#f8fafc}
+
+  .actions{display:flex; justify-content:center; margin:0 0 18px 0; gap:10px}
+  .print-btn{
+    background:#111827; color:white; border:none; padding:8px 14px; border-radius:8px; cursor:pointer; font-weight:700;
+  }
+  .print-btn:hover{opacity:.92}
+
+  .day{display:none}
+  .day.active{display:block}
+
+  .team-card{
+    background:var(--card); border-radius:14px; box-shadow:0 6px 20px rgba(16,24,40,.06);
+    overflow:hidden; margin-bottom:18px; border:1px solid #e9ecf1;
+  }
+  .team-bar{
+    display:flex; align-items:center; gap:10px; padding:12px 16px; font-weight:800; color:#0f172a;
+  }
+  .team-bar .name{flex:1}
+  .team-bar svg{flex:0 0 auto}
+  .team-bar.video{background:linear-gradient(90deg,var(--video) 0%, #e3f2ea 100%)}
+  .team-bar.audio{background:linear-gradient(90deg,var(--audio) 0%, #e9f2fb 100%)}
+  .team-bar.stage{background:linear-gradient(90deg,var(--stage) 0%, #fff3e1 100%)}
+
+  .overseer{
+    display:inline-flex; align-items:center; gap:8px; font-weight:700;
+    background:var(--chip-bg); border:1px solid var(--line);
+    color:#111827; padding:6px 10px; border-radius:999px; white-space:nowrap;
+  }
+  .overseer .label{color:#6b7280; font-weight:700}
+  .overseer .value[contenteditable="true"]{
+    outline:none; border-radius:6px; padding:0 4px; transition:background .2s ease, box-shadow .2s ease;
+  }
+  .overseer .value[contenteditable="true"]:hover{background:#fafafa}
+  .overseer .value[contenteditable="true"]:focus{background:#fff7d6; box-shadow:inset 0 0 0 2px #facc15}
+
+  table{width:100%; border-collapse:collapse}
+  th,td{padding:12px 14px; border-top:1px solid var(--line); vertical-align:middle}
+  th.role{width:48%}
+  th.time{width:26%; text-align:center}
+  td.time{text-align:center}
+
+  td[contenteditable="true"]{outline:none; border-radius:8px; transition:background .2s ease}
+  td[contenteditable="true"]:hover{background:#fafafa}
+  td[contenteditable="true"]:focus{background:#fff7d6; box-shadow:inset 0 0 0 2px #facc15}
+
+  .role-tag{
+    display:inline-flex; align-items:center; gap:8px; font-weight:600; font-size:13px; color:#0f172a;
+    padding:6px 10px; border-radius:999px; background:#f8fafc; border:1px solid #eef2f7;
+  }
+  .role-tag svg{width:16px; height:16px}
+  .video-badge{background:rgba(154,215,181,.22); border-color:#caeada}
+  .audio-badge{background:rgba(169,203,234,.22); border-color:#d6e6f7}
+  .stage-badge{background:rgba(242,195,137,.22); border-color:#f6e1bf}
+
+  @media (max-width:720px){
+    th.role{width:auto}
+    th,td{padding:10px 12px}
+    .overseer{font-size:12px; padding:5px 8px}
+  }
+  @media print{
+    body{background:white; padding:0}
+    .tabs,.actions{display:none !important}
+    .team-card{box-shadow:none; border:1px solid #ddd}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="title">AV CREW SCHEDULE</div>
+  <!-- Ganti teks hari yang tampil di atas ketika tab diganti -->
+  <div class="subtitle" id="day-title">FRIDAY</div>
+
+  <!-- Cara ganti hari: ubah label button; untuk tambah hari, duplikasi section day & tombolnya -->
+  <div class="tabs" role="tablist" aria-label="Pilih Hari">
+    <button class="tab-btn active" data-day="friday" role="tab" aria-selected="true">Friday</button>
+    <button class="tab-btn" data-day="saturday" role="tab" aria-selected="false">Saturday</button>
+    <button class="tab-btn" data-day="sunday" role="tab" aria-selected="false">Sunday</button>
+  </div>
+
+  <div class="actions">
+    <button class="print-btn" onclick="window.print()">Print</button>
+  </div>
+
+  <!-- ====== FRIDAY ====== -->
+  <section id="friday" class="day active" aria-labelledby="tab-friday">
+    <!-- VIDEO CREW -->
+    <div class="team-card">
+      <div class="team-bar video">
+        <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 10.5V7a2 2 0 0 0-2-2H4.5A2.5 2.5 0 0 0 2 7.5v9A2.5 2.5 0 0 0 4.5 19H13a2 2 0 0 0 2-2v-3.5l6 3.5V7l-6 3.5z" fill="var(--video-dark)"/></svg>
+        <div class="name">VIDEO CREW</div>
+        <!-- Ubah Overseer Video Crew di sini -->
+        <div class="overseer" aria-label="Overseer Video Crew">
+          <span class="label">Overseer:</span>
+          <span class="value" contenteditable="true">Johan Kristy &amp; Nanda Okita</span>
+        </div>
+      </div>
+      <table aria-label="Video Team Friday">
+        <thead>
+          <tr><th class="role">Role</th><th class="time">Morning</th><th class="time">Afternoon</th></tr>
+        </thead>
+        <tbody>
+          <!-- Tambah/hapus role: duplikasi/hapus <tr> -->
+          <tr>
+            <td><span class="role-tag video-badge">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8h18v10H3z" fill="var(--video-dark)"/><path d="M3 6h10l2 2H3z" fill="var(--video-dark)"/></svg>
+              Technical Director
+            </span></td>
+            <!-- Isi nama/jam di sel kuning saat fokus -->
+            <td class="time" contenteditable="true">xx</td><td class="time" contenteditable="true">xx</td>
+          </tr>
+          <tr>
+            <td><span class="role-tag video-badge">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h8v4H4zM4 13h8v4H4z" fill="var(--video-dark)"/><path d="M14 10h6v2h-6zM14 14h6v2h-6z" fill="var(--video-dark)"/></svg>
+              Switcher Operator
+            </span></td>
+            <td class="time" contenteditable="true">xx</td><td class="time" contenteditable="true">xx</td>
+          </tr>
+          <tr>
+            <td><span class="role-tag video-badge">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h9v8H4z" fill="var(--video-dark)"/><path d="M13 10l7-4v12l-7-4z" fill="var(--video-dark)"/></svg>
+              Camera Operator
+            </span></td>
+            <td class="time" contenteditable="true">xx</td><td class="time" contenteditable="true">xx</td>
+          </tr>
+          <tr>
+            <td><span class="role-tag video-badge">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h9v8H4z" fill="var(--video-dark)"/><path d="M13 10l7-4v12l-7-4z" fill="var(--video-dark)"/><path d="M17 3h2v3h3v2h-3v3h-2V8h-3V6h3z" fill="var(--video-dark)"/></svg>
+              Camera Operator Backup
+            </span></td>
+            <td class="time" contenteditable="true">xx</td><td class="time" contenteditable="true">xx</td>
+          </tr>
+          <tr>
+            <td><span class="role-tag video-badge">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h14v10H3z" fill="var(--video-dark)"/><path d="M19 18H1v2h22v-2h-4z" fill="var(--video-dark)"/><path d="M8 8l5 3-5 3V8z" fill="#e6fff4"/></svg>
+              Media Operator
+            </span></td>
+            <td class="time" contenteditable="true">xx</td><td class="time" contenteditable="true">xx</td>
+          </tr>
+          <tr>
+            <td><span class="role-tag video-badge">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h14v10H3z" fill="var(--video-dark)"/><path d="M19 18H1v2h22v-2h-4z" fill="var(--video-dark)"/><path d="M8 8l5 3-5 3V8z" fill="#e6fff4"/><path d="M18 3h2v3h3v2h-3v3h-2V8h-3V6h3z" fill="var(--video-dark)"/></svg>
+              Media Operator Backup
+            </span></td>
+            <td class="time" contenteditable="true">xx</td><td class="time" contenteditable="true">xx</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- AUDIO CREW -->
+    <div class="team-card">
+      <div class="team-bar audio">
+        <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 14a3 3 0 0 0 3-3V6a3 3 0 1 0-6 0v5a3 3 0 0 0 3 3zm-7-3a7 7 0 0 0 14 0h-2a5 5 0 1 1-10 0H5zM11 19h2v3h-2z" fill="var(--audio-dark)"/></svg>
+        <div class="name">AUDIO CREW</div>
+        <!-- Ubah Overseer Audio Crew di sini -->
+        <div class="overseer" aria-label="Overseer Audio Crew">
+          <span class="label">Overseer:</span>
+          <span class="value" contenteditable="true">Angga Kusuma &amp; Ayub Evan</span>
+        </div>
+      </div>
+      <table aria-label="Audio Team Friday">
+        <thead><tr><th class="role">Role</th><th class="time">Morning</th><th class="time">Afternoon</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><span class="role-tag audio-badge">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4h2v16H6zM11 4h2v16h-2zM16 4h2v16h-2z" fill="var(--audio-dark)"/><path d="M5 10h4v3H5zM10 7h4v3h-4zM15 12h4v3h-4z" fill="var(--audio-dark)"/></svg>
+              Mixer Operator
+            </span></td>
+            <td class="time" contenteditable="true">xx</td><td class="time" contenteditable="true">xx</td>
+          </tr>
+          <tr>
+            <td><span class="role-tag audio-badge">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4h2v16H6zM11 4h2v16h-2zM16 4h2v16h-2z" fill="var(--audio-dark)"/><path d="M5 10h4v3H5zM10 7h4v3h-4zM15 12h4v3h-4z" fill="var(--audio-dark)"/><path d="M18 3h2v3h3v2h-3v3h-2V8h-3V6h3z" fill="var(--audio-dark)"/></svg>
+              Mixer Operator Assistant
+            </span></td>
+            <td class="time" contenteditable="true">xx</td><td class="time" contenteditable="true">xx</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- STAGE CREW -->
+    <div class="team-card">
+      <div class="team-bar stage">
+        <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 19h18v2H3zM7 17h10l2-8H5l2 8zm3-10h4V5h-4v2z" fill="var(--stage-dark)"/></svg>
+        <div class="name">STAGE CREW</div>
+        <!-- Ubah Overseer Stage Crew di sini -->
+        <div class="overseer" aria-label="Overseer Stage Crew">
+          <span class="label">Overseer:</span>
+          <span class="value" contenteditable="true">Isac Lestari</span>
+        </div>
+      </div>
+      <table aria-label="Stage Crew Friday">
+        <thead><tr><th class="role">Role</th><th class="time">Morning</th><th class="time">Afternoon</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><span class="role-tag stage-badge">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17h10l2-8H5z" fill="var(--stage-dark)"/></svg>
+              Stage Crew 1
+            </span></td>
+            <td class="time" contenteditable="true">xx</td><td class="time" contenteditable="true">xx</td>
+          </tr>
+          <tr>
+            <td><span class="role-tag stage-badge">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17h10l2-8H5z" fill="var(--stage-dark)"/></svg>
+              Stage Crew 2
+            </span></td>
+            <td class="time" contenteditable="true">xx</td><td class="time" contenteditable="true">xx</td>
+          </tr>
+          <tr>
+            <td><span class="role-tag stage-badge">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 18c0-2 1.5-3.5 3.5-3.5S11 16 11 18v2H4v-2z" fill="var(--stage-dark)"/><path d="M12 4l4 4-6 6-2-2 6-6z" fill="var(--stage-dark)"/></svg>
+              Makeup 1
+            </span></td>
+            <td class="time" contenteditable="true">xx</td><td class="time" contenteditable="true">xx</td>
+          </tr>
+          <tr>
+            <td><span class="role-tag stage-badge">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 18c0-2 1.5-3.5 3.5-3.5S11 16 11 18v2H4v-2z" fill="var(--stage-dark)"/><path d="M12 4l4 4-6 6-2-2 6-6z" fill="var(--stage-dark)"/></svg>
+              Makeup 2
+            </span></td>
+            <td class="time" contenteditable="true">xx</td><td class="time" contenteditable="true">xx</td>
+          </tr>
+          <tr>
+            <td><span class="role-tag stage-badge">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4h10a2 2 0 0 1 2 2v14H5V6a2 2 0 0 1 2-2z" fill="var(--stage-dark)"/><path d="M9 3h6v3H9z" fill="#fff3e1"/><path d="M8 10l2 2 4-4 1.5 1.5L10 15 6.5 11.5 8 10z" fill="#fff3e1"/></svg>
+              Final Check
+            </span></td>
+            <td class="time" contenteditable="true">xx</td><td class="time" contenteditable="true">xx</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ====== SATURDAY ====== -->
+  <section id="saturday" class="day" aria-labelledby="tab-saturday">
+    <div class="team-card">
+      <div class="team-bar video">
+        <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 10.5V7a2 2 0 0 0-2-2H4.5A2.5 2.5 0 0 0 2 7.5v9A2.5 2.5 0 0 0 4.5 19H13a2 2 0 0 0 2-2v-3.5l6 3.5V7l-6 3.5z" fill="var(--video-dark)"/></svg>
+        <div class="name">VIDEO CREW</div>
+        <div class="overseer" aria-label="Overseer Video Crew">
+          <span class="label">Overseer:</span>
+          <span class="value" contenteditable="true">Johan Kristy &amp; Nanda Okita</span>
+        </div>
+      </div>
+      <table aria-label="Video Team Saturday">
+        <thead><tr><th class="role">Role</th><th class="time">Morning</th><th class="time">Afternoon</th></tr></thead>
+        <tbody>
+          <tr><td><span class="role-tag video-badge"><svg viewBox="0 0 24 24"><path d="M3 8h18v10H3z" fill="var(--video-dark)"/><path d="M3 6h10l2 2H3z" fill="var(--video-dark)"/></svg>Technical Director</span></td><td class="time" contenteditable="true">xx</td><td class="time" contenteditable="true">xx</td></tr>
+          <tr><td><span class="role-tag video-badge"><svg viewBox="0 0 24 24"><path d="M4 7h8v4H4zM4 13h8v4H4z" fill="var(--video-dark)"/><path d="M14 10h6v2h-6zM14 14h6v2h-6z" fill="var(--video-dark)"/></svg>Switcher Operator</span></td><td class="time" contenteditable="true">xx</td><td class="time" contenteditable="true">xx</td></tr>
+          <tr><td><span class="role-tag video-badge"><svg viewBox="0 0 24 24"><path d="M4 8h9v8H4z" fill="var(--video-dark)"/><path d="M13 10l7-4v12l-7-4z" fill="var(--video-dark)"/></svg>Camera Operator</span></td><td class="time" contenteditable="true">xx</td><td class="time" contenteditable="true">xx</td></tr>
+          <tr><td><span class="role-tag video-badge"><svg viewBox="0 0 24 24"><path d="M4 8h9v8H4z" fill="var(--video-dark)"/><path d="M13 10l7-4v12l-7-4z" fill="var(--video-dark)"/><path d="M17 3h2v3h3v2h-3v3h-2V8h-3V6h3z" fill="var(--video-dark)"/></svg>Camera Operator Backup</span></td><td class="time" contenteditable="true">xx</td><td class="time" contenteditable="true">xx</td></tr>
+          <tr><td><span class="role-tag video-badge"><svg viewBox="0 0 24 24"><path d="M3 6h14v10H3z" fill="var(--video-dark)"/><path d="M19 18H1v2h22v-2h-4z" fill="var(--video-dark)"/><path d="M8 8l5 3-5 3V8z" fill="#e6fff4"/></svg>Media Operator</span></td><td class="time" contenteditable="true">xx</td><td class="time" contenteditable="true">xx</td></tr>
+          <tr><td><span class="role-tag video-badge"><svg viewBox="0 0 24 24"><path d="M3 6h14v10H3z" fill="var(--video-dark)"/><path d="M19 18H1v2h22v-2h-4z" fill="var(--video-dark)"/><path d="M8 8l5 3-5 3V8z" fill="#e6fff4"/><path d="M18 3h2v3h3v2h-3v3h-2V8h-3V6h3z" fill="var(--video-dark)"/></svg>Media Operator Backup</span></td><td class="time" contenteditable="true">xx</td><td class="time" contenteditable="true">xx</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="team-card">
+      <div class="team-bar audio">
+        <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 14a3 3 0 0 0 3-3V6a3 3 0 1 0-6 0v5a3 3 0 0 0 3 3zm-7-3a7 7 0 0 0 14 0h-2a5 5 0 1 1-10 0H5zM11 19h2v3h-2z" fill="var(--audio-dark)"/></svg>
+        <div class="name">AUDIO CREW</div>
+        <div class="overseer" aria-label="Overseer Audio Crew">
+          <span class="label">Overseer:</span>
+          <span class="value" contenteditable="true">Angga Kusuma &amp; Ayub Evan</span>
+        </div>
+      </div>
+      <table aria-label="Audio Team Saturday">
+        <thead><tr><th class="role">Role</th><th class="time">Morning</th><th class="time">Afternoon</th></tr></thead>
+        <tbody>
+          <tr><td><span class="role-tag audio-badge"><svg viewBox="0 0 24 24"><path d="M6 4h2v16H6zM11 4h2v16h-2zM16 4h2v16h-2z" fill="var(--audio-dark)"/><path d="M5 10h4v3H5zM10 7h4v3h-4zM15 12h4v3h-4z" fill="var(--audio-dark)"/></svg>Mixer Operator</span></td><td class="time" contenteditable="true">xx</td><td class="time" contenteditable="true">xx</td></tr>
+          <tr><td><span class="role-tag audio-badge"><svg viewBox="0 0 24 24"><path d="M6 4h2v16H6zM11 4h2v16h-2zM16 4h2v16h-2z" fill="var(--audio-dark)"/><path d="M5 10h4v3H5zM10 7h4v3h-4zM15 12h4v3h-4z" fill="var(--audio-dark)"/><path d="M18 3h2v3h3v2h-3v3h-2V8h-3V6h3z" fill="var(--audio-dark)"/></svg>Mixer Operator Assistant</span></td><td class="time" contenteditable="true">xx</td><td class="time" contenteditable="true">xx</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="team-card">
+      <div class="team-bar stage">
+        <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 19h18v2H3zM7 17h10l2-8H5l2 8zm3-10h4V5h-4v2z" fill="var(--stage-dark)"/></svg>
+        <div class="name">STAGE CREW</div>
+        <div class="overseer" aria-label="Overseer Stage Crew">
+          <span class="label">Overseer:</span>
+          <span class="value" contenteditable="true">Isac Lestari</span>
+        </div>
+      </div>
+      <table aria-label="Stage Crew Saturday">
+        <thead><tr><th class="role">Role</th><th class="time">Morning</th><th class="time">Afternoon</th></tr></thead>
+        <tbody>
+          <tr><td><span class="role-tag stage-badge"><svg viewBox="0 0 24 24"><path d="M7 17h10l2-8H5z" fill="var(--stage-dark)"/></svg>Stage Crew 1</span></td><td class="time" contenteditable="true">xx</td><td class="time" contenteditable="true">xx</td></tr>
+          <tr><td><span class="role-tag stage-badge"><svg viewBox="0 0 24 24"><path d="M7 17h10l2-8H5z" fill="var(--stage-dark)"/></svg>Stage Crew 2</span></td><td class="time" contenteditable="true">xx</td><td class="time" contenteditable="true">xx</td></tr>
+          <tr><td><span class="role-tag stage-badge"><svg viewBox="0 0 24 24"><path d="M4 18c0-2 1.5-3.5 3.5-3.5S11 16 11 18v2H4v-2z" fill="var(--stage-dark)"/><path d="M12 4l4 4-6 6-2-2 6-6z" fill="var(--stage-dark)"/></svg>Makeup 1</span></td><td class="time" contenteditable="true">xx</td><td class="time" contenteditable="true">xx</td></tr>
+          <tr><td><span class="role-tag stage-badge"><svg viewBox="0 0 24 24"><path d="M4 18c0-2 1.5-3.5 3.5-3.5S11 16 11 18v2H4v-2z" fill="var(--stage-dark)"/><path d="M12 4l4 4-6 6-2-2 6-6z" fill="var(--stage-dark)"/></svg>Makeup 2</span></td><td class="time" contenteditable="true">xx</td><td class="time" contenteditable="true">xx</td></tr>
+          <tr><td><span class="role-tag stage-badge"><svg viewBox="0 0 24 24"><path d="M7 4h10a2 2 0 0 1 2 2v14H5V6a2 2 0 0 1 2-2z" fill="var(--stage-dark)"/><path d="M9 3h6v3H9z" fill="#fff3e1"/><path d="M8 10l2 2 4-4 1.5 1.5L10 15 6.5 11.5 8 10z" fill="#fff3e1"/></svg>Final Check</span></td><td class="time" contenteditable="true">xx</td><td class="time" contenteditable="true">xx</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ====== SUNDAY ====== -->
+  <section id="sunday" class="day" aria-labelledby="tab-sunday">
+    <div class="team-card">
+      <div class="team-bar video">
+        <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 10.5V7a2 2 0 0 0-2-2H4.5A2.5 2.5 0 0 0 2 7.5v9A2.5 2.5 0 0 0 4.5 19H13a2 2 0 0 0 2-2v-3.5l6 3.5V7l-6 3.5z" fill="var(--video-dark)"/></svg>
+        <div class="name">VIDEO CREW</div>
+        <div class="overseer" aria-label="Overseer Video Crew">
+          <span class="label">Overseer:</span>
+          <span class="value" contenteditable="true">Johan Kristy &amp; Nanda Okita</span>
+        </div>
+      </div>
+      <table aria-label="Video Team Sunday">
+        <thead><tr><th class="role">Role</th><th class="time">Morning</th><th class="time">Afternoon</th></tr></thead>
+        <tbody>
+          <tr><td><span class="role-tag video-badge"><svg viewBox="0 0 24 24"><path d="M3 8h18v10H3z" fill="var(--video-dark)"/><path d="M3 6h10l2 2H3z" fill="var(--video-dark)"/></svg>Technical Director</span></td><td class="time" contenteditable="true">xx</td><td class="time" contenteditable="true">xx</td></tr>
+          <tr><td><span class="role-tag video-badge"><svg viewBox="0 0 24 24"><path d="M4 7h8v4H4zM4 13h8v4H4z" fill="var(--video-dark)"/><path d="M14 10h6v2h-6zM14 14h6v2h-6z" fill="var(--video-dark)"/></svg>Switcher Operator</span></td><td class="time" contenteditable="true">xx</td><td class="time" contenteditable="true">xx</td></tr>
+          <tr><td><span class="role-tag video-badge"><svg viewBox="0 0 24 24"><path d="M4 8h9v8H4z" fill="var(--video-dark)"/><path d="M13 10l7-4v12l-7-4z" fill="var(--video-dark)"/></svg>Camera Operator</span></td><td class="time" contenteditable="true">xx</td><td class="time" contenteditable="true">xx</td></tr>
+          <tr><td><span class="role-tag video-badge"><svg viewBox="0 0 24 24"><path d="M4 8h9v8H4z" fill="var(--video-dark)"/><path d="M13 10l7-4v12l-7-4z" fill="var(--video-dark)"/><path d="M17 3h2v3h3v2h-3v3h-2V8h-3V6h3z" fill="var(--video-dark)"/></svg>Camera Operator Backup</span></td><td class="time" contenteditable="true">xx</td><td class="time" contenteditable="true">xx</td></tr>
+          <tr><td><span class="role-tag video-badge"><svg viewBox="0 0 24 24"><path d="M3 6h14v10H3z" fill="var(--video-dark)"/><path d="M19 18H1v2h22v-2h-4z" fill="var(--video-dark)"/><path d="M8 8l5 3-5 3V8z" fill="#e6fff4"/></svg>Media Operator</span></td><td class="time" contenteditable="true">xx</td><td class="time" contenteditable="true">xx</td></tr>
+          <tr><td><span class="role-tag video-badge"><svg viewBox="0 0 24 24"><path d="M3 6h14v10H3z" fill="var(--video-dark)"/><path d="M19 18H1v2h22v-2h-4z" fill="var(--video-dark)"/><path d="M8 8l5 3-5 3V8z" fill="#e6fff4"/><path d="M18 3h2v3h3v2h-3v3h-2V8h-3V6h3z" fill="var(--video-dark)"/></svg>Media Operator Backup</span></td><td class="time" contenteditable="true">xx</td><td class="time" contenteditable="true">xx</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="team-card">
+      <div class="team-bar audio">
+        <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 14a3 3 0 0 0 3-3V6a3 3 0 1 0-6 0v5a3 3 0 0 0 3 3zm-7-3a7 7 0 0 0 14 0h-2a5 5 0 1 1-10 0H5zM11 19h2v3h-2z" fill="var(--audio-dark)"/></svg>
+        <div class="name">AUDIO CREW</div>
+        <div class="overseer" aria-label="Overseer Audio Crew">
+          <span class="label">Overseer:</span>
+          <span class="value" contenteditable="true">Angga Kusuma &amp; Ayub Evan</span>
+        </div>
+      </div>
+      <table aria-label="Audio Team Sunday">
+        <thead><tr><th class="role">Role</th><th class="time">Morning</th><th class="time">Afternoon</th></tr></thead>
+        <tbody>
+          <tr><td><span class="role-tag audio-badge"><svg viewBox="0 0 24 24"><path d="M6 4h2v16H6zM11 4h2v16h-2zM16 4h2v16h-2z" fill="var(--audio-dark)"/><path d="M5 10h4v3H5zM10 7h4v3h-4zM15 12h4v3h-4z" fill="var(--audio-dark)"/></svg>Mixer Operator</span></td><td class="time" contenteditable="true">xx</td><td class="time" contenteditable="true">xx</td></tr>
+          <tr><td><span class="role-tag audio-badge"><svg viewBox="0 0 24 24"><path d="M6 4h2v16H6zM11 4h2v16h-2zM16 4h2v16h-2z" fill="var(--audio-dark)"/><path d="M5 10h4v3H5zM10 7h4v3h-4zM15 12h4v3h-4z" fill="var(--audio-dark)"/><path d="M18 3h2v3h3v2h-3v3h-2V8h-3V6h3z" fill="var(--audio-dark)"/></svg>Mixer Operator Assistant</span></td><td class="time" contenteditable="true">xx</td><td class="time" contenteditable="true">xx</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="team-card">
+      <div class="team-bar stage">
+        <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 19h18v2H3zM7 17h10l2-8H5l2 8zm3-10h4V5h-4v2z" fill="var(--stage-dark)"/></svg>
+        <div class="name">STAGE CREW</div>
+        <div class="overseer" aria-label="Overseer Stage Crew">
+          <span class="label">Overseer:</span>
+          <span class="value" contenteditable="true">Isac Lestari</span>
+        </div>
+      </div>
+      <table aria-label="Stage Crew Sunday">
+        <thead><tr><th class="role">Role</th><th class="time">Morning</th><th class="time">Afternoon</th></tr></thead>
+        <tbody>
+          <tr><td><span class="role-tag stage-badge"><svg viewBox="0 0 24 24"><path d="M7 17h10l2-8H5z" fill="var(--stage-dark)"/></svg>Stage Crew 1</span></td><td class="time" contenteditable="true">xx</td><td class="time" contenteditable="true">xx</td></tr>
+          <tr><td><span class="role-tag stage-badge"><svg viewBox="0 0 24 24"><path d="M7 17h10l2-8H5z" fill="var(--stage-dark)"/></svg>Stage Crew 2</span></td><td class="time" contenteditable="true">xx</td><td class="time" contenteditable="true">xx</td></tr>
+          <tr><td><span class="role-tag stage-badge"><svg viewBox="0 0 24 24"><path d="M4 18c0-2 1.5-3.5 3.5-3.5S11 16 11 18v2H4v-2z" fill="var(--stage-dark)"/><path d="M12 4l4 4-6 6-2-2 6-6z" fill="var(--stage-dark)"/></svg>Makeup 1</span></td><td class="time" contenteditable="true">xx</td><td class="time" contenteditable="true">xx</td></tr>
+          <tr><td><span class="role-tag stage-badge"><svg viewBox="0 0 24 24"><path d="M4 18c0-2 1.5-3.5 3.5-3.5S11 16 11 18v2H4v-2z" fill="var(--stage-dark)"/><path d="M12 4l4 4-6 6-2-2 6-6z" fill="var(--stage-dark)"/></svg>Makeup 2</span></td><td class="time" contenteditable="true">xx</td><td class="time" contenteditable="true">xx</td></tr>
+          <tr><td><span class="role-tag stage-badge"><svg viewBox="0 0 24 24"><path d="M7 4h10a2 2 0 0 1 2 2v14H5V6a2 2 0 0 1 2-2z" fill="var(--stage-dark)"/><path d="M9 3h6v3H9z" fill="#fff3e1"/><path d="M8 10l2 2 4-4 1.5 1.5L10 15 6.5 11.5 8 10z" fill="#fff3e1"/></svg>Final Check</span></td><td class="time" contenteditable="true">xx</td><td class="time" contenteditable="true">xx</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
+
+<script>
+  // Ganti hari aktif dengan klik tab
+  const buttons = document.querySelectorAll('.tab-btn');
+  const days = document.querySelectorAll('.day');
+  const dayTitle = document.getElementById('day-title');
+  const labelMap = { friday:'FRIDAY', saturday:'SATURDAY', sunday:'SUNDAY' };
+
+  buttons.forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const target = btn.dataset.day;
+      buttons.forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      days.forEach(d=>d.classList.remove('active'));
+      document.getElementById(target).classList.add('active');
+      dayTitle.textContent = labelMap[target] || 'SCHEDULE';
+    });
+  });
+</script>
+</body>
+</html>
