@@ -7,11 +7,10 @@
 
 :root {
   --bg: #0f1620;
-  --card: #1a2332cc;
+  --card: #1a2332ee;
   --line: #2a3444;
   --text: #dde6f4;
 
-  /* warna seksi */
   --audio: #ffb84d;
   --video: #4db7ff;
   --stage: #da72ff;
@@ -23,6 +22,7 @@ body {
   color: var(--text);
   font-family: "Inter", Arial, sans-serif;
   padding-bottom: 60px;
+  transition: .3s ease;
 }
 
 /* ---------- NAV ---------- */
@@ -39,7 +39,6 @@ body {
   max-width: 1000px;
   margin: auto;
   padding: 14px 20px;
-
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -57,15 +56,12 @@ body {
   font-weight: 600;
   text-decoration: none;
   color: #9ab3d5;
-  transition: 0.25s;
+  transition: .25s;
 }
 
-.nav a.active {
-  color: #ffffff;
-}
-
+.nav a.active,
 .nav a:hover {
-  color: #fff;
+  color: #ffffff;
 }
 
 /* ---------- CONTAINER ---------- */
@@ -88,7 +84,7 @@ body {
   margin-top: 4px;
 }
 
-/* ---------- HERO GRID ---------- */
+/* ---------- GRID MENU ---------- */
 .hero-grid {
   margin-top: 28px;
   display: grid;
@@ -111,49 +107,42 @@ body {
   border-radius: 14px;
   overflow: hidden;
   min-height: 220px;
-
   display: flex;
   align-items: flex-end;
-
   border: 1px solid var(--line);
   background: var(--card);
-  box-shadow: 0 6px 20px #00000060;
-
-  transition: 0.35s ease;
+  box-shadow: 0 6px 20px #0008;
+  transition: .3s ease;
 }
 
 .card-hero:hover {
-  transform: scale(1.02);
-  box-shadow: 0 10px 26px #00000080;
+  transform: scale(1.03);
+  box-shadow: 0 10px 26px #000c;
 }
 
 .card-hero img {
   position: absolute;
   inset: 0;
-  height: 100%;
   width: 100%;
+  height: 100%;
   object-fit: cover;
-
-  filter: brightness(0.7) saturate(1.1);
-  transition: .3s;
+  filter: brightness(.75) saturate(1.1);
+  transition: .3s ease;
 }
 
 .card-hero:hover img {
-  filter: brightness(0.9) saturate(1.25);
+  filter: brightness(1) saturate(1.25);
 }
 
-/* Jika ingin label MUNCUL saat hover */
-.card-hero .label {
-  position: relative;
+.label {
   z-index: 2;
   font-size: 42px;
   font-weight: 900;
-  letter-spacing: .02em;
-  color: #fff;
-
+  color: white;
   opacity: 0;
-  transform: translateY(10px);
+  transform: translateY(14px);
   transition: .35s ease;
+  text-shadow: 0 2px 12px #000;
 }
 
 .card-hero:hover .label {
@@ -161,65 +150,7 @@ body {
   transform: translateY(0);
 }
 
-/* ---------- QUICK LINKS ---------- */
-.quick {
-  margin-top: 10px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.quick a {
-  text-decoration: none;
-  color: var(--text);
-  padding: 6px 12px;
-  font-size: 13px;
-  font-weight: 700;
-
-  background: #18212ebb;
-  border: 1px solid #2c3b51;
-  border-radius: 999px;
-
-  transition: .25s ease;
-}
-
-.quick a:hover {
-  background: #253142;
-  border-color: #445469;
-}
-
-/* ---------- FOOTER ---------- */
-footer {
-  text-align: center;
-  opacity: 0.6;
-  margin-top: 40px;
-  font-size: 14px;
-}
-
-/* ============= LIGHT MODE ============= */
-body.light {
-  --bg: #f4f7fb;
-  --card: #ffffffdd;
-  --line: #ccd4e1;
-  --text: #1b2533;
-}
-
-body.light .navbar {
-  background: rgba(255,255,255,0.7);
-  border-bottom: 1px solid #d5ddea;
-}
-
-body.light .card-hero img {
-  filter: brightness(1) saturate(1.1);
-}
-
-body.light .theme-toggle {
-  background: #e3e8f0;
-  color: #1b2533;
-  border-color: #b4c0d3;
-}
-``/* --- THEME TOGGLE MODERN --- */
-
+/* ---------- MODERN DARK/LIGHT BUTTON ---------- */
 .theme-toggle {
   cursor: pointer;
   padding: 6px 16px;
@@ -227,24 +158,48 @@ body.light .theme-toggle {
   font-size: 13px;
   font-weight: 700;
   border: 1px solid var(--line);
-  background: #1f2937;
-  color: #e5e7eb;
+  background: #1e293b;
+  color: #e2e8f0;
   transition: .25s ease;
   margin-left: 16px;
 }
 
 .theme-toggle:hover {
-  background: #374151;
-  border-color: #4b5563;
+  background: #334155;
+  border-color: #475569;
 }
 
-/* Light mode */
+/* ---------- LIGHT MODE ---------- */
+body.light {
+  --bg: #f3f5f9;
+  --card: #ffffff;
+  --line: #d4d8df;
+  --text: #1b2533;
+}
+
+body.light .navbar {
+  background: rgba(255,255,255,0.8);
+  border-bottom: 1px solid #ccd4e1;
+}
+
 body.light .theme-toggle {
   background: #e5e7eb;
-  color: #111827;
+  color: #1e293b;
   border-color: #cbd5e1;
 }
 
 body.light .theme-toggle:hover {
   background: #f3f4f6;
+}
+
+body.light .card-hero img {
+  filter: brightness(.95);
+}
+
+/* ---------- FOOTER ---------- */
+footer {
+  text-align: center;
+  opacity: 0.7;
+  margin-top: 40px;
+  font-size: 14px;
 }
