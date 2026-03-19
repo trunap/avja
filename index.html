@@ -5,9 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Panduan Teknis — Home</title>
 
-  <link rel="stylesheet" href="assets/style.css?v=9" />
+  <link rel="stylesheet" href="assets/style.css?v=10" />
 
   <style>
+    /* grid hero */
     .hero-grid {
       display: grid;
       grid-template-columns: repeat(1, minmax(0, 1fr));
@@ -18,7 +19,7 @@
       .hero-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
 
-    .card { display: block; text-decoration: none; color: inherit; }
+    .card { text-decoration: none; color: inherit; }
 
     .card-hero {
       position: relative;
@@ -27,9 +28,9 @@
       align-items: flex-end;
       padding: 18px;
       border-radius: 14px;
+      overflow: hidden;
       border: 1px solid var(--line);
       background: linear-gradient(180deg,rgba(0,0,0,.05),rgba(0,0,0,.45));
-      overflow: hidden;
       transition: .3s ease;
     }
     .card-hero:hover { transform: scale(1.02); }
@@ -44,7 +45,9 @@
       filter: brightness(.8) saturate(1.1);
       transition: .3s ease;
     }
-    .card-hero:hover img { filter: brightness(1) saturate(1.25); }
+    .card-hero:hover img {
+      filter: brightness(1) saturate(1.25);
+    }
 
     .label {
       font-size: 40px;
@@ -52,7 +55,7 @@
       color: #fff;
       opacity: 0;
       transform: translateY(12px);
-      transition: .3s;
+      transition: .3s ease;
       text-shadow: 0 2px 12px rgba(0,0,0,.6);
     }
     .card-hero:hover .label {
@@ -73,7 +76,10 @@
       <nav class="nav">
         <a class="active" href="./">Home</a>
         <a href="audio.html">Audio</a>
-        <a href="video.html
+        <a href="video.html">Video</a>
+        <a href="stage.html">Stage</a>
+        <a href="it.html">IT</a>
+        <a href="apendiks.html">Apendiks</a>
 
         <button id="themeBtn" class="theme-toggle">Dark</button>
       </nav>
@@ -91,37 +97,42 @@
     <!-- HERO GRID -->
     <section class="hero-grid">
 
+      <!-- AUDIO -->
       <a class="card" href="audio.html">
         <div class="card-hero">
-          <img src="assets/img/audio.jpg" alt="">
+          <img src="assets/img/audio.jpg" alt="Audio">
           <span class="label" style="color:var(--audio)">AUDIO</span>
         </div>
       </a>
 
+      <!-- VIDEO -->
       <a class="card" href="video.html">
         <div class="card-hero">
-          <img src="assets/img/video.jpg" alt="">
+          <img src="assets/img/video.jpg" alt="Video">
           <span class="label" style="color:var(--video)">VIDEO</span>
         </div>
       </a>
 
+      <!-- STAGE -->
       <a class="card" href="stage.html">
         <div class="card-hero">
-          <img src="assets/img/stage.jpg" alt="">
+          <img src="assets/img/stage.jpg" alt="Stage">
           <span class="label" style="color:var(--stage)">STAGE</span>
         </div>
       </a>
 
+      <!-- IT -->
       <a class="card" href="it.html">
         <div class="card-hero">
-          <img src="assets/img/it.jpg" alt="">
+          <img src="assets/img/it.jpg" alt="IT">
           <span class="label">IT</span>
         </div>
       </a>
 
+      <!-- APENDIKS -->
       <a class="card" href="apendiks.html">
         <div class="card-hero">
-          <img src="assets/img/all.jpg" alt="">
+          <img src="assets/img/all.jpg" alt="Apendiks">
           <span class="label">APENDIKS</span>
         </div>
       </a>
@@ -131,7 +142,6 @@
     <footer>© 2026 — Disusun oleh Truna</footer>
   </main>
 
-  <!-- ✅ INI YANG DULU SALAH -->
   <script src="assets/theme.js"></script>
 
 </body>
