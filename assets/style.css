@@ -218,4 +218,33 @@ body.light .theme-toggle {
   color: #1b2533;
   border-color: #b4c0d3;
 }
-``
+``/* --- THEME TOGGLE MODERN --- */
+
+.theme-toggle {
+  cursor: pointer;
+  padding: 6px 16px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  border: 1px solid var(--line);
+  background: #1f2937;
+  color: #e5e7eb;
+  transition: .25s ease;
+  margin-left: 16px;
+}
+
+.theme-toggle:hover {
+  background: #374151;
+  border-color: #4b5563;
+}
+
+/* Light mode */
+body.light .theme-toggle {
+  background: #e5e7eb;
+  color: #111827;
+  border-color: #cbd5e1;
+}
+
+body.light .theme-toggle:hover {
+  background: #f3f4f6;
+}
