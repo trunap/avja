@@ -1,1 +1,250 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Apendiks — Pembagian Tugas Hari Acara</title>
 
+  <link rel="stylesheet" href="../assets/style.css">
+  
+  <style>
+    :root{
+      --bg:#f5f6f8;
+      --card:#ffffff;
+      --text:#27323f;
+      --muted:#6b7280;
+      --line:#eef0f3;
+
+      --video:#9ad7b5;
+      --audio:#a9cbea;
+      --stage:#f2c389;
+
+      --video-dark:#3d8d6d;
+      --audio-dark:#2b6aa7;
+      --stage-dark:#a06719;
+    }
+
+    body{margin:0;background:var(--bg);font-family:ui-sans-serif;color:var(--text);}
+    .wrap{max-width:980px;margin:0 auto;padding:28px 20px;}
+    .title{text-align:center;font-weight:800;font-size:28px;}
+    .subtitle{text-align:center;margin-top:4px;color:var(--muted);font-weight:600;}
+
+    .tabs{display:flex;gap:8px;justify-content:center;margin:18px auto 22px;flex-wrap:wrap;}
+    .tab-btn{
+      padding:8px 14px;border-radius:999px;
+      border:1px solid var(--line);
+      background:#fff;font-weight:700;cursor:pointer;
+    }
+    .tab-btn.active{background:#f1f5f9;border-color:#cbd5e1;}
+
+    .day{display:none;}
+    .day.active{display:block;}
+
+    .team-card{
+      background:var(--card);
+      border-radius:14px;
+      margin-bottom:24px;
+      box-shadow:0 6px 20px rgba(0,0,0,.05);
+      border:1px solid var(--line);
+      overflow:hidden;
+    }
+
+    .team-bar{
+      display:flex;align-items:center;
+      gap:12px;padding:12px 16px;
+      font-weight:800;color:#0f172a;
+    }
+
+    .video{background:linear-gradient(90deg,var(--video),#e9f8f0);}
+    .audio{background:linear-gradient(90deg,var(--audio),#eef6ff);}
+    .stage{background:linear-gradient(90deg,var(--stage),#fff6e4);}
+
+    .overseer{
+      margin-left:auto;
+      padding:6px 10px;border-radius:999px;
+      background:#f8fafc;border:1px solid var(--line);
+      font-weight:700;font-size:14px;
+    }
+    .overseer .value[contenteditable="true"]{
+      padding:2px 4px;border-radius:4px;
+    }
+
+    table{width:100%;border-collapse:collapse;}
+    th,td{
+      padding:12px 14px;
+      border-top:1px solid var(--line);
+      vertical-align:middle;
+      font-size:14px;
+    }
+    th.time,td.time{text-align:center;}
+    td[contenteditable="true"]{border-radius:4px;}
+
+    .role-tag{
+      display:inline-flex;align-items:center;gap:6px;
+      padding:6px 10px;font-size:13px;
+      border-radius:999px;border:1px solid var(--line);
+      background:#f8fafc;font-weight:600;color:#0f172a;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="wrap">
+
+  <div class="title">Pembagian Tugas Hari Acara</div>
+  <div class="subtitle" id="day-title">JUMAT</div>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-day="fri">Jumat</button>
+    <button class="tab-btn" data-day="sat">Sabtu</button>
+    <button class="tab-btn" data-day="sun">Minggu</button>
+  </div>
+
+  <!-- ================== JUMAT ================== -->
+  <section id="fri" class="day active">
+
+    <!-- VIDEO -->
+    <div class="team-card">
+      <div class="team-bar video">
+        <span>VIDEO CREW</span>
+        <span class="overseer">Overseer: <span class="value" contenteditable="true">Nama Crew</span></span>
+      </div>
+
+      <table>
+        <thead>
+          <tr><th>Role</th><th class="time">Pagi</th><th class="time">Siang</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="role-tag">Technical Director</span></td>
+            <td class="time" contenteditable="true"></td>
+            <td class="time" contenteditable="true"></td>
+          </tr>
+          <tr>
+            <td><span class="role-tag">Switcher Operator</span></td>
+            <td class="time" contenteditable="true"></td>
+            <td class="time" contenteditable="true"></td>
+          </tr>
+          <tr>
+            <td><span class="role-tag">Camera Operator</span></td>
+            <td class="time" contenteditable="true"></td>
+            <td class="time" contenteditable="true"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- AUDIO -->
+    <div class="team-card">
+      <div class="team-bar audio">
+        <span>AUDIO CREW</span>
+        <span class="overseer">Overseer: <span class="value" contenteditable="true">Nama Crew</span></span>
+      </div>
+
+      <table>
+        <thead>
+          <tr><th>Role</th><th class="time">Pagi</th><th class="time">Siang</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="role-tag">Mixer Operator</span></td>
+            <td class="time" contenteditable="true"></td>
+            <td class="time" contenteditable="true"></td>
+          </tr>
+          <tr>
+            <td><span class="role-tag">Mixer Assistant</span></td>
+            <td class="time" contenteditable="true"></td>
+            <td class="time" contenteditable="true"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- STAGE -->
+    <div class="team-card">
+      <div class="team-bar stage">
+        <span>STAGE CREW</span>
+        <span class="overseer">Overseer: <span class="value" contenteditable="true">Nama Crew</span></span>
+      </div>
+
+      <table>
+        <thead>
+          <tr><th>Role</th><th class="time">Pagi</th><th class="time">Siang</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="role-tag">Stage Crew 1</span></td>
+            <td class="time" contenteditable="true"></td>
+            <td class="time" contenteditable="true"></td>
+          </tr>
+          <tr>
+            <td><span class="role-tag">Final Check</span></td>
+            <td class="time" contenteditable="true"></td>
+            <td class="time" contenteditable="true"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </section>
+
+  <!-- ================== SABTU ================== -->
+  <section id="sat" class="day">
+    <!-- tinggal copy dari Jumat dan ganti crew -->
+    <div class="team-card">
+      <div class="team-bar video">
+        <span>VIDEO CREW</span>
+        <span class="overseer">Overseer: <span class="value" contenteditable="true">Nama Crew</span></span>
+      </div>
+
+      <table>
+        <thead>
+          <tr><th>Role</th><th class="time">Pagi</th><th class="time">Siang</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="role-tag">Technical Director</span></td>
+            <td class="time" contenteditable="true"></td>
+            <td class="time" contenteditable="true"></td>
+          </tr>
+          <tr>
+            <td><span class="role-tag">Switcher Operator</span></td>
+            <td class="time" contenteditable="true"></td>
+            <td class="time" contenteditable="true"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ================== MINGGU ================== -->
+  <section id="sun" class="day">
+    <!-- sama seperti Jumat/Sabtu -->
+  </section>
+
+</div>
+
+<script>
+  const tabs = document.querySelectorAll('.tab-btn');
+  const days = document.querySelectorAll('.day');
+  const title = document.getElementById('day-title');
+
+  const label = { fri:'JUMAT', sat:'SABTU', sun:'MINGGU' };
+
+  tabs.forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      tabs.forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+
+      days.forEach(d=>d.classList.remove('active'));
+      document.getElementById(btn.dataset.day).classList.add('active');
+
+      title.textContent = label[btn.dataset.day];
+    });
+  });
+</script>
+
+</body>
+</html>
+``
