@@ -1,89 +1,94 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Panduan Teknis</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Panduan Teknis — Home</title>
 
-  assets/style.css?v=22
+  <link rel="stylesheet" href="assets/style.css?v=22">
 </head>
 
 <body>
 
-<!-- NAVBAR -->
-<div class="navbar">
-  <div class="navbar-inner">
+  <!-- NAVBAR -->
+  <div class="navbar">
+    <div class="navbar-inner">
 
-    index.htmlPANDUAN TEKNIS</a>
+      <a class="brand" href="index.html">PANDUAN TEKNIS</a>
 
-    <nav class="nav">
-      index.htmlHome</a>
-      audio.htmlAudio</a>
-      video.htmlVideo</a>
-      stage.htmlStage</a>
-      it.htmlIT</a>
-      apendiks.htmlApendiks</a>
+      <nav class="nav">
+        <a class="active" href="index.html">Home</a>
+        <a href="audio.html">Audio</a>
+        <a href="video.html">Visual</a>
+        <a href="stage.html">Stage</a>
+        <a href="it.html">IT</a>
+        <a href="apendiks.html">Apendiks</a>
 
-      <button id="themeBtn" class="theme-toggle">🌙 Dark</button>
-    </nav>
+        <!-- Toggle Dark/Light -->
+        <button id="themeBtn" class="theme-toggle">🌙 Dark</button>
+      </nav>
 
+    </div>
   </div>
-</div>
 
-<main class="container">
-  
-  <h1 class="hero-title">PANDUAN TEKNIS</h1>
-  <p class="hero-sub">Tim Audio • Video • Stage • IT</p>
+  <main class="container">
 
-  <section class="hero-grid">
+    <section>
+      <h1 class="hero-title">PANDUAN TEKNIS</h1>
+      <p class="hero-sub">Tim Audio • Visual • Stage • IT</p>
+    </section>
 
-    <!-- AUDIO -->
-    audio.html
-      <div class="card-hero">
-        assets/img/audio.jpg
-        <span class="label" style="color:var(--audio)">AUDIO</span>
-      </div>
-    </a>
+    <!-- GRID MENU -->
+    <section class="hero-grid">
 
-    <!-- VIDEO -->
-    video.html
-      <div class="card-hero">
-        assets/img/video.jpg
-        <span class="label" style="color:var(--video)">VISUAL</span>
-      </div>
-    </a>
+      <!-- AUDIO -->
+      <a class="card" href="audio.html">
+        <div class="card-hero">
+          <img src="assets/img/audio.jpg" alt="">
+          <span class="label" style="color:var(--audio)">AUDIO</span>
+        </div>
+      </a>
 
-    <!-- STAGE -->
-    stage.html
-      <div class="card-hero">
-        assets/img/stage.jpg
-        <span class="label" style="color:var(--stage)">STAGE</span>
-      </div>
-    </a>
+      <!-- VISUAL -->
+      <a class="card" href="video.html">
+        <div class="card-hero">
+          <img src="assets/img/video.jpg" alt="">
+          <span class="label" style="color:var(--video)">VISUAL</span>
+        </div>
+      </a>
 
-    <!-- IT -->
-    it.html
-      <div class="card-hero">
-        assets/img/it.jpg
-        <span class="label" style="color:var(--it)">IT</span>
-      </div>
-    </a>
+      <!-- STAGE -->
+      <a class="card" href="stage.html">
+        <div class="card-hero">
+          <img src="assets/img/stage.jpg" alt="">
+          <span class="label" style="color:var(--stage)">STAGE</span>
+        </div>
+      </a>
 
-    <!-- APENDIKS -->
-    apendiks.html
-      <div class="card-hero">
-        assets/img/apendiks.jpg
-        <span class="label" style="color:var(--apendiks)">APENDIKS</span>
-      </div>
-    </a>
+      <!-- IT -->
+      <a class="card" href="it.html">
+        <div class="card-hero">
+          <img src="assets/img/it.jpg" alt="">
+          <span class="label" style="color:var(--it)">IT</span>
+        </div>
+      </a>
 
-  </section>
+      <!-- APENDIKS -->
+      <a class="card" href="apendiks.html">
+        <div class="card-hero">
+          <img src="assets/img/all.jpg" alt="">
+          <span class="label" style="color:var(--apendiks)">APENDIKS</span>
+        </div>
+      </a>
 
-  <footer>© 2026 — Disusun oleh Truna</footer>
+    </section>
 
-</main>
+    <footer>© 2026 — Disusun oleh Truna</footer>
 
-assets/theme.js?v=22</script>
+  </main>
+
+  <script src="assets/theme.js?v=22"></script>
 
 </body>
 </html>
+``
