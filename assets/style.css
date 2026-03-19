@@ -1,81 +1,198 @@
-/* ====== Theme ====== */
-:root{
-  --bg:#0b0f14;        /* background gelap */
-  --panel:#151a22;     /* panel/card */
-  --text:#e5e7eb;      /* teks utama */
-  --muted:#94a3b8;     /* teks sekunder */
-  --line:#253141;      /* garis/border */
-  --brand:#e5e7eb;     /* teks brand */
-  --accent:#22c55e;    /* aksen kecil */
-
-/* warna tim */
-  --audio:#a9cbea;
-  --video:#9ad7b5;
-  --stage:#f2c389;
+/* ---------- RESET ---------- */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-/* ====== Reset & Base ====== */
-*{box-sizing:border-box}
-html,body{margin:0;padding:0}
-body{
-  font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans",Arial,sans-serif;
-  color:var(--text); background:var(--bg);
+:root {
+  --bg: #0f1620;
+  --card: #1a2332cc;
+  --line: #2a3444;
+  --text: #dde6f4;
+
+  /* warna seksi */
+  --audio: #ffb84d;
+  --video: #4db7ff;
+  --stage: #da72ff;
 }
 
-/* ====== Layout ====== */
-.container{max-width:1100px;margin:0 auto;padding:24px 18px}
-.section{margin:22px 0}
+/* ---------- BODY ---------- */
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Inter", Arial, sans-serif;
+  padding-bottom: 60px;
+}
 
-/* ====== Navbar ====== */
-.navbar{
-  position:sticky; top:0; z-index:50;
-  background:rgba(11,15,20,.85); backdrop-filter:blur(8px);
-  border-bottom:1px solid var(--line);
+/* ---------- NAV ---------- */
+.navbar {
+  background: rgba(10, 15, 25, 0.65);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+  position: sticky;
+  top: 0;
+  z-index: 20;
 }
-.navbar-inner{max-width:1100px;margin:0 auto;padding:10px 14px;display:flex;align-items:center;gap:14px}
-.brand{font-weight:900; letter-spacing:.06em; color:var(--brand); text-decoration:none}
-.nav{margin-left:auto; display:flex; gap:8px; flex-wrap:wrap}
-.nav a{
-  text-decoration:none; color:var(--text);
-  padding:6px 10px; border:1px solid var(--line); border-radius:10px;
-  background:#0d131a; font-weight:700; font-size:14px;
-}
-.nav a.active{background:#111827; border-color:#334155}
-.nav a:hover{border-color:#3b495a}
 
-/* ====== Hero ====== */
-.hero-title{font-size:28px; font-weight:900; letter-spacing:.04em; margin:18px 0 4px}
-.hero-sub{color:var(--muted); font-weight:600; margin:0 0 16px}
+.navbar-inner {
+  max-width: 1000px;
+  margin: auto;
+  padding: 14px 20px;
 
-/* ====== Cards ====== */
-.grid{display:grid; grid-template-columns:repeat(1,minmax(0,1fr)); gap:16px}
-@media (min-width:720px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-.card{
-  background:var(--panel); border:1px solid var(--line); border-radius:14px;
-  overflow:hidden; box-shadow:0 8px 24px rgba(0,0,0,.25);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
-.card-hero{
-  position:relative; min-height:220px; display:flex; align-items:flex-end; padding:18px;
-  background:linear-gradient(180deg,rgba(0,0,0,.05),rgba(0,0,0,.45));
-  isolation:isolate;
-}
-.card-hero img{
-  position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:-1; filter:saturate(1.1);
-}
-.card-hero .label{
-  font-size:42px; font-weight:900; line-height:1; text-transform:lowercase; letter-spacing:.02em;
-  color:white; text-shadow:0 2px 12px rgba(0,0,0,.6);
-}
-.badge{display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border-radius:999px;
-  border:1px solid var(--line); background:#0f1620; font-weight:700; color:var(--text)}
-.badge.audio{border-color:#3a4e6a; background:rgba(169,203,234,.15)}
-.badge.video{border-color:#325a4b; background:rgba(154,215,181,.15)}
-.badge.stage{border-color:#5a4a32; background:rgba(242,195,137,.15)}
 
-/* ====== Tables (buat halaman detail & ringkasan) ====== */
-.table{width:100%; border-collapse:collapse}
-.table th,.table td{padding:10px 12px; border-top:1px solid var(--line); vertical-align:middle}
-.table th{color:var(--muted); font-weight:800; text-align:left}
+.brand {
+  font-size: 20px;
+  font-weight: 800;
+  text-decoration: none;
+  color: var(--text);
+}
 
-/* ====== Footer ====== */
-footer{margin:28px 0 10px; color:var(--muted); font-size:12px; text-align:center}
+.nav a {
+  margin-left: 16px;
+  font-weight: 600;
+  text-decoration: none;
+  color: #9ab3d5;
+  transition: 0.25s;
+}
+
+.nav a.active {
+  color: #ffffff;
+}
+
+.nav a:hover {
+  color: #fff;
+}
+
+/* ---------- CONTAINER ---------- */
+.container {
+  max-width: 1000px;
+  margin: auto;
+  padding: 20px;
+}
+
+/* ---------- HERO TITLE ---------- */
+.hero-title {
+  font-size: 46px;
+  font-weight: 900;
+  letter-spacing: -1px;
+}
+
+.hero-sub {
+  opacity: 0.6;
+  font-size: 18px;
+  margin-top: 4px;
+}
+
+/* ---------- HERO GRID ---------- */
+.hero-grid {
+  margin-top: 28px;
+  display: grid;
+  gap: 20px;
+}
+@media (min-width: 720px) {
+  .hero-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+.card-hero {
+  position: relative;
+  border-radius: 14px;
+  overflow: hidden;
+  min-height: 220px;
+
+  display: flex;
+  align-items: flex-end;
+
+  border: 1px solid var(--line);
+  background: var(--card);
+  box-shadow: 0 6px 20px #00000060;
+
+  transition: 0.35s ease;
+}
+
+.card-hero:hover {
+  transform: scale(1.02);
+  box-shadow: 0 10px 26px #00000080;
+}
+
+.card-hero img {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+
+  filter: brightness(0.7) saturate(1.1);
+  transition: .3s;
+}
+
+.card-hero:hover img {
+  filter: brightness(0.9) saturate(1.25);
+}
+
+/* Jika ingin label MUNCUL saat hover */
+.card-hero .label {
+  position: relative;
+  z-index: 2;
+  font-size: 42px;
+  font-weight: 900;
+  letter-spacing: .02em;
+  color: #fff;
+
+  opacity: 0;
+  transform: translateY(10px);
+  transition: .35s ease;
+}
+
+.card-hero:hover .label {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ---------- QUICK LINKS ---------- */
+.quick {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.quick a {
+  text-decoration: none;
+  color: var(--text);
+  padding: 6px 12px;
+  font-size: 13px;
+  font-weight: 700;
+
+  background: #18212ebb;
+  border: 1px solid #2c3b51;
+  border-radius: 999px;
+
+  transition: .25s ease;
+}
+
+.quick a:hover {
+  background: #253142;
+  border-color: #445469;
+}
+
+/* ---------- FOOTER ---------- */
+footer {
+  text-align: center;
+  opacity: 0.6;
+  margin-top: 40px;
+  font-size: 14px;
+}
+``
