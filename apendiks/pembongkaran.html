@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Apendiks — Pembongkaran</title>
+
+../assets/style.css
+
+<style>
+  .wrap { max-width:1000px; margin:auto; padding:24px; }
+  .title { font-size:36px; font-weight:900; margin-bottom:6px; }
+  .sub { opacity:.7; margin-bottom:24px; }
+
+  .grid {
+    display:grid;
+    gap:20px;
+    grid-template-columns:repeat(auto-fit, minmax(240px,1fr));
+  }
+
+  .cardx {
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:24px;
+    box-shadow:0 6px 20px #0005;
+    transition:.3s;
+  }
+  .cardx:hover { transform:scale(1.02); }
+
+  .cardx h3 {
+    font-weight:900;
+    margin-bottom:14px;
+  }
+
+  .audio { color:var(--audio); }
+  .visual { color:var(--video); }
+  .stage { color:var(--stage); }
+  .it { color:var(--it); }
+
+  .name { padding:6px 0; border-bottom:1px solid var(--line); }
+  .name[contenteditable]{ cursor:text; }
+</style>
+</head>
+
+<body>
+
+<div class="wrap">
+
+  <h1 class="title">Pembongkaran Acara</h1>
+  <p class="sub">Penataan ulang • Packing • Kabel • Peralatan</p>
+
+  <div class="grid">
+
+    <div class="cardx">
+      <h3 class="audio">Team Audio</h3>
+      <div class="name" contenteditable="true"></div>
+      <div class="name" contenteditable="true"></div>
+      <div class="name" contenteditable="true"></div>
+    </div>
+
+    <div class="cardx">
+      <h3 class="visual">Team Visual</h3>
+      <div class="name" contenteditable="true"></div>
+      <div class="name" contenteditable="true"></div>
+    </div>
+
+    <div class="cardx">
+      <h3 class="stage">Team Stage</h3>
+      <div class="name" contenteditable="true"></div>
+      <div class="name" contenteditable="true"></div>
+    </div>
+
+    <div class="cardx">
+      <h3 class="it">Team IT</h3>
+      <div class="name" contenteditable="true"></div>
+    </div>
+
+  </div>
+
+</div>
+
+</body>
+</html>
