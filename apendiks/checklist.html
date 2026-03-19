@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Apendiks — Checklist</title>
+
+../assets/style.css
+
+<style>
+  .wrap { max-width:1000px; margin:auto; padding:24px; }
+  .title { font-size:36px; font-weight:900; margin-bottom:8px; }
+  .sub { opacity:.7; margin-bottom:24px; }
+
+  .card {
+    background:var(--card);
+    border-radius:14px;
+    border:1px solid var(--line);
+    padding:20px;
+    margin-bottom:26px;
+    box-shadow:0 6px 20px #0005;
+  }
+
+  h3 { font-weight:900; margin-bottom:10px; }
+
+  .audio{color:var(--audio)}
+  .visual{color:var(--video)}
+  .stage{color:var(--stage)}
+  .it{color:var(--it)}
+
+  table{width:100%; border-collapse:collapse;}
+  th,td{
+    padding:10px 14px;
+    border-bottom:1px solid var(--line);
+  }
+  td[contenteditable]{ cursor:text; }
+</style>
+</head>
+
+<body>
+
+<div class="wrap">
+
+  <h1 class="title">Checklist Teknis</h1>
+  <p class="sub">Gabungan seluruh seksi</p>
+
+  <!-- AUDIO -->
+  <div class="card">
+    <h3 class="audio">Audio</h3>
+    <table>
+      <tr><th>Item</th><th>Status</th></tr>
+      <tr><td>Kabel Terpasang</td><td contenteditable="true"></td></tr>
+      <tr><td>Speaker Test</td><td contenteditable="true"></td></tr>
+      <tr><td>Mixer Ready</td><td contenteditable="true"></td></tr>
+    </table>
+  </div>
+
+  <!-- VISUAL -->
+  <div class="card">
+    <h3 class="visual">Visual</h3>
+    <table>
+      <tr><th>Item</th><th>Status</th></tr>
+      <tr><td>Kamera Ready</td><td contenteditable="true"></td></tr>
+      <tr><td>Switching OK</td><td contenteditable="true"></td></tr>
+    </table>
+  </div>
+
+  <!-- STAGE -->
+  <div class="card">
+    <h3 class="stage">Stage</h3>
+    <table>
+      <tr><th>Item</th><th>Status</th></tr>
+      <tr><td>Lighting On</td><td contenteditable="true"></td></tr>
+      <tr><td>Backdrop</td><td contenteditable="true"></td></tr>
+    </table>
+  </div>
+
+  <!-- IT -->
+  <div class="card">
+    <h3 class="it">IT</h3>
+    <table>
+      <tr><th>Item</th><th>Status</th></tr>
+      <tr><td>Jaringan Stabil</td><td contenteditable="true"></td></tr>
+      <tr><td>PC Ready</td><td contenteditable="true"></td></tr>
+    </table>
+  </div>
+
+</div>
+
+</body>
+</html>
