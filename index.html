@@ -1,115 +1,43 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Panduan Teknis — Home</title>
-  <link rel="stylesheet" href="assets/style.css" />
-  <style>
-    /* grid hero */
-    .hero-grid{display:grid;grid-template-columns:repeat(1,minmax(0,1fr));gap:16px}
-    @media (min-width:720px){.hero-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-    .card{display:block;text-decoration:none;color:inherit}
-    .card-hero{position:relative;min-height:220px;display:flex;align-items:flex-end;padding:18px;background:linear-gradient(180deg,rgba(0,0,0,.05),rgba(0,0,0,.45));isolation:isolate;border-radius:14px;border:1px solid var(--line);overflow:hidden}
-    .card-hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-1;filter:saturate(1.1)}
-    .card-hero .label{font-size:42px;font-weight:900;line-height:1;letter-spacing:.02em;color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.6)}
-    /* quick links per-seksi */
-    .quick{margin-top:10px;display:flex;flex-wrap:wrap;gap:8px}
-    .quick a{text-decoration:none;color:var(--text);padding:6px 10px;border:1px solid var(--line);border-radius:999px;background:#0f1620;font-weight:700;font-size:13px}
-    .quick a:hover{border-color:#3b495a}
-  </style>
-</head>
-<body>
-  <!-- NAV -->
-  <div class="navbar">
-    <div class="navbar-inner">
-      <a class="brand" href="index.html">PANDUAN TEKNIS</a>
-      <nav class="nav">
-        <a class="active" href="index.html">Home</a>
-        <a href="audio.html">Audio</a>
-        <a href="video.html">Video</a>
-        <a href="stage.html">Stage</a>
-        <a href="allteam.html">All</a>
-        <a href="it.html">IT</a>
-      </nav>
+<section class="hero-grid">
+
+  <!-- AUDIO -->
+  <a class="card" href="audio.html" aria-label="Buka halaman Audio">
+    <div class="card-hero">
+      <img src="assets/img/audio.jpg" alt="" />
+      <!-- label dihapus -->
     </div>
-  </div>
+  </a>
 
-  <main class="container">
-    <!-- Header -->
-    <section class="section">
-      <h1 class="hero-title">PANDUAN TEKNIS</h1>
-      <p class="hero-sub">Tim Audio • Video • Stage • IT</p>
-    </section>
+  <!-- VIDEO -->
+  <a class="card" href="video.html" aria-label="Buka halaman Video">
+    <div class="card-hero">
+      <img src="assets/img/video.jpg" alt="" />
+      <!-- label dihapus -->
+    </div>
+  </a>
 
-    <!-- Kartu hero -->
-    <section class="hero-grid">
-      <!-- AUDIO -->
-      <a class="card" href="audio.html" aria-label="Buka halaman Audio">
-        <div class="card-hero">
-          <img src="assets/img/audio.jpg" alt="" />
-          <span class="label" style="color:var(--audio)">audio</span>
-        </div>
-      </a>
+  <!-- STAGE -->
+  <a class="card" href="stage.html" aria-label="Buka halaman Stage">
+    <div class="card-hero">
+      <img src="assets/img/stage.jpg" alt="" />
+      <!-- label dihapus -->
+    </div>
+  </a>
 
-      <!-- VIDEO -->
-      <a class="card" href="video.html" aria-label="Buka halaman Video">
-        <div class="card-hero">
-          <img src="assets/img/video.jpg" alt="" />
-          <span class="label" style="color:var(--video)">video</span>
-        </div>
-      </a>
+  <!-- ALL -->
+  <a class="card" href="allteam.html" aria-label="Buka ringkasan All">
+    <div class="card-hero">
+      <img src="assets/img/all.jpg" alt="" />
+      <!-- label dihapus -->
+    </div>
+  </a>
 
-      <!-- STAGE -->
-      <a class="card" href="stage.html" aria-label="Buka halaman Stage">
-        <div class="card-hero">
-          <img src="assets/img/stage.jpg" alt="" />
-          <span class="label" style="color:var(--stage)">stage</span>
-        </div>
-      </a>
+  <!-- IT -->
+  <a class="card" href="it.html" aria-label="Buka halaman IT">
+    <div class="card-hero">
+      <img src="assets/img/it.jpg" alt="" />
+      <!-- label dihapus -->
+    </div>
+  </a>
 
-      <!-- ALL -->
-      <a class="card" href="allteam.html" aria-label="Buka ringkasan All">
-        <div class="card-hero">
-          <img src="assets/img/all.jpg" alt="" />
-          <span class="label">ringkasan</span>
-        </div>
-      </a>
-
-      <!-- IT -->
-      <a class="card" href="it.html" aria-label="Buka halaman IT">
-        <div class="card-hero">
-          <img src="assets/img/it.jpg" alt="" />
-          <span class="label">IT</span>
-        </div>
-      </a>
-    </section>
-
-    <!-- Quick links per-seksi (Audio & Video) -->
-    <section class="section">
-      <div class="card" style="padding:16px">
-        <h3 style="margin:0 0 10px">Akses cepat per‑seksi</h3>
-
-        <p class="hero-sub" style="margin:0 0 6px">Audio</p>
-        <div class="quick">
-          <a href="audio/booth.html">Booth</a>
-          <a href="audio/kabel.html">Kabel</a>
-          <a href="audio/speaker.html">Speaker</a>
-          <a href="audio/inventaris.html">Inventaris</a>
-        </div>
-
-        <p class="hero-sub" style="margin:12px 0 6px">Video</p>
-        <div class="quick">
-          <a href="video/booth.html">Booth</a>
-          <a href="video/kamera.html">Kamera</a>
-          <a href="video/tv.html">TV</a>
-          <a href="video/videotron.html">Videotron</a>
-          <a href="video/inventaris.html">Inventaris</a>
-        </div>
-      </div>
-    </section>
-
-    <footer>© 2026 — Disusun oleh Truna</footer>
-  </main>
-</body>
-</html>
+</section>
