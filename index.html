@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Panduan Teknis — Home</title>
 
-  <link rel="stylesheet" href="assets/style.css?v=7">
+  <link rel="stylesheet" href="assets/style.css?v=8" />
 
   <style>
     /* grid hero */
@@ -26,20 +26,22 @@
       text-decoration: none;
       color: inherit;
     }
+
     .card-hero {
       position: relative;
       min-height: 220px;
       display: flex;
       align-items: flex-end;
       padding: 18px;
-      background: linear-gradient(180deg,rgba(0,0,0,.05),rgba(0,0,0,.45));
-      isolation: isolate;
       border-radius: 14px;
-      border: 1px solid var(--line);
       overflow: hidden;
-      transition: .3s ease;
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg,rgba(0,0,0,.05),rgba(0,0,0,.45));
+      transition: 0.3s;
     }
-    .card-hero:hover { transform: scale(1.02); }
+    .card-hero:hover {
+      transform: scale(1.02);
+    }
 
     .card-hero img {
       position: absolute;
@@ -48,21 +50,21 @@
       height: 100%;
       object-fit: cover;
       z-index: -1;
-      filter: saturate(1.1) brightness(.8);
-      transition: .3s ease;
+      filter: brightness(.8) saturate(1.1);
+      transition: 0.3s;
     }
     .card-hero:hover img {
-      filter: saturate(1.2) brightness(1);
+      filter: brightness(1) saturate(1.2);
     }
 
-    .card-hero .label {
+    .label {
       font-size: 40px;
       font-weight: 900;
-      color: #fff;
+      color: white;
       text-shadow: 0 2px 12px rgba(0,0,0,.6);
       opacity: 0;
-      transform: translateY(12px);
-      transition: .35s ease;
+      transform: translateY(10px);
+      transition: 0.3s ease;
     }
     .card-hero:hover .label {
       opacity: 1;
@@ -81,11 +83,11 @@
 
       <nav class="nav">
         <a class="active" href="./">Home</a>
-        <a href="./audio.html">Audio</a>
-        <a href="./video.html">Video</a>
-        <a href="./stage.html">Stage</a>
-        <a href="./it.html">IT</a>
-        <a href="./apendiks.html">Apendiks</a>
+        <a href="audio.html">Audio</a>
+        <a href="video.html">Video</a>
+        <a href="stage.html">Stage</a>
+        <a href="it.html">IT</a>
+        <a href="apendiks.html">Apendiks</a>
 
         <button id="themeBtn" class="theme-toggle">Dark</button>
       </nav>
@@ -95,7 +97,6 @@
 
   <main class="container">
 
-    <!-- Header -->
     <section>
       <h1 class="hero-title">PANDUAN TEKNIS</h1>
       <p class="hero-sub">Tim Audio • Video • Stage • IT</p>
@@ -107,7 +108,7 @@
       <!-- AUDIO -->
       <a class="card" href="audio.html">
         <div class="card-hero">
- assets/img/audio.jpg
+          <img src="assets/img/audio.jpg" alt="Audio" />
           <span class="label" style="color:var(--audio)">AUDIO</span>
         </div>
       </a>
@@ -115,7 +116,7 @@
       <!-- VIDEO -->
       <a class="card" href="video.html">
         <div class="card-hero">
- assets/img/video.jpg
+          <img src="assets/img/video.jpg" alt="Video" />
           <span class="label" style="color:var(--video)">VIDEO</span>
         </div>
       </a>
@@ -123,7 +124,7 @@
       <!-- STAGE -->
       <a class="card" href="stage.html">
         <div class="card-hero">
- assets/img/stage.jpg
+          <img src="assets/img/stage.jpg" alt="Stage" />
           <span class="label" style="color:var(--stage)">STAGE</span>
         </div>
       </a>
@@ -131,15 +132,15 @@
       <!-- IT -->
       <a class="card" href="it.html">
         <div class="card-hero">
- assets/img/it.jpg
+          <img src="assets/img/it.jpg" alt="IT" />
           <span class="label">IT</span>
         </div>
       </a>
 
-      <!-- APENDIKS (NEW) -->
+      <!-- APENDIKS -->
       <a class="card" href="apendiks.html">
         <div class="card-hero">
- assets/img/all.jpg
+          <img src="assets/img/all.jpg" alt="Apendiks" />
           <span class="label">APENDIKS</span>
         </div>
       </a>
@@ -147,10 +148,9 @@
     </section>
 
     <footer>© 2026 — Disusun oleh Truna</footer>
-
   </main>
 
   <script src="assets/theme.js"></script>
-
 </body>
 </html>
+``
