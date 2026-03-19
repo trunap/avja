@@ -1,38 +1,133 @@
-<section class="hero-grid">
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Panduan Teknis — Home</title>
 
-  <!-- AUDIO -->
-  audio.html
-      <img src="assets/img/audio.jpg" alt="">
-      <span class="label" style="color:var(--audio)">AUDIO</span>
+  <!-- CSS utama -->
+  <link rel="stylesheet" href="assets/style.css?v=4">
+
+  <style>
+    /* Tombol Toggle */
+    .theme-toggle {
+      cursor: pointer;
+      background: var(--card);
+      border: 1px solid var(--line);
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+      transition: .25s;
+      margin-left: 14px;
+    }
+    .theme-toggle:hover {
+      background: #2c3a4d;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- NAV -->
+  <div class="navbar">
+    <div class="navbar-inner">
+
+      <a class="brand" href="index.html">PANDUAN TEKNIS</a>
+
+      <nav class="nav">
+        <a class="active" href="index.html">Home</a>
+        <a href="audio.html">Audio</a>
+        <a href="video.html">Video</a>
+        <a href="stage.html">Stage</a>
+        <a href="it.html">IT</a>
+        <a href="allteam.html">All</a>
+
+        <!-- Tombol Light/Dark -->
+        <button id="themeBtn" class="theme-toggle">🌙 Dark</button>
+      </nav>
+
     </div>
-  </a>
+  </div>
 
-  <!-- VIDEO -->
-  video.html
-      <img src="assets/img/video.jpg" alt="">
-      <span class="label" style="color:var(--video)">VIDEO</span>
-    </div>
-  </a>
+  <main class="container">
 
-  <!-- STAGE -->
-  stage.html
-      <img src="assets/img/stage.jpg" alt="">
-      <span class="label" style="color:var(--stage)">STAGE</span>
-    </div>
-  </a>
+    <!-- Header -->
+    <section class="section">
+      <h1 class="hero-title">PANDUAN TEKNIS</h1>
+      <p class="hero-sub">Tim Audio • Video • Stage • IT</p>
+    </section>
 
-  <!-- ALL -->
-  allteam.html
-      <img src="assets/img/all.jpg" alt="">
-      <span class="label">RINGKASAN</span>
-    </div>
-  </a>
+    <!-- Hero Card -->
+    <section class="hero-grid">
 
-  <!-- IT -->
-  it.html
-      <img src="assets/img/it.jpg" alt="">
-      <span class="label">IT</span>
-    </div>
-  </a>
+      <!-- AUDIO -->
+      <a class="card" href="audio.html">
+        <div class="card-hero">
+          <img src="assets/img/audio.jpg" alt="">
+          <span class="label" style="color:var(--audio)">AUDIO</span>
+        </div>
+      </a>
 
-</section>
+      <!-- VIDEO -->
+      <a class="card" href="video.html">
+        <div class="card-hero">
+          <img src="assets/img/video.jpg" alt="">
+          <span class="label" style="color:var(--video)">VIDEO</span>
+        </div>
+      </a>
+
+      <!-- STAGE -->
+      <a class="card" href="stage.html">
+        <div class="card-hero">
+          <img src="assets/img/stage.jpg" alt="">
+          <span class="label" style="color:var(--stage)">STAGE</span>
+        </div>
+      </a>
+
+      <!-- ALL -->
+      <a class="card" href="allteam.html">
+        <div class="card-hero">
+          <img src="assets/img/all.jpg" alt="">
+          <span class="label">RINGKASAN</span>
+        </div>
+      </a>
+
+      <!-- IT -->
+      <a class="card" href="it.html">
+        <div class="card-hero">
+          <img src="assets/img/it.jpg" alt="">
+          <span class="label">IT</span>
+        </div>
+      </a>
+
+    </section>
+
+    <!-- Footer -->
+    <footer>© 2026 — Disusun oleh Truna</footer>
+
+  </main>
+
+  <!-- Script Toggle Tema -->
+  <script>
+    const btn = document.getElementById("themeBtn");
+    const saved = localStorage.getItem("theme");
+
+    if (saved === "light") {
+      document.body.classList.add("light");
+      btn.textContent = "🌞 Light";
+    }
+
+    btn.addEventListener("click", () => {
+      document.body.classList.toggle("light");
+
+      const isLight = document.body.classList.contains("light");
+      btn.textContent = isLight ? "🌞 Light" : "🌙 Dark";
+      localStorage.setItem("theme", isLight ? "light" : "dark");
+    });
+  </script>
+
+</body>
+</html>
+``
