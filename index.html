@@ -5,61 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Panduan Teknis — Home</title>
 
-  <link rel="stylesheet" href="assets/style.css?v=12">
-
-  <style>
-    .hero-grid {
-      display: grid;
-      grid-template-columns: repeat(1, minmax(0, 1fr));
-      gap: 20px;
-      margin-top: 20px;
-    }
-    @media (min-width:720px){
-      .hero-grid { grid-template-columns: repeat(2, 1fr); }
-    }
-
-    .card { text-decoration: none; color: inherit; }
-
-    .card-hero {
-      position: relative;
-      min-height: 220px;
-      display: flex;
-      align-items: flex-end;
-      padding: 18px;
-      border-radius: 14px;
-      border: 1px solid var(--line);
-      background: var(--card);
-      overflow: hidden;
-      transition: .3s;
-    }
-    .card-hero:hover { transform: scale(1.02); }
-
-    .card-hero img {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      filter: brightness(.75) saturate(1.1);
-      transition: .3s;
-    }
-    .card-hero:hover img { filter: brightness(1) saturate(1.25); }
-
-    .label {
-      z-index: 2;
-      font-size: 42px;
-      font-weight: 900;
-      color: white;
-      opacity: 0;
-      transform: translateY(12px);
-      transition: .35s;
-      text-shadow: 0 2px 12px rgba(0,0,0,.6);
-    }
-    .card-hero:hover .label {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  </style>
+  <link rel="stylesheet" href="assets/style.css?v=20">
 </head>
 
 <body>
@@ -78,6 +24,7 @@
         <a href="it.html">IT</a>
         <a href="apendiks.html">Apendiks</a>
 
+        <!-- Modern Dark/Light Button -->
         <button id="themeBtn" class="theme-toggle">🌙 Dark</button>
       </nav>
 
@@ -91,13 +38,13 @@
       <p class="hero-sub">Tim Audio • Video • Stage • IT</p>
     </section>
 
-    <!-- HERO GRID -->
+    <!-- GRID MENU -->
     <section class="hero-grid">
 
       <!-- AUDIO -->
       <a class="card" href="audio.html">
         <div class="card-hero">
-          <img src="assets/img/audio.jpg">
+          <img src="assets/img/audio.jpg" alt="Audio">
           <span class="label" style="color:var(--audio)">AUDIO</span>
         </div>
       </a>
@@ -105,7 +52,7 @@
       <!-- VIDEO -->
       <a class="card" href="video.html">
         <div class="card-hero">
-          <img src="assets/img/video.jpg">
+          <img src="assets/img/video.jpg" alt="Video">
           <span class="label" style="color:var(--video)">VIDEO</span>
         </div>
       </a>
@@ -113,7 +60,7 @@
       <!-- STAGE -->
       <a class="card" href="stage.html">
         <div class="card-hero">
-          <img src="assets/img/stage.jpg">
+          <img src="assets/img/stage.jpg" alt="Stage">
           <span class="label" style="color:var(--stage)">STAGE</span>
         </div>
       </a>
@@ -121,29 +68,11 @@
       <!-- IT -->
       <a class="card" href="it.html">
         <div class="card-hero">
-          <img src="assets/img/it.jpg">
-          <span class="label">IT</span>
-        </div>
-      </a>
-
-      <!-- APENDIKS -->
-      <a class="card" href="apendiks.html">
-        <div class="card-hero">
-          <img src="assets/img/apendiks.jpg">
-          <span class="label">APENDIKS</span>
-        </div>
-      </a>
-
-    </section>
-
-    <footer>© 2026 — Disusun oleh Truna</footer>
+          <n oleh Truna</footer>
 
   </main>
 
-  <!-- ✅ FIXED JAVASCRIPT -->
-  <script src="assets/theme.js"></script>
+  <script src="assets/theme.js?v=20"></script>
 
 </body>
 </html>
-``
-<script src="assets/theme.js"></script>
