@@ -1,25 +1,27 @@
 const btn = document.getElementById("themeBtn");
 const saved = localStorage.getItem("theme");
 
-function updateButton() {
+/* Update UI text/icon */
+function updateToggleUI() {
   if (document.body.classList.contains("light")) {
-    btn.innerHTML = "☀️ Light";
+    btn.textContent = "☀️ Light";
   } else {
-    btn.innerHTML = "🌙 Dark";
+    btn.textContent = "🌙 Dark";
   }
 }
 
+/* Apply saved mode */
 if (saved === "light") {
   document.body.classList.add("light");
 }
+updateToggleUI();
 
-updateButton();
-
+/* Toggle mode */
 btn.addEventListener("click", () => {
   document.body.classList.toggle("light");
 
-  const mode = document.body.classList.contains("light") ? "light" : "dark";
-  localStorage.setItem("theme", mode);
+  const newMode = document.body.classList.contains("light") ? "light" : "dark";
+  localStorage.setItem("theme", newMode);
 
-  updateButton();
+  updateToggleUI();
 });
