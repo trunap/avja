@@ -195,4 +195,27 @@ footer {
   margin-top: 40px;
   font-size: 14px;
 }
+
+/* ============= LIGHT MODE ============= */
+body.light {
+  --bg: #f4f7fb;
+  --card: #ffffffdd;
+  --line: #ccd4e1;
+  --text: #1b2533;
+}
+
+body.light .navbar {
+  background: rgba(255,255,255,0.7);
+  border-bottom: 1px solid #d5ddea;
+}
+
+body.light .card-hero img {
+  filter: brightness(1) saturate(1.1);
+}
+
+body.light .theme-toggle {
+  background: #e3e8f0;
+  color: #1b2533;
+  border-color: #b4c0d3;
+}
 ``
