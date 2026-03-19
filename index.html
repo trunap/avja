@@ -1,51 +1,92 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Panduan Teknis — Home</title>
 
-  <!-- CSS utama -->
-  <link rel="stylesheet" href="assets/style.css?v=5">
+  <link rel="stylesheet" href="assets/style.css?v=7">
 
   <style>
-    /* Tombol Toggle */
-    .theme-toggle {
-      cursor: pointer;
-      background: var(--card);
-      border: 1px solid var(--line);
-      padding: 6px 14px;
-      border-radius: 999px;
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--text);
-      transition: .25s;
-      margin-left: 14px;
+    /* grid hero */
+    .hero-grid {
+      display: grid;
+      grid-template-columns: repeat(1, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 20px;
     }
-    .theme-toggle:hover {
-      background: #2c3a4d;
+    @media (min-width:720px){
+      .hero-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    .card {
+      display: block;
+      text-decoration: none;
+      color: inherit;
+    }
+    .card-hero {
+      position: relative;
+      min-height: 220px;
+      display: flex;
+      align-items: flex-end;
+      padding: 18px;
+      background: linear-gradient(180deg,rgba(0,0,0,.05),rgba(0,0,0,.45));
+      isolation: isolate;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      overflow: hidden;
+      transition: .3s ease;
+    }
+    .card-hero:hover { transform: scale(1.02); }
+
+    .card-hero img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -1;
+      filter: saturate(1.1) brightness(.8);
+      transition: .3s ease;
+    }
+    .card-hero:hover img {
+      filter: saturate(1.2) brightness(1);
+    }
+
+    .card-hero .label {
+      font-size: 40px;
+      font-weight: 900;
+      color: #fff;
+      text-shadow: 0 2px 12px rgba(0,0,0,.6);
+      opacity: 0;
+      transform: translateY(12px);
+      transition: .35s ease;
+    }
+    .card-hero:hover .label {
+      opacity: 1;
+      transform: translateY(0);
     }
   </style>
 </head>
 
 <body>
 
-  <!-- NAV -->
+  <!-- NAVBAR -->
   <div class="navbar">
     <div class="navbar-inner">
 
-      <a class="brand" href="index.html">PANDUAN TEKNIS</a>
+      <a class="brand" href="./">PANDUAN TEKNIS</a>
 
       <nav class="nav">
-        <a class="active" href="index.html">Home</a>
-        <a href="audio.html">Audio</a>
-        <a href="video.html">Video</a>
-        <a href="stage.html">Stage</a>
-        <a href="it.html">IT</a>
-        <a href="allteam.html">All</a>
+        <a class="active" href="./">Home</a>
+        <a href="./audio.html">Audio</a>
+        <a href="./video.html">Video</a>
+        <a href="./stage.html">Stage</a>
+        <a href="./it.html">IT</a>
+        <a href="./apendiks.html">Apendiks</a>
 
-        <!-- Toggle Tema -->
         <button id="themeBtn" class="theme-toggle">Dark</button>
       </nav>
 
@@ -55,46 +96,51 @@
   <main class="container">
 
     <!-- Header -->
-    <section class="section">
+    <section>
       <h1 class="hero-title">PANDUAN TEKNIS</h1>
       <p class="hero-sub">Tim Audio • Video • Stage • IT</p>
     </section>
 
-    <!-- Hero Grid -->
+    <!-- HERO GRID -->
     <section class="hero-grid">
 
+      <!-- AUDIO -->
       <a class="card" href="audio.html">
         <div class="card-hero">
-          <img src="assets/img/audio.jpg" alt="">
+ assets/img/audio.jpg
           <span class="label" style="color:var(--audio)">AUDIO</span>
         </div>
       </a>
 
+      <!-- VIDEO -->
       <a class="card" href="video.html">
         <div class="card-hero">
-          <img src="assets/img/video.jpg" alt="">
+ assets/img/video.jpg
           <span class="label" style="color:var(--video)">VIDEO</span>
         </div>
       </a>
 
+      <!-- STAGE -->
       <a class="card" href="stage.html">
         <div class="card-hero">
-          <img src="assets/img/stage.jpg" alt="">
+ assets/img/stage.jpg
           <span class="label" style="color:var(--stage)">STAGE</span>
         </div>
       </a>
 
-      <a class="card" href="allteam.html">
+      <!-- IT -->
+      <a class="card" href="it.html">
         <div class="card-hero">
-          <img src="assets/img/all.jpg" alt="">
-          <span class="label">RINGKASAN</span>
+ assets/img/it.jpg
+          <span class="label">IT</span>
         </div>
       </a>
 
-      <a class="card" href="it.html">
+      <!-- APENDIKS (NEW) -->
+      <a class="card" href="apendiks.html">
         <div class="card-hero">
-          <img src="assets/img/it.jpg" alt="">
-          <span class="label">IT</span>
+ assets/img/all.jpg
+          <span class="label">APENDIKS</span>
         </div>
       </a>
 
@@ -104,24 +150,7 @@
 
   </main>
 
-  <!-- Script Toggle Tema -->
-  <script>
-    const btn = document.getElementById("themeBtn");
-    const saved = localStorage.getItem("theme");
-
-    if (saved === "light") {
-      document.body.classList.add("light");
-      btn.textContent = "Light";
-    }
-
-    btn.addEventListener("click", () => {
-      document.body.classList.toggle("light");
-
-      const isLight = document.body.classList.contains("light");
-      btn.textContent = isLight ? "Light" : "Dark";
-      localStorage.setItem("theme", isLight ? "light" : "dark");
-    });
-  </script>
+  <script src="assets/theme.js"></script>
 
 </body>
 </html>
