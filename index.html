@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
   <title>Panduan Teknis — Home</title>
 
   <!-- CSS utama -->
-  <link rel="stylesheet" href="assets/style.css?v=4">
+  <link rel="stylesheet" href="assets/style.css?v=5">
 
   <style>
     /* Tombol Toggle */
@@ -44,8 +45,8 @@
         <a href="it.html">IT</a>
         <a href="allteam.html">All</a>
 
-        <!-- Tombol Light/Dark -->
-        <button id="themeBtn" class="theme-toggle">🌙 Dark</button>
+        <!-- Toggle Tema -->
+        <button id="themeBtn" class="theme-toggle">Dark</button>
       </nav>
 
     </div>
@@ -59,10 +60,9 @@
       <p class="hero-sub">Tim Audio • Video • Stage • IT</p>
     </section>
 
-    <!-- Hero Card -->
+    <!-- Hero Grid -->
     <section class="hero-grid">
 
-      <!-- AUDIO -->
       <a class="card" href="audio.html">
         <div class="card-hero">
           <img src="assets/img/audio.jpg" alt="">
@@ -70,7 +70,6 @@
         </div>
       </a>
 
-      <!-- VIDEO -->
       <a class="card" href="video.html">
         <div class="card-hero">
           <img src="assets/img/video.jpg" alt="">
@@ -78,7 +77,6 @@
         </div>
       </a>
 
-      <!-- STAGE -->
       <a class="card" href="stage.html">
         <div class="card-hero">
           <img src="assets/img/stage.jpg" alt="">
@@ -86,7 +84,6 @@
         </div>
       </a>
 
-      <!-- ALL -->
       <a class="card" href="allteam.html">
         <div class="card-hero">
           <img src="assets/img/all.jpg" alt="">
@@ -94,7 +91,6 @@
         </div>
       </a>
 
-      <!-- IT -->
       <a class="card" href="it.html">
         <div class="card-hero">
           <img src="assets/img/it.jpg" alt="">
@@ -104,7 +100,6 @@
 
     </section>
 
-    <!-- Footer -->
     <footer>© 2026 — Disusun oleh Truna</footer>
 
   </main>
@@ -116,18 +111,17 @@
 
     if (saved === "light") {
       document.body.classList.add("light");
-      btn.textContent = "🌞 Light";
+      btn.textContent = "Light";
     }
 
     btn.addEventListener("click", () => {
       document.body.classList.toggle("light");
 
       const isLight = document.body.classList.contains("light");
-      btn.textContent = isLight ? "🌞 Light" : "🌙 Dark";
+      btn.textContent = isLight ? "Light" : "Dark";
       localStorage.setItem("theme", isLight ? "light" : "dark");
     });
   </script>
 
 </body>
 </html>
-``
