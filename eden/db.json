@@ -1,0 +1,16 @@
+[
+  {
+    "id": "kamera",
+    "title": "KAMERA",
+    "image": "kamera.jpg",
+    "deskripsi": "Daftar kamera untuk Regional Convention 2026.",
+    "items": ["Canon EOS 1200D", "Sony NX100", "Handycam"]
+  },
+  {
+    "id": "kabel",
+    "title": "KABEL",
+    "image": "kabel.jpg",
+    "deskripsi": "Semua jenis kabel SDI, HDMI, dan XLR.",
+    "items": ["SDI 50m", "HDMI 10m", "Converter"]
+  }
+]
