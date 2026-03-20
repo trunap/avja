@@ -8,20 +8,19 @@
   <link rel="stylesheet" href="../assets/style.css?v=1">
 
   <style>
-    /* ============================
-       PREMIUM ADDITIONAL STYLING
-       — matches the main website —
-    ============================ */
+    /* ======================
+       PREMIUM PAGE STYLING
+    ====================== */
 
     .wrap {
       max-width: 1050px;
       margin: auto;
       padding: 32px 20px;
-      animation: fadeIn 0.5s ease;
+      animation: fadeIn .4s ease;
     }
 
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
+      from { opacity: 0; transform: translateY(8px); }
       to   { opacity: 1; transform: translateY(0); }
     }
 
@@ -29,7 +28,6 @@
       font-size: 42px;
       font-weight: 900;
       letter-spacing: -1px;
-      margin-bottom: 6px;
     }
 
     .ap-sub {
@@ -38,59 +36,51 @@
       font-size: 15px;
     }
 
-    /* TEAM CARD PREMIUM */
+    /* MAIN CARD */
     .team-card {
       background: var(--card);
-      border: 1px solid var(--line);
       border-radius: 18px;
       padding: 26px;
       margin-bottom: 34px;
-
-      /* elevation */
+      border: 1px solid var(--line);
       box-shadow: 0 8px 26px rgba(0,0,0,0.45);
-
-      /* glassy */
       backdrop-filter: blur(6px);
-      -webkit-backdrop-filter: blur(6px);
-
-      transition: 0.28s ease;
+      transition: .28s ease;
     }
-
     .team-card:hover {
       transform: translateY(-3px);
       box-shadow: 0 12px 32px rgba(0,0,0,0.55);
     }
 
-    /* TITLE STYLE */
+    /* HEAD */
     .team-head {
       font-size: 22px;
       font-weight: 900;
       margin-bottom: 18px;
       padding-bottom: 12px;
       border-bottom: 1px solid var(--line);
-
       display: flex;
       align-items: center;
       gap: 10px;
     }
 
-    /* Head Icons */
+    /* Sexy icons */
     .head-icon {
-      font-size: 20px;
-      opacity: .85;
+      font-size: 22px;
+      opacity: .9;
     }
 
     /* Colors */
     .audio-head { color: var(--audio); }
-    .visual-head { color: var(--video); }
+    .video-head { color: var(--video); }
     .stage-head { color: var(--stage); }
-    .it-head { color: var(--it); }
+    .it-head    { color: var(--it); }
 
     /* SUBGRID */
     .subgrid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
       gap: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     }
 
     /* SUBCARD */
@@ -98,15 +88,13 @@
       background: var(--bg);
       border: 1px solid var(--line);
       border-radius: 14px;
-      padding: 16px 20px;
-      transition: .25s ease;
+      padding: 18px;
+      transition: .25s;
       box-shadow: 0 4px 14px rgba(0,0,0,0.3);
     }
-
     .subcard:hover {
-      border-color: var(--text);
-      background: rgba(255,255,255,0.06);
       transform: translateY(-2px);
+      background: rgba(255,255,255,0.07);
     }
 
     .subcard-title {
@@ -114,8 +102,8 @@
       margin-bottom: 12px;
       font-size: 15px;
       opacity: .95;
-      letter-spacing: .3px;
       text-transform: uppercase;
+      letter-spacing: .3px;
     }
 
     /* NAME LIST */
@@ -132,18 +120,35 @@
 
     .name[contenteditable] {
       cursor: text;
-      transition: .2s;
       border-radius: 6px;
+      transition: .2s ease;
     }
-
     .name[contenteditable]:hover {
       background: rgba(255,255,255,0.05);
     }
-
     .name[contenteditable]:focus {
       outline: 2px solid #facc15;
       background: rgba(255,255,200,0.16);
     }
+
+    /* ✅ KAPTEN (neutral formal badge) */
+    .captain {
+      background: rgba(255,215,0,0.12);
+      border-left: 3px solid #FFD700;
+      font-weight: 800 !important;
+      color: #FFD700;
+      padding-left: 8px !important;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .captain::before {
+      content: "🎖️";
+      font-size: 15px;
+      opacity: .95;
+    }
+
   </style>
 
 </head>
@@ -155,40 +160,37 @@
   <h1 class="ap-title">Persiapan Acara</h1>
   <p class="ap-sub">Instalasi • Pemanasan • Setup Area</p>
 
-  <!-- =======================
-       TEAM AUDIO
-     ======================= -->
+  <!-- ================= AUDIO ================= -->
   <div class="team-card">
     <div class="team-head audio-head">
-      <span class="head-icon">🎚️</span>
-      Team Audio
+      <span class="head-icon">🎚️</span> Audio
     </div>
 
     <div class="subgrid">
 
       <div class="subcard">
         <div class="subcard-title">Inventaris</div>
-        <div class="name" contenteditable="true">Peni</div>
+        <div class="name captain" contenteditable="true">Peni</div>
         <div class="name" contenteditable="true">Sarah</div>
         <div class="name" contenteditable="true">Emma</div>
       </div>
 
       <div class="subcard">
         <div class="subcard-title">Booth</div>
-        <div class="name" contenteditable="true">Truna</div>
+        <div class="name captain" contenteditable="true">Truna</div>
         <div class="name" contenteditable="true">Evan</div>
       </div>
 
       <div class="subcard">
         <div class="subcard-title">Kabel</div>
-        <div class="name" contenteditable="true">Anggid</div>
+        <div class="name captain" contenteditable="true">Anggid</div>
         <div class="name" contenteditable="true">Vina</div>
         <div class="name" contenteditable="true">Yonna</div>
       </div>
 
       <div class="subcard">
         <div class="subcard-title">Speaker</div>
-        <div class="name" contenteditable="true">Malkhiel</div>
+        <div class="name captain" contenteditable="true">Malkhiel</div>
         <div class="name" contenteditable="true">Surya</div>
         <div class="name" contenteditable="true">Edo</div>
         <div class="name" contenteditable="true">Rian</div>
@@ -198,74 +200,70 @@
     </div>
   </div>
 
-  <!-- =======================
-       TEAM VISUAL
-     ======================= -->
+
+  <!-- ================= VIDEO ================= -->
   <div class="team-card">
-    <div class="team-head visual-head">
-      <span class="head-icon">🎥</span>
-      Team Visual
+    <div class="team-head video-head">
+      <span class="head-icon">🎥</span> Video
     </div>
 
     <div class="subgrid">
 
       <div class="subcard">
         <div class="subcard-title">Inventaris</div>
-        <div class="name" contenteditable="true"></div>
+        <div class="name captain" contenteditable="true"></div>
       </div>
 
       <div class="subcard">
         <div class="subcard-title">Booth</div>
-        <div class="name" contenteditable="true"></div>
+        <div class="name captain" contenteditable="true"></div>
       </div>
 
       <div class="subcard">
         <div class="subcard-title">Videotron 1</div>
-        <div class="name" contenteditable="true"></div>
+        <div class="name captain" contenteditable="true"></div>
       </div>
 
       <div class="subcard">
         <div class="subcard-title">Videotron 2</div>
-        <div class="name" contenteditable="true"></div>
+        <div class="name captain" contenteditable="true"></div>
       </div>
 
       <div class="subcard">
         <div class="subcard-title">TV</div>
-        <div class="name" contenteditable="true"></div>
+        <div class="name captain" contenteditable="true"></div>
       </div>
 
       <div class="subcard">
         <div class="subcard-title">Kabel</div>
-        <div class="name" contenteditable="true"></div>
+        <div class="name captain" contenteditable="true"></div>
       </div>
 
       <div class="subcard">
         <div class="subcard-title">PTZ</div>
-        <div class="name" contenteditable="true"></div>
+        <div class="name captain" contenteditable="true"></div>
       </div>
 
     </div>
   </div>
 
-  <!-- =======================
-       TEAM IT
-     ======================= -->
+
+  <!-- ================= IT ================= -->
   <div class="team-card">
     <div class="team-head it-head">
-      <span class="head-icon">💻</span>
-      Team IT
+      <span class="head-icon">💻</span> IT
     </div>
 
     <div class="subgrid">
 
       <div class="subcard">
         <div class="subcard-title">Inventaris</div>
-        <div class="name" contenteditable="true"></div>
+        <div class="name captain" contenteditable="true"></div>
       </div>
 
       <div class="subcard">
         <div class="subcard-title">Booth</div>
-        <div class="name" contenteditable="true"></div>
+        <div class="name captain" contenteditable="true"></div>
       </div>
 
     </div>
