@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventaris Realtime - Kabel LAN</title>
+    <style>
+        body { background: #121212; color: white; font-family: sans-serif; text-align: center; padding: 50px; }
+        .container { max-width: 400px; margin: auto; background: #1e1e1e; padding: 30px; border-radius: 15px; border: 1px solid #333; }
+        h1 { font-size: 2rem; margin-bottom: 5px; }
+        .data-info { color: #888; margin-bottom: 20px; font-size: 0.9rem; }
+        .realtime-text { font-size: 4rem; font-weight: bold; color: #6a41d8; margin: 20px 0; }
+        input { background: #2a2a2a; border: 1px solid #444; color: white; padding: 15px; border-radius: 8px; width: 100%; font-size: 1.2rem; text-align: center; box-sizing: border-box; margin-bottom: 20px; }
+        button { background: #6a41d8; color: white; border: none; padding: 15px 30px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; font-size: 1rem; transition: 0.2s; }
+        button:hover { background: #5a31c8; }
+        button:active { transform: scale(0.98); }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Kabel LAN 100M</h1>
+        <div class="data-info">Total Unit: <span id="total-stok">--</span> Pcs</div>
+        
+        <p>Tersisa Sekarang:</p>
+        <div class="realtime-text" id="tersisa-stok">--</div>
+
+        <p>Ubah Jumlah Tersisa:</p>
+        <input type="number" id="input-tersisa" placeholder="Masukkan angka baru">
+        
+        <button id="btn-simpan">💾 Simpan Perubahan</button>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
+
+    <script>
+        // 2. Konfigurasi Koneksi (⚠️ GANTI DENGAN KODE KAMU DARI LANGKAH 3 ⚠️)
+		const firebaseConfig = {
+		  apiKey: "AIzaSyBNHkgkLR6WEQXDU7OdMyyWuoo-8jcSERo",
+		  authDomain: "panduanteknis-6e258.firebaseapp.com",
+		  databaseURL: "https://panduanteknis-6e258-default-rtdb.firebaseio.com",
+		  projectId: "panduanteknis-6e258",
+		  storageBucket: "panduanteknis-6e258.firebasestorage.app",
+		  messagingSenderId: "202324364776",
+		  appId: "1:202324364776:web:ddaf872764e19e5413685d",
+		  measurementId: "G-VGFJF9L8W0"
+				};
+
+        // 3. Inisialisasi Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        // 4. Referensi ke data "kabel_lan" di database
+        const refKabelLan = database.ref('kabel_lan');
+
+        // --- A. FUNGSI MEMBACA DATA (REALTIME) ---
+        // 'on' berarti Firebase akan terus memantau. Jika ada perubahan di console, halaman web langsung update!
+        refKabelLan.on('value', (snapshot) => {
+            const data = snapshot.val();
+            
+            if (data) {
+                // Masukkan data dari Firebase ke HTML
+                document.getElementById('total-stok').innerText = data.total;
+                document.getElementById('tersisa-stok').innerText = data.tersisa;
+                // Masukkan juga ke input field agar mudah diedit
+                document.getElementById('input-tersisa').value = data.tersisa;
+            }
+        });
+
+        // --- B. FUNGSI MENULIS/UPDATE DATA (DARI TOMBOL) ---
+        const btnSimpan = document.getElementById('btn-simpan');
+        btnSimpan.addEventListener('click', () => {
+            const jumlahBaru = document.getElementById('input-tersisa').value;
+
+            // Validasi: Jangan biarkan input kosong atau bukan angka
+            if (jumlahBaru === "" || isNaN(jumlahBaru)) {
+                alert("Tolong masukkan angka yang valid.");
+                return;
+            }
+
+            // Kirim update ke Firebase ('update' hanya mengubah yang ditentukan)
+            refKabelLan.update({
+                tersisa: parseInt(jumlahBaru) // Pastikan dikirim sebagai angka
+            }).then(() => {
+                alert("Hore! Data tersimpan di Firebase!");
+            }).catch((error) => {
+                console.error("Gagal simpan data:", error);
+                alert("Duh, gagal. Cek konsol browser.");
+            });
+        });
+
+    </script>
+</body>
+</html>
