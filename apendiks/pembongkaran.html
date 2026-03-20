@@ -1,46 +1,126 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Apendiks — Pembongkaran</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Apendiks — Pembongkaran</title>
 
-../assets/style.css
+  <!-- PENTING: link stylesheet -->
+  <link rel="stylesheet" href="../assets/style.css?v=1">
 
-<style>
-  .wrap { max-width:1000px; margin:auto; padding:24px; }
-  .title { font-size:36px; font-weight:900; margin-bottom:6px; }
-  .sub { opacity:.7; margin-bottom:24px; }
+  <style>
+    /* ==========================
+       PREMIUM ADDITIONAL STYLE
+    ========================== */
+    .wrap {
+      max-width: 1050px;
+      margin: auto;
+      padding: 32px 20px;
+      animation: fadeIn .4s ease;
+    }
 
-  .grid {
-    display:grid;
-    gap:20px;
-    grid-template-columns:repeat(auto-fit, minmax(240px,1fr));
-  }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
 
-  .cardx {
-    background:var(--card);
-    border:1px solid var(--line);
-    border-radius:14px;
-    padding:24px;
-    box-shadow:0 6px 20px #0005;
-    transition:.3s;
-  }
-  .cardx:hover { transform:scale(1.02); }
+    .title {
+      font-size: 42px;
+      font-weight: 900;
+      margin-bottom: 6px;
+      letter-spacing: -1px;
+    }
 
-  .cardx h3 {
-    font-weight:900;
-    margin-bottom:14px;
-  }
+    .sub {
+      opacity: .7;
+      margin-bottom: 32px;
+      font-size: 15px;
+    }
 
-  .audio { color:var(--audio); }
-  .visual { color:var(--video); }
-  .stage { color:var(--stage); }
-  .it { color:var(--it); }
+    /* GRID LAYOUT */
+    .grid {
+      display: grid;
+      gap: 22px;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    }
 
-  .name { padding:6px 0; border-bottom:1px solid var(--line); }
-  .name[contenteditable]{ cursor:text; }
-</style>
+    /* CARD PREMIUM */
+    .cardx {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 26px;
+      box-shadow: 0 8px 26px rgba(0,0,0,0.45);
+      transition: .28s ease;
+      backdrop-filter: blur(6px);
+    }
+
+    .cardx:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 32px rgba(0,0,0,0.55);
+    }
+
+    .cardx h3 {
+      font-weight: 900;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 20px;
+    }
+
+    /* Warna seksi */
+    .audio { color: var(--audio); }
+    .video { color: var(--video); }
+    .stage { color: var(--stage); }
+    .it    { color: var(--it); }
+
+    /* NAME LIST */
+    .name {
+      padding: 8px 0;
+      border-bottom: 1px solid var(--line);
+      font-size: 14px;
+      opacity: .9;
+    }
+
+    .name:last-child {
+      border-bottom: none;
+    }
+
+    .name[contenteditable] {
+      cursor: text;
+      border-radius: 6px;
+      transition: .2s ease;
+    }
+
+    .name[contenteditable]:hover {
+      background: rgba(255,255,255,0.05);
+    }
+
+    .name[contenteditable]:focus {
+      outline: 2px solid #facc15;
+      background: rgba(255,255,200,0.16);
+    }
+
+    /* ✅ Kapten badge baru (netral – profesional) */
+    .captain {
+      background: rgba(255,215,0,0.12);
+      border-left: 3px solid #FFD700;
+      font-weight: 800 !important;
+      color: #FFD700;
+      padding-left: 8px !important;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .captain::before {
+      content: "🎖️";
+      font-size: 15px;
+      opacity: .95;
+    }
+
+  </style>
 </head>
 
 <body>
@@ -52,27 +132,33 @@
 
   <div class="grid">
 
+    <!-- AUDIO -->
     <div class="cardx">
-      <h3 class="audio">Team Audio</h3>
-      <div class="name" contenteditable="true"></div>
+      <h3 class="audio">🎚️ Audio</h3>
+      <div class="name captain" contenteditable="true"></div>
       <div class="name" contenteditable="true"></div>
       <div class="name" contenteditable="true"></div>
     </div>
 
+    <!-- VIDEO -->
     <div class="cardx">
-      <h3 class="visual">Team Visual</h3>
+      <h3 class="video">🎥 Video</h3>
+      <div class="name captain" contenteditable="true"></div>
       <div class="name" contenteditable="true"></div>
       <div class="name" contenteditable="true"></div>
     </div>
 
+    <!-- STAGE -->
     <div class="cardx">
-      <h3 class="stage">Team Stage</h3>
-      <div class="name" contenteditable="true"></div>
+      <h3 class="stage">🎛️ Stage</h3>
+      <div class="name captain" contenteditable="true"></div>
       <div class="name" contenteditable="true"></div>
     </div>
 
+    <!-- IT -->
     <div class="cardx">
-      <h3 class="it">Team IT</h3>
+      <h3 class="it">💻 IT</h3>
+      <div class="name captain" contenteditable="true"></div>
       <div class="name" contenteditable="true"></div>
     </div>
 
