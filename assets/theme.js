@@ -1,7 +1,8 @@
 const btn = document.getElementById("themeBtn");
 const saved = localStorage.getItem("theme");
 
-function updateToggleUI() {
+/* Update UI icon/text */
+function updateUI() {
   if (document.body.classList.contains("light")) {
     btn.textContent = "☀️ Light";
   } else {
@@ -9,14 +10,18 @@ function updateToggleUI() {
   }
 }
 
-if (saved === "light") document.body.classList.add("light");
-updateToggleUI();
+/* Load saved mode (if any) */
+if (saved === "light") {
+  document.body.classList.add("light");
+}
+updateUI();
 
+/* Toggle theme */
 btn.addEventListener("click", () => {
   document.body.classList.toggle("light");
-  localStorage.setItem("theme",
+  localStorage.setItem(
+    "theme",
     document.body.classList.contains("light") ? "light" : "dark"
   );
-  updateToggleUI();
+  updateUI();
 });
-``
