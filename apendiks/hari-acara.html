@@ -5,160 +5,171 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Apendiks — Pembagian Tugas Hari Acara</title>
 
-  <link rel="stylesheet" href="../assets/style.css?v=1">
+  <!-- LINK NORMAL -->
+  <link rel="stylesheet" href="../assets/style.css?v=2">
 
   <style>
-    /* PAGE PREMIUM STYLE (TIDAK MENGGANGGU STYLE.CSS UTAMA) */
-
-    .wrap {
-      max-width: 1050px;
-      margin: auto;
-      padding: 32px 20px;
-      animation: fadeIn .4s ease;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
+    /* =====================
+       PAGE PREMIUM STYLE
+    ====================== */
+    .wrap { max-width:1050px; margin:auto; padding:30px 20px; }
 
     .title {
-      font-size: 42px;
-      font-weight: 900;
-      text-align: center;
-      letter-spacing: -1px;
-      margin-bottom: 6px;
+      font-size:42px;
+      font-weight:900;
+      text-align:center;
+      letter-spacing:-1px;
     }
-
     .subtitle {
-      text-align: center;
-      margin-top: 4px;
-      opacity: .7;
-      font-size: 15px;
-      margin-bottom: 24px;
+      text-align:center;
+      opacity:.7;
+      margin-top:4px;
+      margin-bottom:26px;
     }
 
-    /* TABS */
+    /* Tabs */
     .tabs {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      margin-bottom: 28px;
+      display:flex;
+      justify-content:center;
+      gap:12px;
+      margin-bottom:30px;
     }
 
     .tab-btn {
-      padding: 8px 18px;
-      border-radius: 999px;
-      border: 1px solid var(--line);
-      background: var(--card);
-      color: var(--text);
-      font-weight: 700;
-      cursor: pointer;
-      transition: .25s ease;
+      padding:8px 18px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:var(--card);
+      cursor:pointer;
+      font-weight:700;
+      transition:.25s;
+      color:var(--text);
     }
-    .tab-btn:hover {
-      background: rgba(255,255,255,0.06);
-      transform: translateY(-1px);
-    }
+    .tab-btn:hover { background:rgba(255,255,255,0.06); }
     .tab-btn.active {
-      background: var(--text);
-      color: var(--bg);
-      border-color: var(--text);
+      background:var(--text);
+      color:var(--bg);
+      border-color:var(--text);
     }
 
-    .day { display: none; }
-    .day.active { display: block; }
+    .day { display:none; }
+    .day.active { display:block; }
 
-    /* CARD */
+    /* TEAM CARD */
     .team-card {
-      background: var(--card);
-      border-radius: 18px;
-      border: 1px solid var(--line);
-      margin-bottom: 34px;
-      overflow: hidden;
-      box-shadow: 0 8px 26px rgba(0,0,0,.45);
-      backdrop-filter: blur(6px);
-      transition: .25s;
+      background:var(--card);
+      border-radius:18px;
+      border:1px solid var(--line);
+      box-shadow:0 8px 26px rgba(0,0,0,.45);
+      margin-bottom:34px;
+      overflow:hidden;
+      transition:.25s ease;
     }
-    .team-card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 12px 32px rgba(0,0,0,.55);
-    }
+    .team-card:hover { transform:translateY(-3px); }
 
     /* BAR */
     .team-bar {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 16px 20px;
-      font-weight: 900;
-      font-size: 18px;
+      display:flex;
+      align-items:center;
+      gap:12px;
+      padding:16px 20px;
+      font-weight:900;
+      font-size:18px;
+      letter-spacing:.3px;
     }
 
-    .bar-audio { color: var(--audio); }
-    .bar-video { color: var(--video); }
-    .bar-stage { color: var(--stage); }
-    .bar-it { color: var(--it); }
+    .bar-video { color:var(--video); }
+    .bar-audio { color:var(--audio); }
+    .bar-stage { color:var(--stage); }
+    .bar-it    { color:var(--it); }
 
     .overseer {
-      margin-left: auto;
-      background: var(--bg);
-      padding: 6px 12px;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      font-size: 13px;
-      font-weight: 700;
+      margin-left:auto;
+      padding:6px 12px;
+      border-radius:999px;
+      background:var(--bg);
+      border:1px solid var(--line);
+      font-size:13px;
+      font-weight:700;
     }
 
     .value[contenteditable] {
-      padding: 2px 4px;
-      border-radius: 6px;
+      padding:2px 4px;
+      border-radius:4px;
     }
     .value[contenteditable]:focus {
-      outline: 2px solid #facc15;
-      background: rgba(255,255,200,0.15);
+      outline:2px solid #facc15;
+      background:rgba(255,255,200,0.15);
     }
 
     /* TABLE */
-    table {
-      width: 100%;
-      border-collapse: collapse;
+    table { width:100%; border-collapse:collapse; }
+    th,td {
+      padding:14px 18px;
+      border-top:1px solid var(--line);
+      font-size:14px;
     }
-    th, td {
-      padding: 14px 18px;
-      border-top: 1px solid var(--line);
-      font-size: 14px;
-      vertical-align: middle;
+
+    /* ✅ FIX: ROLE ke KIRI MENTOK */
+    th:first-child {
+      text-align:left !important;
+      padding-left:20px !important;
     }
-    th.time, td.time { text-align: center; }
+
+    td:first-child {
+      text-align:left !important;
+      padding-left:20px !important;
+    }
+
+    th.time,td.time { text-align:center; }
 
     td[contenteditable] {
-      transition: .25s;
-      cursor: text;
-      border-radius: 6px;
+      cursor:text;
+      transition:.25s;
+      border-radius:6px;
     }
     td[contenteditable]:hover {
-      background: rgba(255,255,255,0.05);
+      background:rgba(255,255,255,0.05);
     }
     td[contenteditable]:focus {
-      outline: 2px solid #facc15;
-      background: rgba(255,255,200,0.15);
+      outline:2px solid #facc15;
+      background:rgba(255,255,200,0.15);
     }
 
     /* ROLE TAG */
     .role-tag {
-      padding: 6px 12px;
-      border-radius: 999px;
-      font-weight: 700;
-      border: 1px solid var(--line);
-      background: rgba(255,255,255,0.06);
-      display: inline-block;
+      display:inline-block;
+      padding:6px 12px;
+      border-radius:999px;
+      font-weight:700;
+      background:rgba(255,255,255,0.06);
+      border:1px solid var(--line);
     }
-
   </style>
+
 </head>
 
 <body>
+
+<!-- ✅ NAVBAR (agar DARK/LIGHT MODE MUNCUL di halaman ini) -->
+<div class="navbar">
+  <div class="navbar-inner">
+    <a class="brand" href="../index.html">PANDUAN TEKNIS</a>
+    <nav class="nav">
+      <a href="../index.html">Home</a>
+      <a href="../audio.html">Audio</a>
+      <a href="../video.html">Video</a>
+      <a href="../stage.html">Stage</a>
+      <a href="../it.html">IT</a>
+      <a href="../apendiks.html">Apendiks</a>
+
+      <!-- ✅ TOMBOL DARK/LIGHT -->
+      <button id="themeBtn" class="theme-toggle">🌙 Dark</button>
+    </nav>
+  </div>
+</div>
+
+<script src="../assets/theme.js"></script>
 
 <div class="wrap">
 
@@ -171,14 +182,13 @@
     <button class="tab-btn" data-day="sun">Minggu</button>
   </div>
 
-  <!-- ===========================
-        JUMAT
-  ============================ -->
+  <!-- ==================== JUMAT ==================== -->
   <section id="fri" class="day active">
 
     <!-- VIDEO -->
     <div class="team-card">
-      <div class="team-bar bar-video">🎥 Video
+      <div class="team-bar bar-video">
+        🎥 Video
         <span class="overseer">Pengawas: <span class="value" contenteditable="true">Nama Pengawas</span></span>
       </div>
 
@@ -190,6 +200,7 @@
             <th class="time">Siang</th>
           </tr>
         </thead>
+
         <tbody>
           <tr><td><span class="role-tag">Technical Director</span></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>
           <tr><td><span class="role-tag">Operator Switcher</span></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>
@@ -201,10 +212,10 @@
       </table>
     </div>
 
-
     <!-- AUDIO -->
     <div class="team-card">
-      <div class="team-bar bar-audio">🎚️ Audio
+      <div class="team-bar bar-audio">
+        🎚️ Audio
         <span class="overseer">Pengawas: <span class="value" contenteditable="true">Nama Pengawas</span></span>
       </div>
 
@@ -212,6 +223,7 @@
         <thead>
           <tr><th>Role</th><th class="time">Pagi</th><th class="time">Siang</th></tr>
         </thead>
+
         <tbody>
           <tr><td><span class="role-tag">Mixer Operator</span></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>
           <tr><td><span class="role-tag">Mixer Assistant</span></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>
@@ -219,10 +231,10 @@
       </table>
     </div>
 
-
     <!-- STAGE -->
     <div class="team-card">
-      <div class="team-bar bar-stage">🎛️ Stage
+      <div class="team-bar bar-stage">
+        🎛️ Stage
         <span class="overseer">Pengawas: <span class="value" contenteditable="true">Nama Pengawas</span></span>
       </div>
 
@@ -230,6 +242,7 @@
         <thead>
           <tr><th>Role</th><th class="time">Pagi</th><th class="time">Siang</th></tr>
         </thead>
+
         <tbody>
           <tr><td><span class="role-tag">Podium 1</span></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>
           <tr><td><span class="role-tag">Podium 2</span></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>
@@ -242,16 +255,16 @@
 
   </section>
 
-  <!-- ===========================
-        SABTU
-  ============================ -->
+  <!-- ==================== SABTU ==================== -->
   <section id="sat" class="day">
 
-    <!-- COPY EXACT SAME ROLE LIST FOR SATURDAY -->
+    <!-- VIDEO -->
     <div class="team-card">
-      <div class="team-bar bar-video">🎥 Video
+      <div class="team-bar bar-video">
+        🎥 Video
         <span class="overseer">Pengawas: <span class="value" contenteditable="true">Nama Pengawas</span></span>
       </div>
+
       <table>
         <thead>
           <tr><th>Role</th><th class="time">Pagi</th><th class="time">Siang</th></tr>
@@ -269,9 +282,11 @@
 
     <!-- AUDIO -->
     <div class="team-card">
-      <div class="team-bar bar-audio">🎚️ Audio
+      <div class="team-bar bar-audio">
+        🎚️ Audio
         <span class="overseer">Pengawas: <span class="value" contenteditable="true">Nama Pengawas</span></span>
       </div>
+
       <table>
         <thead>
           <tr><th>Role</th><th class="time">Pagi</th><th class="time">Siang</th></tr>
@@ -285,9 +300,11 @@
 
     <!-- STAGE -->
     <div class="team-card">
-      <div class="team-bar bar-stage">🎛️ Stage
+      <div class="team-bar bar-stage">
+        🎛️ Stage
         <span class="overseer">Pengawas: <span class="value" contenteditable="true">Nama Pengawas</span></span>
       </div>
+
       <table>
         <thead>
           <tr><th>Role</th><th class="time">Pagi</th><th class="time">Siang</th></tr>
@@ -301,18 +318,18 @@
         </tbody>
       </table>
     </div>
+
   </section>
 
-  <!-- ===========================
-        MINGGU
-  ============================ -->
+  <!-- ==================== MINGGU ==================== -->
   <section id="sun" class="day">
 
-    <!-- COPY EXACT SAME ROLE LIST FOR SUNDAY -->
     <div class="team-card">
-      <div class="team-bar bar-video">🎥 Video
+      <div class="team-bar bar-video">
+        🎥 Video
         <span class="overseer">Pengawas: <span class="value" contenteditable="true">Nama Pengawas</span></span>
       </div>
+
       <table>
         <thead>
           <tr><th>Role</th><th class="time">Pagi</th><th class="time">Siang</th></tr>
@@ -328,11 +345,12 @@
       </table>
     </div>
 
-    <!-- AUDIO -->
     <div class="team-card">
-      <div class="team-bar bar-audio">🎚️ Audio
+      <div class="team-bar bar-audio">
+        🎚️ Audio
         <span class="overseer">Pengawas: <span class="value" contenteditable="true">Nama Pengawas</span></span>
       </div>
+
       <table>
         <thead>
           <tr><th>Role</th><th class="time">Pagi</th><th class="time">Siang</th></tr>
@@ -344,11 +362,12 @@
       </table>
     </div>
 
-    <!-- STAGE -->
     <div class="team-card">
-      <div class="team-bar bar-stage">🎛️ Stage
+      <div class="team-bar bar-stage">
+        🎛️ Stage
         <span class="overseer">Pengawas: <span class="value" contenteditable="true">Nama Pengawas</span></span>
       </div>
+
       <table>
         <thead>
           <tr><th>Role</th><th class="time">Pagi</th><th class="time">Siang</th></tr>
@@ -366,25 +385,6 @@
   </section>
 
 </div>
-
-<script>
-  const tabs = document.querySelectorAll('.tab-btn');
-  const days = document.querySelectorAll('.day');
-  const title = document.getElementById('day-title');
-  const label = { fri:'JUMAT', sat:'SABTU', sun:'MINGGU' };
-
-  tabs.forEach(btn=>{
-    btn.addEventListener('click', ()=>{
-      tabs.forEach(b=>b.classList.remove('active'));
-      btn.classList.add('active');
-
-      days.forEach(d=>d.classList.remove('active'));
-      document.getElementById(btn.dataset.day).classList.add('active');
-
-      title.textContent = label[btn.dataset.day];
-    });
-  });
-</script>
 
 </body>
 </html>
