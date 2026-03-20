@@ -1,70 +1,170 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>AUDIO — Panduan Teknis</title>
 
-  <link rel="stylesheet" href="assets/style.css?v=5">
+  <link rel="stylesheet" href="assets/style.css?v=40">
+
+  <style>
+    /* ============================================
+       PREMIUM AUDIO PAGE STYLING
+    ============================================ */
+
+    .audio-wrap {
+      max-width: 1100px;
+      margin: auto;
+      padding: 32px 20px;
+    }
+
+    /* Title */
+    .hero-title {
+      font-size: 42px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      margin-bottom: 6px;
+    }
+
+    .hero-sub {
+      opacity: .7;
+      margin-bottom: 26px;
+      font-size: 16px;
+    }
+
+    /* GRID */
+    .hero-grid {
+      display: grid;
+      gap: 24px;
+      margin-top: 10px;
+    }
+    @media (min-width: 720px) {
+      .hero-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    /* CARD PREMIUM */
+    .card-hero {
+      position: relative;
+      border-radius: 18px;
+      overflow: hidden;
+      min-height: 230px;
+
+      background: var(--card);
+      border: 1px solid var(--line);
+      box-shadow: 0 8px 26px rgba(0,0,0,.50);
+      transition: .35s ease;
+    }
+
+    .card-hero:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 14px 38px rgba(0,0,0,.65);
+    }
+
+    /* CARD IMAGE */
+    .card-hero img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+
+      filter: brightness(.70) saturate(1.05);
+      transition: .35s ease;
+    }
+    .card-hero:hover img {
+      filter: brightness(.90) saturate(1.2);
+    }
+
+    /* LABEL */
+    .card-hero .label {
+      position: relative;
+      z-index: 2;
+
+      font-size: 40px;
+      font-weight: 900;
+      text-shadow: 0 3px 16px rgba(0,0,0,.65);
+
+      /* ✅ FIX: Tidak mepet kiri */
+      padding-left: 16px;
+      padding-right: 16px;
+
+      opacity: 0;
+      transform: translateY(16px);
+      transition: .35s ease;
+    }
+
+    .card-hero:hover .label {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+
 </head>
 
 <body>
 
+<!-- ✅ NAVBAR -->
 <div class="navbar">
   <div class="navbar-inner">
-    <a class="brand" href="index.html">PANDUAN TEKNIS</a>
+    <a class="brand" href="index.html">PANDUAN TEKNIS - Regional 2026 | Javanese</a>
 
     <nav class="nav">
       <a href="index.html">Home</a>
       <a class="active" href="audio.html">Audio</a>
       <a href="video.html">Video</a>
-      <a href="stage.html">Stage</a>
+      <a href="stage.html">Podium</a>
       <a href="it.html">IT</a>
-      <button id="themeBtn" class="theme-toggle">Dark</button>
+      <a href="apendiks.html">Apendiks</a>
+
+      <button id="themeBtn" class="theme-toggle">🌙 Dark</button>
     </nav>
   </div>
 </div>
 
-<main class="container">
+<script src="assets/theme.js?v=40"></script>
+
+
+<!-- ✅ CONTENT -->
+<div class="audio-wrap">
+
   <h1 class="hero-title">AUDIO</h1>
   <p class="hero-sub">Sub‑pages untuk seksi Audio</p>
 
   <section class="hero-grid">
 
+    <!-- BOOTH -->
     <a class="card" href="audio/booth.html">
       <div class="card-hero">
-        <img src="assets/img/audio-booth.jpg">
-        <span class="label">BOOTH</span>
+        <img src="assets/img/audio-booth.jpg" alt="">
+        <span class="label" style="color:var(--audio)">BOOTH</span>
       </div>
     </a>
 
+    <!-- SPEAKER -->
     <a class="card" href="audio/speaker.html">
       <div class="card-hero">
-        <img src="assets/img/audio-speaker.jpg">
-        <span class="label">SPEAKER</span>
+        <img src="assets/img/audio
+        <span class="label" style="color:var(--audio)">KABEL</span>
       </div>
     </a>
 
-    <a class="card" href="audio/kabel.html">
-      <div class="card-hero">
-        <img src="assets/img/audio-kabel.jpg">
-        <span class="label">KABEL</span>
-      </div>
-    </a>
-
+    <!-- INVENTARIS -->
     <a class="card" href="audio/inventaris.html">
       <div class="card-hero">
-        <img src="assets/img/audio-inventaris.jpg">
-        <span class="label">INVENTARIS</span>
+        <img src="assets/img/audio-inventaris.jpg" alt="">
+        <span class="label" style="color:var(--audio)">INVENTARIS</span>
       </div>
     </a>
 
   </section>
 
-  <footer>© 2026 — Disusun oleh Truna</footer>
-</main>
+  <footer style="margin-top:40px; opacity:.6; text-align:center;">
+    © 2026 — Disusun oleh Truna
+  </footer>
 
-<script src="assets/theme.js"></script>
+</div>
+
 </body>
 </html>
-``
