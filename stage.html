@@ -4,92 +4,189 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Panduan Teknis — Stage</title>
+
+  <!-- CSS global -->
   <link rel="stylesheet" href="assets/style.css" />
+
   <style>
-    .toc{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 16px}
-    .toc a{text-decoration:none;color:var(--text);padding:6px 10px;border:1px solid var(--line);border-radius:999px;background:#0f1620;font-weight:700;font-size:13px}
-    .toc a:hover{border-color:#3b495a}
-    .section-anchor{scroll-margin-top:80px}
+    /* ----------- EXTRA PAGE STYLE ----------- */
+
+    .page-wrap {
+      max-width: 1050px;
+      margin: auto;
+      padding: 32px 20px;
+    }
+
+    /* Title */
+    .section-title {
+      font-size: 38px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      margin-bottom: 6px;
+    }
+
+    .section-sub {
+      opacity: .7;
+      margin-bottom: 26px;
+    }
+
+    /* General card wrapper */
+    .card-block {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 26px;
+      margin-bottom: 32px;
+      box-shadow: 0 8px 26px rgba(0,0,0,.45);
+      backdrop-filter: blur(6px);
+      transition: .25s;
+    }
+    .card-block:hover {
+      transform: translateY(-3px);
+    }
+
+    .block-title {
+      font-size: 24px;
+      font-weight: 900;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--stage);
+    }
+
+    /* Image reminder area */
+    .reminder-image-area {
+      text-align: center;
+      padding: 16px 0;
+    }
+
+    .reminder-image-area img {
+      max-width: 100%;
+      border-radius: 12px;
+      margin-bottom: 8px;
+    }
+
+    .reminder-label {
+      font-weight: 800;
+      margin-top: 6px;
+    }
+
+    /* Checklist table */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 14px 18px;
+      border-top: 1px solid var(--line);
+      font-size: 14px;
+    }
+    td:first-child {
+      text-align: left;
+      padding-left: 24px;
+    }
+
+    td[contenteditable] {
+      cursor: text;
+      border-radius: 6px;
+      transition: .25s;
+    }
+    td[contenteditable]:hover {
+      background: rgba(255,255,255,0.05);
+    }
+    td[contenteditable]:focus {
+      outline: 2px solid #facc15;
+      background: rgba(255,255,200,0.15);
+    }
   </style>
 </head>
+
 <body>
-  <div class="navbar">
-    <div class="navbar-inner">
-      <a class="brand" href="index.html">PANDUAN TEKNIS</a>
-      <nav class="nav">
-        <a href="index.html">Home</a>
-        <a href="audio.html">Audio</a>
-        <a href="video.html">Video</a>
-        <a class="active" href="stage.html">Stage</a>
-        <a href="allteam.html">All</a>
-      </nav>
+
+<!-- ✅ NAVBAR -->
+<div class="navbar">
+  <div class="navbar-inner">
+    <a class="brand" href="index.html">PANDUAN TEKNIS</a>
+
+    <nav class="nav">
+      <a href="index.html">Home</a>
+      <a href="audio.html">Audio</a>
+      <a href="video.html">Video</a>
+      <a class="active" href="stage.html">Stage</a>
+      <a href="it.html">IT</a>
+      <a href="apendiks.html">Apendiks</a>
+
+      <button id="themeBtn" class="theme-toggle">🌙 Dark</button>
+    </nav>
+  </div>
+</div>
+
+<!-- ✅ THEME SCRIPT -->
+<script src="assets/theme.js"></script>
+
+<div class="page-wrap">
+
+  <!-- HEADER -->
+  <h1 class="section-title">Stage</h1>
+  <p class="section-sub">Pengingat • Posisi Mikrofon • Checklist Podium</p>
+
+
+  <!-- ================================================= -->
+  <!-- ✅ 1) AREA PENGINGAT – kamu tinggal taruh gambar -->
+  <!-- ================================================= -->
+  <div class="card-block">
+
+    <div class="block-title">
+      📌 Pengingat — Posisi Mikrofon
     </div>
+
+    <!-- ✅ Kamu cukup ganti isi div ini dengan <img src="assets/img/xxxx.png"> -->
+    <div class="reminder-image-area">
+
+      <!-- CONTOH PENEMPATAN GAMBAR -->
+      <!-- Hapus dan ganti dengan file kamu -->
+      <img src="assets/img/mic-positition.png" alt="Posisi Salah dan Benar">
+      <div class="reminder-label" style="color:#ff6b6b;">Salah</div>
+
+
+      <!-- Kamu tinggal ganti dengan:
+      <img src="assets/img/NAMA_FILE_KAMU.png">
+      Atau dua gambar lainnya -->
+    </div>
+
   </div>
 
-  <main class="container">
-    <section class="section">
-      <h1 class="hero-title">Stage</h1>
-      <p class="hero-sub">Booth • Panggung • Makeup • Final Check • Inventaris</p>
-      <div class="toc">
-        <a href="#booth">Booth</a>
-        <a href="#panggung">Panggung</a>
-        <a href="#makeup">Makeup</a>
-        <a href="#finalcheck">Final Check</a>
-        <a href="#inventaris">Inventaris</a>
-      </div>
-    </section>
 
-    <!-- BOOTH -->
-    <section id="booth" class="card section-anchor" style="padding:16px">
-      <h3 style="margin:0 0 8px"><span class="badge stage">Booth</span></h3>
-      <table class="table" aria-label="Stage - Booth">
-        <thead><tr><th>Item</th><th>Checklist</th></tr></thead>
-        <tbody>
-          <tr><td>Comms</td><td>HT/Intercom; channel fix; headset; charger & cadangan.</td></tr>
-          <tr><td>Cue Sheet</td><td>Versi terbaru; perubahan ditandai; distribusi ke tim.</td></tr>
-          <tr><td>Toolbox</td><td>Gaffer, cable tie, cutter, spidol, label; P3K ringkas.</td></tr>
-          <tr><td>Logistik</td><td>Air minum; tisu; power strip; lampu meja.</td></tr>
-        </tbody>
-      </table>
-    </section>
+  <!-- =========================================== -->
+  <!-- ✅ 2) CHECKLIST PODIUM -->
+  <!-- =========================================== -->
+  <div class="card-block">
 
-    <!-- PANGGUNG -->
-    <section id="panggung" class="card section-anchor" style="padding:16px">
-      <h3 style="margin:0 0 8px"><span class="badge stage">Panggung</span></h3>
-      <table class="table" aria-label="Stage - Panggung">
-        <thead><tr><th>Bagian</th><th>Checklist</th></tr></thead>
-        <tbody>
-          <tr><td>Stage Plot</td><td>Layout alat; jalur kabel; akses naik–turun; area aman.</td></tr>
-          <tr><td>Mic/Stand</td><td>Posisi sesuai rundown; clamp; sandbag untuk keamanan.</td></tr>
-          <tr><td>Kabel</td><td>Rapi; ditape; jalur tidak mengganggu talent.</td></tr>
-          <tr><td>Safety</td><td>Jarak aman dari rigging/LED; fire extinguisher terdekat.</td></tr>
-        </tbody>
-      </table>
-    </section>
+    <div class="block-title">🎤 Checklist Podium</div>
 
-    <!-- MAKEUP -->
-    <section id="makeup" class="card section-anchor" style="padding:16px">
-      <h3 style="margin:0 0 8px"><span class="badge stage">Makeup</span></h3>
-      <table class="table" aria-label="Stage - Makeup">
-        <thead><tr><th>Bagian</th><th>Checklist</th></tr></thead>
-        <tbody>
-          <tr><td>Urutan</td><td>Daftar talent; jam panggil; buffer waktu; PIC jelas.</td></tr>
-          <tr><td>Hygiene</td><td>Brush bersih; sanitizer; tisu; disposable bila perlu.</td></tr>
-          <tr><td>Lighting</td><td>Pencahayaan cukup; cermin; kursi; power untuk hair tools.</td></tr>
-        </tbody>
-      </table>
-    </section>
+    <table>
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>Keterangan</th>
+        </tr>
+      </thead>
 
-    <!-- FINAL CHECK -->
-    <section id="finalcheck" class="card section-anchor" style="padding:16px">
-      <h3 style="margin:0 0 8px"><span class="badge stage">Final Check</span></h3>
-      <table class="table" aria-label="Stage - Final Check">
-        <thead><tr><th>Bagian</th><th>Checklist</th></tr></thead>
-        <tbody>
-          <tr><td>Run‑through</td><td>Timing; posisi; perubahan last minute tercatat.</td></tr>
-          <tr><td>Comms</td><td>Call sign; cue siap; standby posisi.</td></tr>
-          <tr><td>Safety</td><td>Clear jalur; kabel rapi; matikan risiko trip/hook.</td></tr>
-        </tbody>
-      </table>
-    </section>
+      <tbody>
+        <tr><td>Mikrofon</td><td contenteditable="true"></td></tr>
+        <tr><td>Stand Mic</td><td contenteditable="true"></td></tr>
+        <tr><td>Posisi Mikrofon</td><td contenteditable="true"></td></tr>
+        <tr><td>Kabel</td><td contenteditable="true"></td></tr>
+        <tr><td>Pencahayaan Podium</td><td contenteditable="true"></td></tr>
+        <tr><td>Area Talent Bersih</td><td contenteditable="true"></td></tr>
+        <tr><td>Safety (tidak ada kabel mengganggu)</td><td contenteditable="true"></td></tr>
+      </tbody>
+    </table>
 
+  </div>
+
+</div>
+
+</body>
+</html>
