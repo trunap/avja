@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detail Inventaris</title>
+    <style>
+        body { background: #121212; color: white; font-family: sans-serif; padding: 40px; }
+        .container { max-width: 600px; margin: auto; border-left: 5px solid #6a41d8; padding-left: 20px; }
+        h1 { font-size: 3rem; margin-bottom: 10px; }
+        p { color: #bbb; margin-bottom: 30px; }
+        ul { list-style: none; padding: 0; }
+        li { background: #222; margin: 10px 0; padding: 15px; border-radius: 8px; }
+        .btn-back { display: inline-block; margin-top: 30px; color: #6a41d8; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="content">
+        <h1 id="title">Loading...</h1>
+        <p id="desc"></p>
+        <ul id="item-list"></ul>
+        <a href="index.html" class="btn-back">← Kembali ke Home</a>
+    </div>
+
+    <script>
+        // 1. Ambil ID dari URL (Contoh: detail.html?id=kamera)
+        const urlParams = new URLSearchParams(window.location.search);
+        const categoryId = urlParams.get('id');
+
+        // 2. Panggil file JSON
+        fetch('database.json')
+            .then(response => response.json())
+            .then(data => {
+                const pageData = data[categoryId];
+
+                if (pageData) {
+                    // 3. Masukkan data ke HTML
+                    document.getElementById('title').innerText = pageData.judul;
+                    document.getElementById('desc').innerText = pageData.deskripsi;
+                    
+                    const listContainer = document.getElementById('item-list');
+                    pageData.list.forEach(item => {
+                        let li = document.createElement('li');
+                        li.innerText = item;
+                        listContainer.appendChild(li);
+                    });
+                } else {
+                    document.getElementById('title').innerText = "Data Tidak Ditemukan";
+                }
+            })
+            .catch(err => console.error("Gagal ambil data:", err));
+    </script>
+</body>
+</html>
