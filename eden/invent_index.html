@@ -7,115 +7,69 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; }
-        body { background-color: #121212; color: white; padding: 30px; }
-        
-        /* Header & Search simulasi */
-        .header-section { max-width: 1000px; margin: auto; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center; }
-        .tabs { display: flex; gap: 10px; }
-        .tab { padding: 8px 15px; border-radius: 20px; color: #888; cursor: pointer; font-size: 0.9rem; }
-        .tab.active { background-color: #2a2a2a; color: white; }
-        .search-box { background: #1e1e1e; border: 1px solid #333; padding: 10px 15px; border-radius: 8px; color: #888; width: 250px; display: flex; align-items: center; gap: 10px; }
-
-        /* Styling List (Tabel) */
-        .list-container { max-width: 1000px; margin: auto; background-color: #1a1a1a; border-radius: 12px; border: 1px solid #2a2a2a; overflow: hidden; }
-        
-        /* CSS untuk baris yang bisa diklik */
-        .list-item { display: flex; align-items: center; padding: 18px 25px; border-bottom: 1px solid #2a2a2a; text-decoration: none; color: white; transition: background 0.2s; cursor: pointer; }
+        body { background-color: #121212; color: white; padding: 20px; }
+        .header-section { max-width: 800px; margin: auto; margin-bottom: 20px; display: flex; justify-content: space-between; }
+        .list-container { max-width: 800px; margin: auto; background-color: #1a1a1a; border-radius: 12px; border: 1px solid #2a2a2a; }
+        .list-item { display: flex; align-items: center; padding: 15px 20px; border-bottom: 1px solid #2a2a2a; text-decoration: none; color: white; transition: 0.2s; }
         .list-item:hover { background-color: #252525; }
-        .list-item:last-child { border-bottom: none; }
-
-        /* Ikon Centang (Status) */
-        .status-icon { width: 40px; height: 40px; border-radius: 50%; border: 2px solid #333; margin-right: 20px; display: flex; align-items: center; justify-content: center; color: transparent; }
-        .list-item.aman .status-icon { border-color: #6a41d8; background-color: #6a41d8; color: white; } /* Jika tersisa > 0 */
-        .list-item.habis .status-icon { border-color: #cc3300; color: #cc3300; } /* Contoh jika habis */
-
-        /* Teks Barang */
+        .status-icon { width: 35px; height: 35px; border-radius: 50%; border: 2px solid #333; margin-right: 15px; display: flex; align-items: center; justify-content: center; }
+        .list-item.aman .status-icon { border-color: #6a41d8; background-color: #6a41d8; color: white; }
         .item-info { flex-grow: 1; }
-        .item-name { font-weight: bold; font-size: 1.1rem; margin-bottom: 4px; }
-        .item-meta { color: #888; font-size: 0.9rem; }
-
-        /* Panah Kanan */
-        .arrow-icon { color: #444; font-size: 1.2rem; }
+        .item-name { font-weight: bold; }
+        .item-meta { color: #888; font-size: 0.85rem; }
     </style>
 </head>
 <body>
 
     <div class="header-section">
-        <div class="tabs">
-            <div class="tab">Kantor Cabang</div>
-            <div class="tab">Wilayah</div>
-            <div class="tab">Sidang</div>
-            <div class="tab active">All</div>
-        </div>
-        <div class="search-box">
-            <i class="fas fa-search"></i>
-            <span>Cari</span>
-        </div>
+        <h3>Semua Inventaris</h3>
     </div>
 
     <div class="list-container" id="inventory-list">
-        <p style="text-align:center; padding: 20px; color: #888;">Memuat data realtime...</p>
+        <p style="text-align:center; padding: 20px; color: #888;">Memuat data...</p>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
 
     <script>
-        // 1. Konfigurasi (GANTI DENGAN KODE KAMU)
+        // --- COPY PASTE CONFIG FIREBASE KAMU DI SINI ---
         const firebaseConfig = {
-            apiKey: "AIzaSyBNHkgkLR6WEQXDU7OdMyyWuoo-8jcSERo",
-		  authDomain: "panduanteknis-6e258.firebaseapp.com",
-		  databaseURL: "https://panduanteknis-6e258-default-rtdb.firebaseio.com",
-		  projectId: "panduanteknis-6e258",
-		  storageBucket: "panduanteknis-6e258.firebasestorage.app",
-		  messagingSenderId: "202324364776",
-		  appId: "1:202324364776:web:ddaf872764e19e5413685d",
-		  measurementId: "G-VGFJF9L8W0"
+            apiKey: "AIzaSyD...",
+            authDomain: "...",
+            databaseURL: "...",
+            projectId: "...",
+            storageBucket: "...",
+            messagingSenderId: "...",
+            appId: "..."
         };
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
-        // 2. Referensi ke folder 'inventaris'
-        const refInventaris = database.ref('inventaris');
         const listContainer = document.getElementById('inventory-list');
 
-        // 3. Baca Data Realtime (Fungsi Utama)
-        refInventaris.on('value', (snapshot) => {
+        // Memanggil folder utama (Ganti '0' atau 'inventaris' sesuai folder di Firebase kamu)
+        // Di gambar kamu folder utamanya '0', jadi saya pakai '0'
+        database.ref('0').on('value', (snapshot) => {
             const allData = snapshot.val();
-            
-            // Bersihkan wadah sebelum diisi data baru (agar tidak double saat update)
             listContainer.innerHTML = '';
 
             if (allData) {
-                // Looping (mengulangi) untuk setiap barang yang ada di Firebase
-                // 'key' adalah ID unik (misal barang_01), 'data' adalah isinya
                 Object.entries(allData).forEach(([key, data]) => {
-                    
-                    // Tentukan kelas CSS berdasarkan stok (jika habis jadi merah)
-                    const statusClass = (data.tersisa > 0) ? 'aman' : 'habis';
+                    const statusClass = (data.sisa > 0) ? 'aman' : 'habis';
 
-                    // Buat elemen HTML untuk satu baris
-                    // Perhatikan link-nya: detail.html?id=key (mengirim ID ke halaman sebelah)
                     const itemHTML = `
                         <a href="detail.html?id=${key}" class="list-item ${statusClass}">
-                            <div class="status-icon">
-                                <i class="fas fa-check"></i>
-                            </div>
+                            <div class="status-icon"><i class="fas fa-check"></i></div>
                             <div class="item-info">
                                 <div class="item-name">${data.nama}</div>
-                                <div class="item-meta">Sumber: ${data.sumber} | ${data.tersisa} Pcs</div>
+                                <div class="item-meta">Ket: ${data.keterangan} | Sisa: ${data.sisa} ${data.satuan}</div>
                             </div>
-                            <div class="arrow-icon">
-                                <i class="fas fa-chevron-right"></i>
-                            </div>
+                            <i class="fas fa-chevron-right" style="color:#444"></i>
                         </a>
                     `;
-
-                    // Masukkan baris tersebut ke dalam container utama
                     listContainer.innerHTML += itemHTML;
                 });
-            } else {
-                listContainer.innerHTML = '<p style="text-align:center; padding: 20px;">Database Kosong.</p>';
             }
         });
     </script>
