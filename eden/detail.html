@@ -165,6 +165,26 @@ refBarang.on('value', (snapshot) => {
         document.getElementById('input-sisa-quick').value = data.sisa;
     }
 });
+		<script>
+    // Perbaikan warna teks input di light mode
+    const inputSisa = document.getElementById('input-sisa-quick');
+    // Tambahkan CSS dinamis lewat script
+    inputSisa.style.color = "var(--text)"; 
+    // Pastikan di CSS style.css, var(--text) berubah jadi hitam saat body.light aktif
+</script>
+
+<style>
+    /* Tambahkan ini di style detail agar input terbaca */
+    #input-sisa-quick {
+        background: rgba(255,255,255,0.05);
+        color: var(--text) !important; /* Paksa pakai warna tema */
+        border: 1px solid var(--line);
+    }
+    body.light #input-sisa-quick {
+        background: #f0f0f0;
+        color: #000 !important;
+    }
+</style>
     </script>
 
 </body>
