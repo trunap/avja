@@ -7,47 +7,33 @@
     <link rel="stylesheet" href="../assets/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-
-        .detail-container { 
-    max-width: 600px; 
-    margin: 0 auto; 
-    padding: 40px 20px 100px; /* Angka 40px ini yang bikin jarak dari atas */
-}
-
-.img-display { 
-    width: 100%; 
-    height: 350px; 
-    border-radius: 24px; 
-    object-fit: cover; 
-    border: 1px solid var(--line); 
-    background: var(--card); 
-    margin-bottom: 30px; 
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2); /* Tambah bayangan dikit biar makin cakep */
-}
         .detail-container { max-width: 600px; margin: 0 auto; padding: 0 20px 100px; }
         
-        /* Foto Header */
-        .img-display { width: 100%; height: 350px; border-radius: 24px; object-fit: cover; border: 1px solid var(--line); background: var(--card); margin-bottom: 30px; }
+        /* Tombol Kembali (Navigasi Cepat) */
+        .back-nav { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--it); font-weight: 800; font-size: 13px; margin-bottom: 25px; transition: 0.2s; padding-top: 10px; }
+        .back-nav:hover { opacity: 0.7; transform: translateX(-5px); }
 
-        /* Nama & Kategori */
-        .item-header { margin-bottom: 35px; }
-        .item-category { font-size: 13px; font-weight: 800; color: var(--it); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; display: block; }
-        .item-name { font-size: 38px; font-weight: 900; line-height: 1.1; margin: 0; color: var(--text); letter-spacing: -1px; }
+        /* HEADER JUDUL (Sekarang di Paling Atas) */
+        .item-header { margin-bottom: 30px; }
+        .item-category { font-size: 13px; font-weight: 800; color: var(--it); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 5px; display: block; }
+        
+        /* FIX: Ukuran Nama di H2 (32px), Tidak Segede Kemarin */
+        .item-name { font-size: 32px; font-weight: 900; line-height: 1.2; margin: 0; color: var(--text); letter-spacing: -1px; }
+
+        /* FOTO HEADER (Sekarang di Bawah Judul) */
+        .img-display { width: 100%; height: 350px; border-radius: 20px; object-fit: cover; border: 1px solid var(--line); background: var(--card); margin-bottom: 35px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); }
 
         /* Sisa Stok Section */
-        .stock-section { background: var(--card); border: 1px solid var(--line); border-radius: 24px; padding: 40px 20px; text-align: center; margin-bottom: 35px; }
+        .stock-section { background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: 40px 20px; text-align: center; margin-bottom: 35px; }
         .stock-label { font-size: 12px; font-weight: 800; opacity: 0.5; text-transform: uppercase; }
         
         /* Angka Sisa Besar */
         #sisa-angka { font-size: 100px; font-weight: 900; line-height: 1; margin: 10px 0; color: var(--text) !important; }
         body.light #sisa-angka { color: #000000 !important; }
         
-        /* Kontrol Stok (Tanpa Input Tengah) */
+        /* Kontrol Stok */
         .stock-controls { display: flex; gap: 25px; justify-content: center; align-items: center; margin-top: 20px; }
-        .btn-qty { 
-            width: 60px; height: 60px; border-radius: 18px; border: 1px solid var(--line); 
-            background: var(--card); color: var(--text); font-size: 24px; cursor: pointer; transition: 0.2s;
-        }
+        .btn-qty { width: 60px; height: 60px; border-radius: 18px; border: 1px solid var(--line); background: var(--card); color: var(--text); font-size: 24px; cursor: pointer; transition: 0.2s; }
         .btn-qty:active { transform: scale(0.9); }
         .btn-plus { background: var(--it) !important; color: white !important; border: none; }
 
@@ -56,12 +42,9 @@
         .desc-label { font-size: 14px; font-weight: 800; margin-bottom: 12px; display: block; opacity: 0.7; }
         .desc-text { font-size: 16px; line-height: 1.6; opacity: 0.9; white-space: pre-wrap; color: var(--text); }
 
-        /* Action Buttons di Bawah */
+        /* Action Buttons */
         .action-group { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
-        .btn-main { 
-            padding: 18px; border-radius: 16px; font-weight: 900; font-size: 15px; 
-            text-align: center; text-decoration: none; border: none; cursor: pointer; transition: 0.3s;
-        }
+        .btn-main { padding: 18px; border-radius: 16px; font-weight: 900; font-size: 15px; text-align: center; text-decoration: none; border: none; cursor: pointer; transition: 0.3s; }
         .btn-save { background: var(--it); color: white; }
         .btn-edit { background: var(--card); color: var(--text); border: 1px solid var(--line); }
         .btn-main:hover { transform: translateY(-3px); opacity: 0.9; }
@@ -72,12 +55,16 @@
     <div id="navbar-placeholder"></div>
 
     <div class="detail-container">
-        <img id="detail-img" class="img-display" src="" alt="Foto Barang">
+        <a href="invent_index.html" class="back-nav">
+            <i class="fas fa-arrow-left"></i> KEMBALI KE LIST
+        </a>
 
         <div class="item-header">
             <span id="detail-kategori" class="item-category">KATEGORI</span>
             <h1 id="detail-nama" class="item-name">Nama Barang</h1>
         </div>
+
+        <img id="detail-img" class="img-display" src="" alt="Foto Barang">
 
         <div class="stock-section">
             <span class="stock-label">Sisa Stok Saat Ini</span>
@@ -111,11 +98,9 @@
         const ref = database.ref('/' + id);
         let currentSisa = 0;
 
-        // Load Data Awal
         ref.once('value', snap => {
             const data = snap.val();
             if (!data) return;
-
             currentSisa = data.sisa || 0;
             document.getElementById('detail-nama').innerText = data.nama;
             document.getElementById('detail-kategori').innerText = data.kategori || 'UMUM';
@@ -126,21 +111,16 @@
             document.getElementById('link-edit').href = "invent_edit.html?id=" + id;
         });
 
-        // 1. Fungsi ubah angka di layar (Belum simpan ke database)
         function changeDisplay(val) {
             currentSisa += val;
             if (currentSisa < 0) currentSisa = 0;
             document.getElementById('sisa-angka').innerText = currentSisa;
         }
 
-        // 2. Fungsi Simpan permanen & Kembali
         function saveToFirebase() {
-            ref.update({
-                sisa: currentSisa,
-                status_habis: (currentSisa <= 0)
-            }).then(() => {
+            ref.update({ sisa: currentSisa, status_habis: (currentSisa <= 0) }).then(() => {
                 window.location.href = "invent_index.html";
-            }).catch(err => alert("Gagal simpan: " + err.message));
+            }).catch(err => alert("Gagal: " + err.message));
         }
     </script>
 </body>
