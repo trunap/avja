@@ -7,44 +7,37 @@
     <link rel="stylesheet" href="../assets/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* Tambahkan CSS Pill agar tidak kotak-kotak */
-        .btn-pill {
-            background: rgba(255,255,255,0.05); border: 1px solid var(--line); color: var(--text);
-            padding: 9px 18px; border-radius: 50px; font-size: 13px; font-weight: 700;
-            cursor: pointer; transition: 0.2s; white-space: nowrap;
-        }
+        .container { padding: 0 20px; max-width: 1200px; margin: 0 auto; }
+        .page-header { margin-top: 40px; margin-bottom: 30px; }
+        .btn-pill { background: rgba(255,255,255,0.05); border: 1px solid var(--line); color: var(--text); padding: 9px 18px; border-radius: 50px; font-size: 13px; font-weight: 700; cursor: pointer; transition: 0.2s; white-space: nowrap; }
         .btn-pill.active { background: var(--audio); color: white; border-color: var(--audio); }
         body.light .btn-pill { background: #fff; color: #333; }
-
-        .list-container { margin-top: 10px; border-radius: 14px; overflow: hidden; border: 1px solid var(--line); background: var(--card); min-height: 100px; }
+        .list-container { border-radius: 14px; overflow: hidden; border: 1px solid var(--line); background: var(--card); }
         .list-item { display: flex; align-items: center; padding: 18px 20px; border-bottom: 1px solid var(--line); text-decoration: none; color: inherit; }
         .list-item:hover { background: rgba(255,255,255,0.05); }
-        .status-circle { width: 10px; height: 10px; border-radius: 50%; margin-right: 15px; flex-shrink: 0; }
-        .item-info { flex-grow: 1; }
-        .item-name { font-weight: 800; font-size: 17px; display: block; }
-        .item-meta { opacity: 0.5; font-size: 12px; }
-
-        .btn-action-circle {
-            width: 40px; height: 40px; background: var(--card); border: 1px solid var(--line);
-            color: var(--text); border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            cursor: pointer; text-decoration: none;
-        }
+        .status-circle { width: 10px; height: 10px; border-radius: 50%; margin-right: 15px; }
+        .btn-action-circle { width: 40px; height: 40px; background: var(--card); border: 1px solid var(--line); color: var(--text); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; text-decoration: none; }
         #search-container { display: none; margin-bottom: 20px; }
-        #input-search { width: 100%; padding: 15px; border-radius: 12px; background: rgba(255,255,255,0.05); border: 1px solid var(--line); color: var(--text); }
+        #input-search { width: 100%; padding: 15px; border-radius: 12px; background: rgba(255,255,255,0.05); border: 1px solid var(--line); color: var(--text); outline: none; }
+        body.light #input-search { background: #f0f0f0; color: #000; }
     </style>
 </head>
 <body>
 
     <div id="navbar-placeholder"></div>
 
-    <div class="container" style="padding: 0 20px;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; gap: 10px;">
+    <div class="container">
+        <div class="page-header">
+            <h1 style="font-size: 48px; font-weight: 900; margin: 0; letter-spacing: -1px; text-transform: uppercase;">Inventaris</h1>
+            <p style="opacity: 0.5; margin-top: 5px;">Manajemen perlengkapan teknis regional.</p>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; gap: 10px;">
             <div class="filter-wrapper" style="display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none;">
                 <button onclick="filterBarang('Semua')" class="btn-pill active">Semua</button>
-                <button onclick="filterBarang('Audio')" class="btn-pill">Audio</button>
-                <button onclick="filterBarang('Video')" class="btn-pill">Video</button>
-                <button onclick="filterBarang('Podium')" class="btn-pill">Podium</button>
-                <button onclick="filterBarang('IT')" class="btn-pill">IT</button>
+                <button onclick="filterBarang('LED Wall')" class="btn-pill">LED Wall</button>
+                <button onclick="filterBarang('Booth')" class="btn-pill">Booth</button>
+                <button onclick="filterBarang('Kamera')" class="btn-pill">Kamera</button>
             </div>
             <div style="display: flex; gap: 10px;">
                 <button onclick="toggleSearch()" class="btn-action-circle"><i class="fas fa-search"></i></button>
@@ -52,50 +45,41 @@
             </div>
         </div>
 
-        <div id="search-container">
-            <input type="text" id="input-search" placeholder="Cari nama barang...">
-        </div>
-
-        <div class="list-container" id="inventory-list">
-            <p style="padding:40px; opacity:0.3; text-align:center;">Memuat data inventaris...</p>
-        </div>
+        <div id="search-container"><input type="text" id="input-search" placeholder="Cari nama barang..."></div>
+        <div class="list-container" id="inventory-list"><p style="padding:40px; opacity:0.3; text-align:center;">Memuat data...</p></div>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
     <script src="config.js"></script>
-    <script src="navbar.js"></script> <script src="../assets/theme.js"></script>
+    <script src="navbar.js"></script>
 
     <script>
         let currentFilter = "Semua";
         let allItems = {};
 
-        // Ambil Data
-        database.ref('/').on('value', (snapshot) => {
-            allItems = snapshot.val() || {};
-            renderList();
+        database.ref('/').on('value', (snap) => {
+            allItems = snap.val() || {};
+            render();
         });
 
-        function renderList() {
+        function render() {
             const container = document.getElementById('inventory-list');
             const keyword = document.getElementById('input-search').value.toLowerCase();
             container.innerHTML = '';
-            
             Object.entries(allItems).forEach(([key, data]) => {
                 if (!data || !data.nama) return;
-                const matchFilter = (currentFilter === "Semua" || data.kategori === currentFilter);
-                const matchSearch = data.nama.toLowerCase().includes(keyword);
-
-                if (matchFilter && matchSearch) {
+                const matchF = currentFilter === "Semua" || data.kategori === currentFilter;
+                const matchS = data.nama.toLowerCase().includes(keyword);
+                if (matchF && matchS) {
                     const isHabis = (parseInt(data.sisa) <= 0);
                     container.innerHTML += `
                         <a href="detail.html?id=${key}" class="list-item">
                             <div class="status-circle" style="background:${isHabis ? '#ff4d4d' : 'var(--audio)'}"></div>
                             <div class="item-info">
-                                <span class="item-name" style="color:${isHabis ? '#ff4d4d' : 'inherit'}">${data.nama}</span>
-                                <span class="item-meta">${data.kategori} | Sisa: ${data.sisa}</span>
+                                <b style="font-size:17px; color:${isHabis ? '#ff4d4d' : 'inherit'}">${data.nama}</b>
+                                <div style="opacity:0.5; font-size:12px;">${data.kategori} | Sisa: ${data.sisa} ${data.satuan || ''}</div>
                             </div>
-                            <i class="fas fa-chevron-right" style="opacity:0.2"></i>
                         </a>`;
                 }
             });
@@ -103,15 +87,16 @@
 
         function filterBarang(kat) {
             currentFilter = kat;
-            document.querySelectorAll('.btn-pill').forEach(btn => btn.classList.toggle('active', btn.innerText === kat));
-            renderList();
+            document.querySelectorAll('.btn-pill').forEach(b => b.classList.toggle('active', b.innerText === kat));
+            render();
         }
 
         function toggleSearch() {
             const box = document.getElementById('search-container');
             box.style.display = box.style.display === "none" ? "block" : "none";
+            if (box.style.display === "block") document.getElementById('input-search').focus();
         }
-        document.getElementById('input-search').addEventListener('input', renderList);
+        document.getElementById('input-search').addEventListener('input', render);
     </script>
 </body>
 </html>
