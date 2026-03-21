@@ -1,6 +1,50 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
+<link rel="stylesheet" href="../assets/style.css"> <style>
+	
+	/* Tombol Plus Bulat */
+.btn-plus-circle {
+    width: 42px;
+    height: 42px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    color: var(--text);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.btn-plus-circle:hover {
+    background: var(--it);
+    color: white;
+    transform: rotate(90deg) scale(1.1);
+    border-color: var(--it);
+}
+
+/* Tombol Kategori Lonjong (Pill) */
+.btn-pill {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--line);
+    color: var(--text);
+    padding: 10px 20px;
+    border-radius: 50px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.2s;
+    white-space: nowrap;
+}
+.btn-pill:hover { background: rgba(255,255,255,0.1); }
+.btn-pill.active { 
+    background: var(--audio); 
+    color: white; 
+    border-color: var(--audio);
+    box-shadow: 0 4px 12px rgba(77, 183, 255, 0.3);
+}
+	</style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inventaris - Regional 2026</title>
@@ -32,14 +76,26 @@
     <div class="container">
         <h1 class="hero-title">Semua Inventaris</h1>
 		<p class="hero-sub">Daftar perlengkapan teknis regional.</p>
-<div class="filter-group" style="margin-bottom: 20px; display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px;">
-    <button onclick="filterBarang('Semua')" class="btn-filter">Semua</button>
-    <button onclick="filterBarang('LED Wall')" class="btn-filter">LED Wall</button>
-    <button onclick="filterBarang('Booth')" class="btn-filter">Booth</button>
-    <button onclick="filterBarang('Kamera')" class="btn-filter">Kamera</button>
-</div>
-<a href="tambah_barang.html" style="display:block; text-align:center; padding:10px; background:var(--line); color:white; text-decoration:none; border-radius:10px; margin-bottom:20px; font-weight:700;">+ TAMBAH BARANG</a>
-        <div class="list-container" id="inventory-list">
+<div class="container">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+        <h1 class="hero-title" style="font-size: 32px; font-weight: 900; margin: 0;">Semua Inventaris</h1>
+        
+        <a href="tambah_barang.html" class="btn-plus-circle" title="Tambah Barang Baru">
+            <i class="fas fa-plus"></i>
+        </a>
+    </div>
+    <p class="hero-sub" style="margin-bottom: 25px;">Daftar perlengkapan teknis regional.</p>
+
+    <div class="filter-wrapper" style="display: flex; gap: 8px; overflow-x: auto; padding-bottom: 15px; scrollbar-width: none;">
+        <button onclick="filterBarang('Semua')" class="btn-pill active">Semua</button>
+        <button onclick="filterBarang('LED Wall')" class="btn-pill">LED Wall</button>
+        <button onclick="filterBarang('Booth')" class="btn-pill">Booth</button>
+        <button onclick="filterBarang('Kamera')" class="btn-pill">Kamera</button>
+    </div>
+
+    <div class="list-container" id="inventory-list">
+        </div>
+</div>        <div class="list-container" id="inventory-list">
             <p style="padding:20px; opacity:0.5;">Menghubungkan ke Firebase...</p>
         </div>
     </div>
