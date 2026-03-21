@@ -3,39 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daftar Inventaris Regional</title>
+    <title>Inventaris - Regional 2026</title>
+    <link rel="stylesheet" href="../assets/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; }
-        body { background-color: #121212; color: white; padding: 20px; }
-        .header-section { max-width: 800px; margin: auto; margin-bottom: 20px; display: flex; justify-content: space-between; }
-        .list-container { max-width: 800px; margin: auto; background-color: #1a1a1a; border-radius: 12px; border: 1px solid #2a2a2a; }
-        .list-item { display: flex; align-items: center; padding: 15px 20px; border-bottom: 1px solid #2a2a2a; text-decoration: none; color: white; transition: 0.2s; }
-        .list-item:hover { background-color: #252525; }
-        .status-icon { width: 35px; height: 35px; border-radius: 50%; border: 2px solid #333; margin-right: 15px; display: flex; align-items: center; justify-content: center; }
-        .list-item.aman .status-icon { border-color: #6a41d8; background-color: #6a41d8; color: white; }
+        /* Penyesuaian khusus agar list inventaris rapi dalam tema baru */
+        .list-container { margin-top: 20px; border-radius: 14px; overflow: hidden; border: 1px solid var(--line); background: var(--card); }
+        .list-item { display: flex; align-items: center; padding: 20px; border-bottom: 1px solid var(--line); text-decoration: none; color: inherit; transition: .25s; }
+        .list-item:hover { background: rgba(255,255,255,0.05); }
+        body.light .list-item:hover { background: rgba(0,0,0,0.03); }
+        .status-circle { width: 12px; height: 12px; border-radius: 50%; margin-right: 15px; }
         .item-info { flex-grow: 1; }
-        .item-name { font-weight: bold; }
-        .item-meta { color: #888; font-size: 0.85rem; }
+        .item-name { font-weight: 800; font-size: 18px; display: block; }
+        .item-meta { opacity: 0.6; font-size: 13px; }
     </style>
 </head>
 <body>
 
-    <div class="header-section">
-        <h3>Semua Inventaris</h3>
+    <nav class="navbar">
+        <div class="navbar-inner">
+            <a href="invent_index.html" class="brand">REGIONAL 2026</a>
+            <div class="nav">
+                <button class="theme-toggle" id="themeBtn">🌙 Dark</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1 class="hero-title">Semua Inventaris</h1>
+        <p class="hero-sub">Daftar perlengkapan teknis regional.</p>
+
+        <div class="list-container" id="inventory-list">
+            <p style="padding:20px; opacity:0.5;">Menghubungkan ke Firebase...</p>
+        </div>
     </div>
 
-    <div class="list-container" id="inventory-list">
-        <p style="text-align:center; padding: 20px; color: #888;">Memuat data...</p>
-    </div>
+    <script src="../assets/theme.js"></script>
 
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
 
-   <script>
-    // 1. Konfigurasi Firebase (Tetap pakai punya kamu yang asli)
-    const firebaseConfig = {
-		  apiKey: "AIzaSyBNHkgkLR6WEQXDU7OdMyyWuoo-8jcSERo",
+    <script>
+        const firebaseConfig = {
+			  apiKey: "AIzaSyBNHkgkLR6WEQXDU7OdMyyWuoo-8jcSERo",
 		  authDomain: "panduanteknis-6e258.firebaseapp.com",
 		  databaseURL: "https://panduanteknis-6e258-default-rtdb.firebaseio.com",
 		  projectId: "panduanteknis-6e258",
@@ -43,47 +53,37 @@
 		  messagingSenderId: "202324364776",
 		  appId: "1:202324364776:web:ddaf872764e19e5413685d",
 		  measurementId: "G-VGFJF9L8W0"
-				};
+			
+		};
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
 
-    firebase.initializeApp(firebaseConfig);
-    const database = firebase.database();
-    const listContainer = document.getElementById('inventory-list');
+        database.ref('/').on('value', (snapshot) => {
+            const allData = snapshot.val();
+            const listContainer = document.getElementById('inventory-list');
+            listContainer.innerHTML = '';
 
-    // 2. Memanggil data dari "Akar" (Root) Database
-    // Karena sekarang 001, 002 langsung ada di depan, kita pakai ref('/')
-    database.ref('/').on('value', (snapshot) => {
-        const allData = snapshot.val();
-        
-        // Bersihkan list sebelum isi baru
-        listContainer.innerHTML = '';
-
-        if (allData) {
-            // Kita looping semua "Key" (001, 002, dst)
-            Object.entries(allData).forEach(([key, data]) => {
-                
-                // Cek apakah data ini benar-benar object barang (punya nama)
-                // Ini untuk jaga-jaga kalau ada data "sampah" di database
-                if (data && data.nama) {
-                    
-                    const statusClass = (data.sisa > 0) ? 'aman' : 'habis';
-
-                    const itemHTML = `
-                        <a href="detail.html?id=${key}" class="list-item ${statusClass}">
-                            <div class="status-icon"><i class="fas fa-check"></i></div>
-                            <div class="item-info">
-                                <div class="item-name">${data.nama}</div>
-                                <div class="item-meta">Ket: ${data.keterangan || '-'} | Sisa: ${data.sisa} ${data.satuan}</div>
-                            </div>
-                            <i class="fas fa-chevron-right" style="color:#444"></i>
-                        </a>
-                    `;
-                    listContainer.innerHTML += itemHTML;
-                }
-            });
-        } else {
-            listContainer.innerHTML = '<p style="text-align:center; padding: 20px;">Database Kosong atau Belum Terhubung.</p>';
-        }
-    });
-</script>
+            if (allData) {
+                Object.entries(allData).forEach(([key, data]) => {
+                    if (data && data.nama) {
+                        // Gunakan warna dari CSS root (misal warna IT untuk status)
+                        const statusColor = (data.sisa > 0) ? 'var(--it)' : '#ff4d4d';
+                        
+                        const itemHTML = `
+                            <a href="detail.html?id=${key}" class="list-item">
+                                <div class="status-circle" style="background:${statusColor}"></div>
+                                <div class="item-info">
+                                    <span class="item-name">${data.nama}</span>
+                                    <span class="item-meta">${data.keterangan || '-'} | Sisa: ${data.sisa} ${data.satuan}</span>
+                                </div>
+                                <i class="fas fa-chevron-right" style="opacity:0.3"></i>
+                            </a>
+                        `;
+                        listContainer.innerHTML += itemHTML;
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 </html>
