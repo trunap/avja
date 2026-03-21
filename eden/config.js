@@ -1,4 +1,4 @@
-// assets/config.js
+// eden/config.js
 
 const firebaseConfig = {
     apiKey: "AIzaSyBNHkgkLR6WEQXDU7OdMyyWuoo-8jcSERo",
