@@ -43,35 +43,73 @@
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
 
     <script>
-        // --- KONFIGURASI FIREBASE (Sama dengan invent_index.html) ---
-        const firebaseConfig = { apiKey: "AIzaSyD...", ... }; 
-        firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
+    // 1. Konfigurasi Firebase (Gunakan milikmu yang asli)
+    const firebaseConfig = {
+		  apiKey: "AIzaSyBNHkgkLR6WEQXDU7OdMyyWuoo-8jcSERo",
+		  authDomain: "panduanteknis-6e258.firebaseapp.com",
+		  databaseURL: "https://panduanteknis-6e258-default-rtdb.firebaseio.com",
+		  projectId: "panduanteknis-6e258",
+		  storageBucket: "panduanteknis-6e258.firebasestorage.app",
+		  messagingSenderId: "202324364776",
+		  appId: "1:202324364776:web:ddaf872764e19e5413685d",
+		  measurementId: "G-VGFJF9L8W0"
+				};
 
-        const urlParams = new URLSearchParams(window.location.search);
-        const idBarang = urlParams.get('id');
 
-        // Ambil data dari folder '0' lalu sub-folder idBarang
-        const refBarang = database.ref('0/' + idBarang);
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
 
-        refBarang.on('value', (snapshot) => {
-            const data = snapshot.val();
-            if (data) {
-                document.getElementById('nama-barang').innerText = data.nama;
-                document.getElementById('ket-barang').innerText = data.keterangan || "-";
-                document.getElementById('total-lengkap').innerText = data.total + " " + data.satuan;
-                document.getElementById('sisa-angka').innerText = data.sisa;
-                document.getElementById('satuan-teks').innerText = data.satuan;
-                document.getElementById('input-sisa').value = data.sisa;
-            }
+    // 2. Ambil ID dari URL (Contoh: ?id=001)
+    const urlParams = new URLSearchParams(window.location.search);
+    const idBarang = urlParams.get('id');
+
+    if (!idBarang) {
+        alert("ID Barang tidak ditemukan!");
+        window.location.href = 'invent_index.html';
+    }
+
+    // 3. Referensi langsung ke ID barang di root database
+    // Dulu: .ref('0/' + idBarang) -> SEKARANG: .ref('/' + idBarang)
+    const refBarang = database.ref('/' + idBarang);
+
+    // --- A. BACA DATA ---
+    refBarang.on('value', (snapshot) => {
+        const data = snapshot.val();
+        
+        if (data) {
+            // Update tampilan HTML
+            document.getElementById('nama-barang').innerText = data.nama || "Tanpa Nama";
+            document.getElementById('ket-barang').innerText = data.keterangan || "-";
+            document.getElementById('total-lengkap').innerText = (data.total || 0) + " " + (data.satuan || "");
+            document.getElementById('sisa-angka').innerText = data.sisa || 0;
+            document.getElementById('satuan-teks').innerText = data.satuan || "";
+            
+            // Isi input field dengan angka sisa saat ini
+            document.getElementById('input-sisa').value = data.sisa;
+        } else {
+            document.getElementById('nama-barang').innerText = "Barang Tidak Ditemukan";
+        }
+    });
+
+    // --- B. UPDATE DATA ---
+    document.getElementById('btn-update').addEventListener('click', () => {
+        const sisaBaru = document.getElementById('input-sisa').value;
+
+        if (sisaBaru === "" || isNaN(sisaBaru)) {
+            alert("Masukkan angka yang valid!");
+            return;
+        }
+
+        // Update ke Firebase
+        refBarang.update({
+            sisa: parseInt(sisaBaru)
+        }).then(() => {
+            alert("Berhasil memperbarui sisa stok!");
+        }).catch((error) => {
+            console.error("Error:", error);
+            alert("Gagal update data.");
         });
-
-        document.getElementById('btn-update').addEventListener('click', () => {
-            const sisaBaru = document.getElementById('input-sisa').value;
-            refBarang.update({
-                sisa: parseInt(sisaBaru)
-            }).then(() => alert("Data berhasil diperbarui!"));
-        });
-    </script>
+    });
+</script>
 </body>
 </html>
