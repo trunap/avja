@@ -111,6 +111,10 @@
                     frame.innerHTML = `<span style="opacity: 0.2;">Tidak ada foto</span>`;
                 }
             }
+			if (data.foto_url) {
+    let linkTampil = data.foto_url.replace('i.ibb.co/', 'i.ibb.co.com/');
+    frame.innerHTML = `<img src="${linkTampil}" style="width:100%; height:100%; object-fit:cover;">`;
+}
         });
 
         // Simpan perubahan sisa stok saja
@@ -121,12 +125,5 @@
         });
     </script>
 
-	<script>
-		// Di dalam refBarang.on('value', ...
-if (data.foto_url) {
-    let linkTampil = data.foto_url.replace('i.ibb.co/', 'i.ibb.co.com/');
-    frame.innerHTML = `<img src="${linkTampil}" style="width:100%; height:100%; object-fit:cover;">`;
-}
-	</script>
 </body>
 </html>
