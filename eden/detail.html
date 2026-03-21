@@ -1,192 +1,138 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-			<script>
-    // Perbaikan warna teks input di light mode
-    const inputSisa = document.getElementById('input-sisa-quick');
-    // Tambahkan CSS dinamis lewat script
-    inputSisa.style.color = "var(--text)"; 
-    // Pastikan di CSS style.css, var(--text) berubah jadi hitam saat body.light aktif
-</script>
-
-<style>
-    /* Tambahkan ini di style detail agar input terbaca */
-    #input-sisa-quick {
-        background: rgba(255,255,255,0.05);
-        color: var(--text) !important; /* Paksa pakai warna tema */
-        border: 1px solid var(--line);
-    }
-    body.light #input-sisa-quick {
-        background: #f0f0f0;
-        color: #000 !important;
-    }
-</style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detail Inventaris - Regional 2026</title>
+    <title>Detail Barang - Regional 2026</title>
     <link rel="stylesheet" href="../assets/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        .detail-card { background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: 25px; margin-top: 20px; text-align: center; }
+        .detail-container { max-width: 600px; margin: 0 auto; padding: 0 20px 50px; }
         
-        /* Wadah Foto Barang */
-        #photo-frame { width: 100%; height: 250px; border-radius: 15px; background: rgba(0,0,0,0.2); margin-bottom: 20px; overflow: hidden; border: 1px solid var(--line); display: flex; align-items: center; justify-content: center; }
-        #photo-frame img { width: 100%; height: 100%; object-fit: cover; }
+        /* Foto Detail */
+        .img-header { 
+            width: 100%; height: 300px; border-radius: 20px; object-fit: cover; 
+            margin-bottom: 25px; border: 1px solid var(--line); background: var(--card);
+        }
 
-        .big-sisa { font-size: 80px; font-weight: 900; color: var(--it); line-height: 1; margin: 10px 0; }
-        .label-caps { font-size: 12px; font-weight: 800; letter-spacing: 2px; opacity: 0.5; text-transform: uppercase; }
+        /* Card Sisa Stok & Perbaikan Warna Angka */
+        .stock-card { 
+            background: var(--card); border: 1px solid var(--line); padding: 25px; 
+            border-radius: 20px; text-align: center; margin-bottom: 25px;
+        }
+        .stock-label { font-size: 12px; font-weight: 800; opacity: 0.6; text-transform: uppercase; letter-spacing: 1px; }
         
-        .action-group { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 30px; }
-        .btn-edit { background: transparent; color: var(--text); border: 1px solid var(--line); padding: 15px; border-radius: 12px; font-weight: 700; text-decoration: none; transition: .2s; display: flex; align-items: center; justify-content: center; gap: 10px; }
-        .btn-edit:hover { background: var(--line); }
-        
-        .quick-update { margin-top: 25px; padding-top: 20px; border-top: 1px solid var(--line); }
-        .input-mini { background: rgba(255,255,255,0.05); border: 1px solid var(--line); color: white; padding: 12px; border-radius: 8px; width: 80px; text-align: center; font-weight: 700; margin-right: 10px; }
-        .btn-save-mini { background: var(--it); color: white; border: none; padding: 12px 20px; border-radius: 8px; font-weight: 700; cursor: pointer; }
+        /* FIX: Angka Sisa agar terbaca di Light/Dark Mode */
+        #sisa-angka { 
+            font-size: 64px; font-weight: 900; line-height: 1; margin: 10px 0;
+            color: var(--text) !important; 
+        }
+        body.light #sisa-angka { color: #000000 !important; }
+
+        /* Quick Update Input */
+        .quick-update { 
+            display: flex; gap: 10px; justify-content: center; align-items: center; margin-top: 15px; 
+        }
+        .input-qty { 
+            width: 80px; padding: 12px; border-radius: 10px; border: 1px solid var(--line); 
+            background: rgba(255,255,255,0.05); color: var(--text); text-align: center; font-weight: 900;
+        }
+        body.light .input-qty { background: #f0f0f0; color: #000; }
+
+        /* Info List */
+        .info-box { margin-bottom: 30px; }
+        .info-row { display: flex; justify-content: space-between; padding: 15px 0; border-bottom: 1px solid var(--line); }
+        .info-label { opacity: 0.5; font-size: 14px; }
+        .info-value { font-weight: 700; text-align: right; }
+
+        .btn-edit { 
+            display: block; width: 100%; padding: 18px; border-radius: 15px; background: var(--card); 
+            color: var(--text); text-align: center; text-decoration: none; font-weight: 800; border: 1px solid var(--line);
+        }
     </style>
 </head>
 <body>
 
-    <nav class="navbar">
-        <div class="navbar-inner">
-            <a href="invent_index.html" class="brand">← KEMBALI</a>
-            <button class="theme-toggle" id="themeBtn">🌙 Dark</button>
-        </div>
-    </nav>
+    <div id="navbar-placeholder"></div>
 
-    <div class="container" style="max-width: 500px;">
-        <div class="detail-card">
-            
-            <div id="photo-frame">
-                <span style="opacity: 0.3;">Memuat Foto...</span>
-            </div>
+    <div class="detail-container">
+        <img id="detail-img" class="img-header" src="" alt="Foto Barang">
 
-            <h1 id="nama-barang" style="font-weight:900; font-size: 28px;">...</h1>
-            <p id="ket-barang" style="opacity:0.6; margin-bottom: 20px; font-size: 14px; line-height: 1.5;">-</p>
-            
-            <div class="label-caps">Sisa Stok</div>
-            <div class="big-sisa" id="sisa-angka">0</div>
-            <div id="satuan-teks" style="font-weight: 700; opacity: 0.8; margin-bottom: 10px;">Unit</div>
-            <div style="opacity:0.4; font-size:13px;">Total Aset: <span id="total-stok">0</span></div>
+        <div class="stock-card">
+            <span class="stock-label">Sisa Stok Saat Ini</span>
+            <div id="sisa-angka">0</div>
+            <span id="detail-satuan" style="font-weight: 700; opacity: 0.5;">Pcs</span>
+
             <div class="quick-update">
-                <input type="number" id="input-sisa-quick" class="input-mini">
-                <button id="btn-save-quick" class="btn-save-mini">Update Sisa</button>
-            </div>
-
-            <div class="action-group">
-                <a id="link-edit" href="#" class="btn-edit">
-                    <i class="fas fa-edit"></i> Edit Informasi Lengkap
-                </a>
+                <button onclick="updateStok(-1)" class="btn-pill">- 1</button>
+                <input type="number" id="input-manual" class="input-qty" value="1">
+                <button onclick="updateStok(1)" class="btn-pill" style="background:var(--it); border-color:var(--it); color:white;">+ 1</button>
             </div>
         </div>
-    </div>
 
-    <script src="../assets/theme.js"></script>
+        <div class="info-box">
+            <div class="info-row">
+                <span class="info-label">Nama Barang</span>
+                <span class="info-value" id="detail-nama">-</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Kategori / Tim</span>
+                <span class="info-value" id="detail-kategori">-</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Total Inventaris</span>
+                <span class="info-value" id="detail-total">-</span>
+            </div>
+            <div class="info-row" style="flex-direction: column; gap: 10px;">
+                <span class="info-label">Keterangan</span>
+                <p id="detail-ket" style="margin:0; font-size: 15px; line-height: 1.5; color: var(--text); opacity: 0.8;">-</p>
+            </div>
+        </div>
+
+        <a id="link-edit" href="#" class="btn-edit"><i class="fas fa-edit"></i> Edit Informasi Barang</a>
+    </div>
 
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
+    <script src="config.js"></script>
+    <script src="navbar.js"></script>
+    <script src="../assets/theme.js"></script>
 
     <script>
-        // --- MASUKKAN CONFIG FIREBASE KAMU DI SINI ---
-        const firebaseConfig = {
-            apiKey: "AIzaSyBNHkgkLR6WEQXDU7OdMyyWuoo-8jcSERo",
-		  authDomain: "panduanteknis-6e258.firebaseapp.com",
-		  databaseURL: "https://panduanteknis-6e258-default-rtdb.firebaseio.com",
-		  projectId: "panduanteknis-6e258",
-		  storageBucket: "panduanteknis-6e258.firebasestorage.app",
-		  messagingSenderId: "202324364776",
-		  appId: "1:202324364776:web:ddaf872764e19e5413685d",
-		  measurementId: "G-VGFJF9L8W0"
-        };
-        firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
-
-        // Ambil ID dari URL
         const urlParams = new URLSearchParams(window.location.search);
-        const idBarang = urlParams.get('id');
-        const refBarang = database.ref('/' + idBarang);
+        const itemId = urlParams.get('id');
+        const itemRef = database.ref('/' + itemId);
 
-        // Pasang link edit secara otomatis
-        if (idBarang) {
-            document.getElementById('link-edit').href = `invent_edit.html?id=${idBarang}`;
-        }
+        // Ambil Data
+        itemRef.on('value', (snap) => {
+            const data = snap.val();
+            if (!data) return;
 
-        // AMBIL DATA REALTIME
-        refBarang.on('value', (snapshot) => {
-            const data = snapshot.val();
-            if (data) {
-                document.getElementById('nama-barang').innerText = data.nama || "Tanpa Nama";
-                document.getElementById('ket-barang').innerText = data.keterangan || "-";
-                document.getElementById('sisa-angka').innerText = data.sisa || 0;
-                document.getElementById('total-stok').innerText = (data.total || 0) + " " + (data.satuan || "");
-                document.getElementById('satuan-teks').innerText = data.satuan || "";
-                document.getElementById('input-sisa-quick').value = data.sisa || 0;
+            document.getElementById('detail-nama').innerText = data.nama;
+            document.getElementById('detail-kategori').innerText = data.kategori;
+            document.getElementById('detail-total').innerText = data.total + " " + data.satuan;
+            document.getElementById('detail-satuan').innerText = data.satuan;
+            document.getElementById('detail-ket').innerText = data.keterangan || "Tidak ada keterangan.";
+            document.getElementById('sisa-angka').innerText = data.sisa;
+            document.getElementById('detail-img').src = data.foto_url || 'https://via.placeholder.com/500x300?text=No+Image';
+            document.getElementById('link-edit').href = "invent_edit.html?id=" + itemId;
+        });
 
-                // Tampilkan Foto dari foto_url
-                const frame = document.getElementById('photo-frame');
-                if (data.foto_url && data.foto_url !== "") {
-                    frame.innerHTML = `<img src="${data.foto_url}" alt="${data.nama}">`;
-                } else {
-                    frame.innerHTML = `<span style="opacity: 0.2;">Tidak ada foto</span>`;
+        // Update Stok Cepat
+        function updateStok(change) {
+            const manualVal = parseInt(document.getElementById('input-manual').value) || 1;
+            const step = change * manualVal;
+
+            itemRef.transaction((currentData) => {
+                if (currentData) {
+                    let newSisa = (currentData.sisa || 0) + step;
+                    if (newSisa < 0) newSisa = 0; // Gak boleh minus
+                    currentData.sisa = newSisa;
+                    currentData.status_habis = (newSisa <= 0);
                 }
-            }
-			if (data.foto_url) {
-    let linkTampil = data.foto_url.replace('i.ibb.co/', 'i.ibb.co.com/');
-    frame.innerHTML = `<img src="${linkTampil}" style="width:100%; height:100%; object-fit:cover;">`;
-}
-        });
-
-        // Simpan perubahan sisa stok saja
-        document.getElementById('btn-save-quick').addEventListener('click', () => {
-            const val = document.getElementById('input-sisa-quick').value;
-            refBarang.update({ sisa: parseInt(val) })
-            .then(() => alert("Stok diperbarui!"));
-        });
-
-		// BACA STATUS SWITCH
-refBarang.on('value', (snapshot) => {
-    const data = snapshot.val();
-    if(data) {
-        const toggleHabis = document.getElementById('toggle-habis');
-        toggleHabis.checked = data.status_habis || false;
-        
-        // Ganti warna angka sisa secara realtime
-        const sisaAngka = document.getElementById('sisa-angka');
-        sisaAngka.style.color = (data.sisa <= 0 || data.status_habis) ? '#ff4d4d' : 'var(--it)';
-    }
-});
-
-// LOGIKA KLIK SWITCH
-document.getElementById('toggle-habis').addEventListener('change', (e) => {
-    const isChecked = e.target.checked;
-    
-    // Jika diaktifkan, sisa jadi 0. Jika dimatikan, sisa kembali ke total.
-    refBarang.update({
-        status_habis: isChecked,
-        sisa: isChecked ? 0 : parseInt(document.getElementById('total-stok').innerText)
-    }).then(() => {
-        alert(isChecked ? "Barang ditandai habis!" : "Status dikembalikan.");
-    });
-});
-
-			// BACA DATA REALTIME
-refBarang.on('value', (snapshot) => {
-    const data = snapshot.val();
-    if(data) {
-        const sisaAngka = document.getElementById('sisa-angka');
-        sisaAngka.innerText = data.sisa;
-        
-        // Warna angka sisa: Merah jika 0, Ungu/IT jika masih ada
-        sisaAngka.style.color = (parseInt(data.sisa) <= 0) ? '#ff4d4d' : 'var(--it)';
-        
-        // Isi data lainnya
-        document.getElementById('nama-barang').innerText = data.nama;
-        document.getElementById('total-stok').innerText = data.total + " " + data.satuan;
-        document.getElementById('input-sisa-quick').value = data.sisa;
-    }
-});
-
+                return currentData;
+            });
+        }
     </script>
-
 </body>
 </html>
