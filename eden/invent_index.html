@@ -58,7 +58,7 @@
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
-        // AMBIL DATA DARI CONFIG.JS
+// AMBIL DATA DARI CONFIG.JS
 database.ref('/').on('value', (snapshot) => {
     const allData = snapshot.val();
     const listContainer = document.getElementById('inventory-list');
@@ -67,8 +67,8 @@ database.ref('/').on('value', (snapshot) => {
     if (allData) {
         Object.entries(allData).forEach(([key, data]) => {
             if (data && data.nama) {
-                // LOGIKA WARNA: Merah jika sisa 0 atau status_habis aktif
-                const isHabis = (data.sisa <= 0 || data.status_habis === true);
+                // RULE WARNA: Merah jika sisa 0, Biru jika > 0
+                const isHabis = (parseInt(data.sisa) <= 0);
                 const colorTheme = isHabis ? '#ff4d4d' : 'var(--audio)'; // Merah vs Biru
                 
                 const itemHTML = `
