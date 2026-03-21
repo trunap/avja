@@ -73,23 +73,29 @@
         </div>
     </nav>
 
-    <div class="container">
-        <h1 class="hero-title">Semua Inventaris</h1>
-		<p class="hero-sub">Daftar perlengkapan teknis regional.</p>
 <div class="container">
-       <div class="filter-wrapper" style="display: flex; gap: 8px; overflow-x: auto; padding-bottom: 15px; scrollbar-width: none;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+        <h1 class="hero-title" style="font-size: 32px; font-weight: 900; margin: 0;">Semua Inventaris</h1>
+        
+        <a href="tambah_barang.html" class="btn-plus-circle" title="Tambah Barang Baru">
+            <i class="fas fa-plus"></i>
+        </a>
+    </div>
+    <p class="hero-sub" style="margin-bottom: 25px;">Daftar perlengkapan teknis regional.</p>
+
+    <div class="filter-wrapper" style="display: flex; gap: 8px; overflow-x: auto; padding-bottom: 15px;">
         <button onclick="filterBarang('Semua')" class="btn-pill active">Semua</button>
         <button onclick="filterBarang('LED Wall')" class="btn-pill">LED Wall</button>
         <button onclick="filterBarang('Booth')" class="btn-pill">Booth</button>
         <button onclick="filterBarang('Kamera')" class="btn-pill">Kamera</button>
     </div>
-
-    <div class="list-container" id="inventory-list">
-        </div>
-</div>        <div class="list-container" id="inventory-list">
-            <p style="padding:20px; opacity:0.5;">Menghubungkan ke Firebase...</p>
-        </div>
+    
     </div>
+
+   <div class="list-container" id="inventory-list">
+    <p style="padding:20px; opacity:0.3; text-align:center;">Memuat data...</p>
+</div>
+    
 
     <script src="../assets/theme.js"></script>
 
