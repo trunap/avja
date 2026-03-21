@@ -31,8 +31,14 @@
 
     <div class="container">
         <h1 class="hero-title">Semua Inventaris</h1>
-        <p class="hero-sub">Daftar perlengkapan teknis regional.</p>
-
+		<p class="hero-sub">Daftar perlengkapan teknis regional.</p>
+<div class="filter-group" style="margin-bottom: 20px; display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px;">
+    <button onclick="filterBarang('Semua')" class="btn-filter">Semua</button>
+    <button onclick="filterBarang('LED Wall')" class="btn-filter">LED Wall</button>
+    <button onclick="filterBarang('Booth')" class="btn-filter">Booth</button>
+    <button onclick="filterBarang('Kamera')" class="btn-filter">Kamera</button>
+</div>
+<a href="tambah_barang.html" style="display:block; text-align:center; padding:10px; background:var(--line); color:white; text-decoration:none; border-radius:10px; margin-bottom:20px; font-weight:700;">+ TAMBAH BARANG</a>
         <div class="list-container" id="inventory-list">
             <p style="padding:20px; opacity:0.5;">Menghubungkan ke Firebase...</p>
         </div>
@@ -86,6 +92,39 @@ database.ref('/').on('value', (snapshot) => {
         });
     }
 });
+		let currentFilter = "Semua";
+
+function filterBarang(kat) {
+    currentFilter = kat;
+    renderList(); // Panggil fungsi untuk gambar ulang list
+}
+
+function renderList() {
+    database.ref('/').once('value').then((snapshot) => {
+        const allData = snapshot.val();
+        const listContainer = document.getElementById('inventory-list');
+        listContainer.innerHTML = '';
+
+        Object.entries(allData).forEach(([key, data]) => {
+            // Logika Filter: Tampilkan jika kategori cocok atau filter adalah 'Semua'
+            if (currentFilter === "Semua" || data.kategori === currentFilter) {
+                const isHabis = (parseInt(data.sisa) <= 0);
+                const colorTheme = isHabis ? '#ff4d4d' : 'var(--audio)';
+                
+                listContainer.innerHTML += `
+                    <a href="detail.html?id=${key}" class="list-item">
+                        <div class="status-circle" style="background:${colorTheme}"></div>
+                        <div class="item-info">
+                            <span class="item-name" style="color:${isHabis ? '#ff4d4d' : 'inherit'}">${data.nama}</span>
+                            <span class="item-meta">${data.kategori || 'Lain-lain'} | Sisa: ${data.sisa}</span>
+                        </div>
+                    </a>`;
+            }
+        });
+    });
+}
+// Panggil pertama kali saat loading
+renderList();
     </script>
 </body>
 </html>
