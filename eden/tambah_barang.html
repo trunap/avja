@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tambah Barang - Regional 2026</title>
+    <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+    <nav class="navbar"><div class="navbar-inner"><a href="index.html" class="brand">← CANCEL</a></div></nav>
+    <div class="container" style="max-width: 500px; margin-top: 20px;">
+        <h2 style="font-weight:900; margin-bottom:20px;">TAMBAH BARANG BARU</h2>
+        <div class="form-group">
+            <label>ID Barang (Contoh: 015)</label>
+            <input type="text" id="new-id" placeholder="015" style="width:100%; padding:15px; border-radius:10px; background:rgba(255,255,255,0.05); border:1px solid var(--line); color:white;">
+        </div>
+        <div class="form-group" style="margin-top:15px;">
+            <label>Nama Barang</label>
+            <input type="text" id="new-nama" placeholder="Nama Barang" style="width:100%; padding:15px; border-radius:10px; background:rgba(255,255,255,0.05); border:1px solid var(--line); color:white;">
+        </div>
+        <div class="form-group" style="margin-top:15px;">
+            <label>Kategori</label>
+            <select id="new-kategori" style="width:100%; padding:15px; border-radius:10px; background:rgba(255,255,255,0.05); border:1px solid var(--line); color:white;">
+                <option value="LED Wall">LED Wall</option>
+                <option value="Booth">Booth</option>
+                <option value="Kamera">Kamera</option>
+                <option value="Lain-lain">Lain-lain</option>
+            </select>
+        </div>
+        <button id="btn-tambah" style="width:100%; padding:18px; border-radius:12px; background:var(--it); color:white; border:none; font-weight:900; margin-top:30px; cursor:pointer;">SIMPAN BARANG</button>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
+    <script src="config.js"></script>
+    <script>
+        document.getElementById('btn-tambah').addEventListener('click', () => {
+            const id = document.getElementById('new-id').value;
+            const data = {
+                nama: document.getElementById('new-nama').value,
+                kategori: document.getElementById('new-kategori').value,
+                sisa: 0,
+                total: 0,
+                satuan: "Pcs",
+                foto_url: ""
+            };
+            if(id && data.nama) {
+                database.ref('/' + id).set(data).then(() => {
+                    alert("Barang Berhasil Ditambahkan!");
+                    window.location.href = "index.html";
+                });
+            } else { alert("ID dan Nama wajib diisi!"); }
+        });
+    </script>
+</body>
+</html>
