@@ -3,53 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detail Inventaris</title>
+    <title>Detail & Ubah Stok</title>
     <style>
-        body { background: #121212; color: white; font-family: sans-serif; padding: 40px; }
-        .container { max-width: 600px; margin: auto; border-left: 5px solid #6a41d8; padding-left: 20px; }
-        h1 { font-size: 3rem; margin-bottom: 10px; }
-        p { color: #bbb; margin-bottom: 30px; }
-        ul { list-style: none; padding: 0; }
-        li { background: #222; margin: 10px 0; padding: 15px; border-radius: 8px; }
-        .btn-back { display: inline-block; margin-top: 30px; color: #6a41d8; text-decoration: none; font-weight: bold; }
+        body { background: #121212; color: white; font-family: sans-serif; text-align: center; padding: 50px; }
+        .container { max-width: 400px; margin: auto; background: #1e1e1e; padding: 30px; border-radius: 15px; border: 1px solid #333; }
+        .back-link { display: block; text-align: left; color: #888; text-decoration: none; margin-bottom: 20px; font-size: 0.9rem; }
+        .back-link:hover { color: white; }
+        h1 { font-size: 1.8rem; margin-bottom: 5px; }
+        .data-info { color: #888; margin-bottom: 20px; font-size: 0.9rem; }
+        .realtime-text { font-size: 4rem; font-weight: bold; color: #6a41d8; margin: 20px 0; }
+        input { background: #2a2a2a; border: 1px solid #444; color: white; padding: 15px; border-radius: 8px; width: 100%; font-size: 1.2rem; text-align: center; box-sizing: border-box; margin-bottom: 20px; }
+        button { background: #6a41d8; color: white; border: none; padding: 15px 30px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; font-size: 1rem; }
+        button:hover { background: #5a31c8; }
     </style>
 </head>
 <body>
 
-    <div class="container" id="content">
-        <h1 id="title">Loading...</h1>
-        <p id="desc"></p>
-        <ul id="item-list"></ul>
-        <a href="index.html" class="btn-back">← Kembali ke Home</a>
+    <div class="container">
+        <a href="index.html" class="back-link">← Kembali ke Daftar</a>
+        
+        <h1 id="nama-barang">Loading...</h1>
+        <div class="data-info">Sumber: <span id="sumber-barang">--</span> | Total: <span id="total-stok">--</span> Pcs</div>
+        
+        <p>Tersisa Sekarang:</p>
+        <div class="realtime-text" id="tersisa-stok">--</div>
+
+        <p>Ubah Jumlah Tersisa:</p>
+        <input type="number" id="input-tersisa">
+        
+        <button id="btn-simpan">💾 Simpan Perubahan</button>
     </div>
 
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
+
     <script>
-        // 1. Ambil ID dari URL (Contoh: detail.html?id=kamera)
+        // 1. Konfigurasi (GANTI DENGAN KODE KAMU)
+        const firebaseConfig = {
+            apiKey: "AIzaSyBNHkgkLR6WEQXDU7OdMyyWuoo-8jcSERo",
+		  authDomain: "panduanteknis-6e258.firebaseapp.com",
+		  databaseURL: "https://panduanteknis-6e258-default-rtdb.firebaseio.com",
+		  projectId: "panduanteknis-6e258",
+		  storageBucket: "panduanteknis-6e258.firebasestorage.app",
+		  messagingSenderId: "202324364776",
+		  appId: "1:202324364776:web:ddaf872764e19e5413685d",
+		  measurementId: "G-VGFJF9L8W0"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        // 2. Tangkap ID Barang dari URL (Contoh: ?id=barang_03)
         const urlParams = new URLSearchParams(window.location.search);
-        const categoryId = urlParams.get('id');
+        const barangId = urlParams.get('id');
 
-        // 2. Panggil file JSON
-        fetch('database.json')
-            .then(response => response.json())
-            .then(data => {
-                const pageData = data[categoryId];
+        if (!barangId) {
+            alert("ID Barang tidak ditemukan di URL!");
+            window.location.href = 'index.html'; // Kembalikan ke home jika error
+        }
 
-                if (pageData) {
-                    // 3. Masukkan data ke HTML
-                    document.getElementById('title').innerText = pageData.judul;
-                    document.getElementById('desc').innerText = pageData.deskripsi;
-                    
-                    const listContainer = document.getElementById('item-list');
-                    pageData.list.forEach(item => {
-                        let li = document.createElement('li');
-                        li.innerText = item;
-                        listContainer.appendChild(li);
-                    });
-                } else {
-                    document.getElementById('title').innerText = "Data Tidak Ditemukan";
-                }
-            })
-            .catch(err => console.error("Gagal ambil data:", err));
+        // 3. Referensi ke data spesifik barang tersebut (inventaris/barang_03)
+        const refSpesifik = database.ref('inventaris/' + barangId);
+
+        // A. Baca Data Realtime Barang Spesifik
+        refSpesifik.on('value', (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                document.getElementById('nama-barang').innerText = data.nama;
+                document.getElementById('sumber-barang').innerText = data.sumber;
+                document.getElementById('total-stok').innerText = data.total;
+                document.getElementById('tersisa-stok').innerText = data.tersisa;
+                document.getElementById('input-tersisa').value = data.tersisa;
+            } else {
+                document.getElementById('nama-barang').innerText = "Barang Tidak Ditemukan";
+            }
+        });
+
+        // B. Fungsi Tombol Simpan
+        document.getElementById('btn-simpan').addEventListener('click', () => {
+            const jumlahBaru = document.getElementById('input-tersisa').value;
+            if (jumlahBaru === "" || isNaN(jumlahBaru)) { alert("Masukkan angka valid"); return; }
+
+            // Update data di Firebase
+            refSpesifik.update({
+                tersisa: parseInt(jumlahBaru)
+            }).then(() => {
+                alert("Data diperbarui!");
+            });
+        });
     </script>
 </body>
 </html>
