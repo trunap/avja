@@ -77,16 +77,7 @@
         <h1 class="hero-title">Semua Inventaris</h1>
 		<p class="hero-sub">Daftar perlengkapan teknis regional.</p>
 <div class="container">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
-        <h1 class="hero-title" style="font-size: 32px; font-weight: 900; margin: 0;">Semua Inventaris</h1>
-        
-        <a href="tambah_barang.html" class="btn-plus-circle" title="Tambah Barang Baru">
-            <i class="fas fa-plus"></i>
-        </a>
-    </div>
-    <p class="hero-sub" style="margin-bottom: 25px;">Daftar perlengkapan teknis regional.</p>
-
-    <div class="filter-wrapper" style="display: flex; gap: 8px; overflow-x: auto; padding-bottom: 15px; scrollbar-width: none;">
+       <div class="filter-wrapper" style="display: flex; gap: 8px; overflow-x: auto; padding-bottom: 15px; scrollbar-width: none;">
         <button onclick="filterBarang('Semua')" class="btn-pill active">Semua</button>
         <button onclick="filterBarang('LED Wall')" class="btn-pill">LED Wall</button>
         <button onclick="filterBarang('Booth')" class="btn-pill">Booth</button>
@@ -152,7 +143,23 @@ database.ref('/').on('value', (snapshot) => {
 
 function filterBarang(kat) {
     currentFilter = kat;
-    renderList(); // Panggil fungsi untuk gambar ulang list
+
+    // 1. Ambil semua tombol filter
+    const buttons = document.querySelectorAll('.btn-pill');
+
+    // 2. Hapus class 'active' dari semua tombol
+    buttons.forEach(btn => btn.classList.remove('active'));
+
+    // 3. Cari tombol yang teksnya sama dengan kategori yang diklik, lalu kasih class 'active'
+    // Kita pakai perulangan lagi untuk memastikan tombol mana yang aktif
+    buttons.forEach(btn => {
+        if (btn.innerText === kat) {
+            btn.classList.add('active');
+        }
+    });
+
+    // 4. Jalankan ulang render list untuk menampilkan data yang disaring
+    renderList();
 }
 
 function renderList() {
