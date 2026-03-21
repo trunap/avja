@@ -7,147 +7,93 @@
     <link rel="stylesheet" href="../assets/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* Desain Khusus Halaman Index */
-        .header-section { padding: 0 20px; }
-        .list-container { margin-top: 10px; border-radius: 14px; overflow: hidden; border: 1px solid var(--line); background: var(--card); }
-        .list-item { display: flex; align-items: center; padding: 18px 20px; border-bottom: 1px solid var(--line); text-decoration: none; color: inherit; transition: .2s; }
+        .header-section { padding: 0 20px; margin-top: 30px; }
+        .list-container { margin-top: 15px; border-radius: 14px; overflow: hidden; border: 1px solid var(--line); background: var(--card); }
+        .list-item { display: flex; align-items: center; padding: 18px 20px; border-bottom: 1px solid var(--line); text-decoration: none; color: inherit; }
         .list-item:hover { background: rgba(255,255,255,0.05); }
-        .status-circle { width: 10px; height: 10px; border-radius: 50%; margin-right: 15px; }
-        .item-info { flex-grow: 1; }
-        .item-name { font-weight: 800; font-size: 17px; display: block; }
-        .item-meta { opacity: 0.5; font-size: 12px; margin-top: 2px; }
-
-        /* Tombol Aksi Bulat (Search & Plus) */
-        .btn-action-circle {
-            width: 40px; height: 40px; background: var(--card); border: 1px solid var(--line);
-            color: var(--text); border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            text-decoration: none; cursor: pointer; transition: 0.3s;
-        }
-        .btn-action-circle:hover { background: var(--it); color: white; border-color: var(--it); transform: scale(1.05); }
-
-        /* Filter Pill */
-        .btn-pill {
-            background: rgba(255,255,255,0.05); border: 1px solid var(--line); color: var(--text);
-            padding: 9px 18px; border-radius: 50px; font-size: 13px; font-weight: 700;
-            cursor: pointer; transition: 0.2s; white-space: nowrap;
-        }
-        .btn-pill.active { background: var(--audio); color: white; border-color: var(--audio); box-shadow: 0 4px 12px rgba(77, 183, 255, 0.2); }
-
-        /* Search Bar Input */
-        #search-container { display: none; margin-bottom: 15px; animation: slideDown 0.3s ease; }
-        #input-search { width: 100%; padding: 14px; border-radius: 10px; background: rgba(255,255,255,0.03); border: 1px solid var(--line); color: white; font-size: 15px; }
-        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        body.light .list-item:hover { background: rgba(0,0,0,0.03); }
+        .btn-pill.active { background: var(--audio); color: white; border-color: var(--audio); }
+        #search-box { display: none; margin-bottom: 15px; }
+        #search-box input { width: 100%; padding: 14px; border-radius: 10px; background: rgba(255,255,255,0.05); border: 1px solid var(--line); color: var(--text); }
     </style>
 </head>
 <body>
-
     <nav class="navbar">
         <div class="navbar-inner">
-            <a href="invent_index.html" class="brand">REGIONAL 2026</a>
+            <a href="invent_index.html" class="brand">PANDUAN TEKNIS - Regional 2026</a>
             <button class="theme-toggle" id="themeBtn">🌙 Dark</button>
         </div>
     </nav>
 
     <div class="container header-section">
-        <h1 class="hero-title" style="font-size: 32px; font-weight: 900; margin-bottom: 15px;">Semua Inventaris</h1>
+        <h1 style="font-size: 42px; font-weight: 900; margin: 0;">PANDUAN TEKNIS</h1>
+        <p style="opacity: 0.6; margin-bottom: 30px;">Audio • Video • Podium • IT</p>
 
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; gap: 10px;">
-            <div class="filter-wrapper" style="display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <div class="filter-wrapper" style="display: flex; gap: 8px; overflow-x: auto;">
                 <button onclick="filterBarang('Semua')" class="btn-pill active">Semua</button>
-                <button onclick="filterBarang('LED Wall')" class="btn-pill">LED Wall</button>
-                <button onclick="filterBarang('Booth')" class="btn-pill">Booth</button>
-                <button onclick="filterBarang('Kamera')" class="btn-pill">Kamera</button>
+                <button onclick="filterBarang('Audio')" class="btn-pill">Audio</button>
+                <button onclick="filterBarang('Video')" class="btn-pill">Video</button>
+                <button onclick="filterBarang('Podium')" class="btn-pill">Podium</button>
+                <button onclick="filterBarang('IT')" class="btn-pill">IT</button>
             </div>
-
             <div style="display: flex; gap: 10px;">
                 <button onclick="toggleSearch()" class="btn-action-circle"><i class="fas fa-search"></i></button>
                 <a href="tambah_barang.html" class="btn-action-circle"><i class="fas fa-plus"></i></a>
             </div>
         </div>
 
-        <div id="search-container">
-            <input type="text" id="input-search" placeholder="Cari nama barang...">
-        </div>
-
-        <div class="list-container" id="inventory-list">
-            <p style="padding:25px; opacity:0.3; text-align:center;">Menghubungkan ke Firebase...</p>
-        </div>
+        <div id="search-box"><input type="text" id="input-search" placeholder="Cari barang..."></div>
+        <div class="list-container" id="inventory-list"></div>
     </div>
 
     <script src="../assets/theme.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
-    
     <script src="config.js"></script>
-
     <script>
         let currentFilter = "Semua";
-        let allItemsData = {};
+        let allData = {};
 
-        // 1. Ambil Data Realtime (Sekali panggil, otomatis update)
         database.ref('/').on('value', (snapshot) => {
-            allItemsData = snapshot.val() || {};
-            renderList();
+            allData = snapshot.val() || {};
+            render();
         });
 
-        // 2. Fungsi Render List (Menggabungkan Filter & Search)
-        function renderList() {
-            const listContainer = document.getElementById('inventory-list');
-            const searchQuery = document.getElementById('input-search').value.toLowerCase();
-            listContainer.innerHTML = '';
-
-            const entries = Object.entries(allItemsData);
-            let hasItems = false;
-
-            entries.forEach(([key, data]) => {
-                if (!data || !data.nama) return;
-
-                const matchKategori = (currentFilter === "Semua" || data.kategori === currentFilter);
-                const matchSearch = data.nama.toLowerCase().includes(searchQuery);
-
-                if (matchKategori && matchSearch) {
-                    hasItems = true;
-                    const isHabis = (parseInt(data.sisa) <= 0);
-                    const colorTheme = isHabis ? '#ff4d4d' : 'var(--audio)';
-                    
-                    listContainer.innerHTML += `
+        function render() {
+            const container = document.getElementById('inventory-list');
+            const search = document.getElementById('input-search').value.toLowerCase();
+            container.innerHTML = '';
+            
+            Object.entries(allData).forEach(([key, data]) => {
+                const matchKat = currentFilter === "Semua" || data.kategori === currentFilter;
+                const matchSearch = data.nama.toLowerCase().includes(search);
+                if (matchKat && matchSearch) {
+                    const isHabis = data.sisa <= 0;
+                    container.innerHTML += `
                         <a href="detail.html?id=${key}" class="list-item">
-                            <div class="status-circle" style="background:${colorTheme}"></div>
+                            <div class="status-circle" style="background:${isHabis ? '#ff4d4d' : 'var(--audio)'}"></div>
                             <div class="item-info">
                                 <span class="item-name" style="color:${isHabis ? '#ff4d4d' : 'inherit'}">${data.nama}</span>
-                                <span class="item-meta">${data.kategori || 'Lain-lain'} | Sisa: ${data.sisa} ${data.satuan || 'Unit'}</span>
+                                <span class="item-meta">${data.kategori} | Sisa: ${data.sisa} ${data.satuan}</span>
                             </div>
                             <i class="fas fa-chevron-right" style="opacity:0.2"></i>
                         </a>`;
                 }
             });
-
-            if (!hasItems) {
-                listContainer.innerHTML = `<p style="padding:30px; opacity:0.3; text-align:center;">Barang tidak ditemukan.</p>`;
-            }
         }
 
-        // 3. Fungsi Filter (Update UI Tombol & List)
         function filterBarang(kat) {
             currentFilter = kat;
-            document.querySelectorAll('.btn-pill').forEach(btn => {
-                btn.classList.toggle('active', btn.innerText === kat);
-            });
-            renderList();
+            document.querySelectorAll('.btn-pill').forEach(b => b.classList.toggle('active', b.innerText === kat));
+            render();
         }
 
-        // 4. Toggle & Event Search
         function toggleSearch() {
-            const container = document.getElementById('search-container');
-            const input = document.getElementById('input-search');
-            const isHidden = window.getComputedStyle(container).display === "none";
-            
-            container.style.display = isHidden ? "block" : "none";
-            if (isHidden) input.focus();
-            else { input.value = ""; renderList(); }
+            const box = document.getElementById('search-box');
+            box.style.display = box.style.display === 'block' ? 'none' : 'block';
         }
-
-        document.getElementById('input-search').addEventListener('input', renderList);
+        document.getElementById('input-search').addEventListener('input', render);
     </script>
 </body>
 </html>
