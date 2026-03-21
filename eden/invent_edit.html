@@ -73,71 +73,105 @@
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
 
     <script>
-        // --- KONFIGURASI ---
-        const firebaseConfig = { /* Paste Config Firebase Kamu */ };
-        const IMGBB_API_KEY = "1ea7916278d418913459909e1a4985ec";
-        
-        firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
-        const idBarang = new URLSearchParams(window.location.search).get('id');
-        const refBarang = database.ref('/' + idBarang);
+    // 1. Konfigurasi Firebase (Tetap pakai milikmu)
+    const firebaseConfig = { apiKey: "AIzaSyBNHkgkLR6WEQXDU7OdMyyWuoo-8jcSERo",
+		  authDomain: "panduanteknis-6e258.firebaseapp.com",
+		  databaseURL: "https://panduanteknis-6e258-default-rtdb.firebaseio.com",
+		  projectId: "panduanteknis-6e258",
+		  storageBucket: "panduanteknis-6e258.firebasestorage.app",
+		  messagingSenderId: "202324364776",
+		  appId: "1:202324364776:web:ddaf872764e19e5413685d",
+		  measurementId: "G-VGFJF9L8W0" };
+    const IMGBB_API_KEY = "1ea7916278d418913459909e1a4985ec"; // Ambil dari api.imgbb.com
 
-        // BACA DATA AWAL
-        refBarang.once('value').then((snapshot) => {
-            const data = snapshot.val();
-            if (data) {
-                document.getElementById('input-nama').value = data.nama || "";
-                document.getElementById('input-keterangan').value = data.keterangan || "";
-                document.getElementById('input-sisa').value = data.sisa || 0;
-                document.getElementById('input-total').value = data.total || 0;
-                document.getElementById('foto-url-hidden').value = data.foto_url || "";
-                if(data.foto_url) document.getElementById('photo-preview').innerHTML = `<img src="${data.foto_url}">`;
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+    
+    // Ambil ID Barang dari URL (?id=001)
+    const idBarang = new URLSearchParams(window.location.search).get('id');
+    const refBarang = database.ref('/' + idBarang);
+
+    // Variabel elemen
+    const inputNama = document.getElementById('input-nama');
+    const inputKet = document.getElementById('input-keterangan');
+    const inputSisa = document.getElementById('input-sisa');
+    const inputTotal = document.getElementById('input-total');
+    const inputSatuan = document.getElementById('input-satuan');
+    const fotoHidden = document.getElementById('foto-url-hidden');
+    const photoPreview = document.getElementById('photo-preview');
+
+    // --- A. AMBIL DATA REALTIME ---
+    // Menggunakan 'on' supaya jika ada orang lain yang edit di saat bersamaan, form kamu ikut update
+    refBarang.on('value', (snapshot) => {
+        const data = snapshot.val();
+        if (data) {
+            inputNama.value = data.nama || "";
+            inputKet.value = data.keterangan || "";
+            inputSisa.value = data.sisa || 0;
+            inputTotal.value = data.total || 0;
+            inputSatuan.value = data.satuan || "Unit";
+            fotoHidden.value = data.foto_url || "";
+            
+            // Update preview foto jika ada URL-nya
+            if (data.foto_url) {
+                photoPreview.innerHTML = `<img src="${data.foto_url}" style="width:100%; height:100%; object-fit:cover;">`;
             }
-        });
+        }
+    });
 
-        // PROSES AUTO-UPLOAD KE IMGBB SAAT FILE DIPILIH
-        document.getElementById('file-input').addEventListener('change', async (e) => {
-            const file = e.target.files[0];
-            if (!file) return;
+    // --- B. PROSES UPLOAD FOTO KE IMGBB ---
+    document.getElementById('file-input').addEventListener('change', async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
 
-            document.getElementById('loading').style.display = 'flex';
+        document.getElementById('loading').style.display = 'flex';
+        const formData = new FormData();
+        formData.append("image", file);
 
-            const formData = new FormData();
-            formData.append("image", file);
-
-            try {
-                const response = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
-                    method: "POST",
-                    body: formData
-                });
-                const result = await response.json();
-
-                if (result.success) {
-                    const urlBaru = result.data.url;
-                    document.getElementById('foto-url-hidden').value = urlBaru;
-                    document.getElementById('photo-preview').innerHTML = `<img src="${urlBaru}">`;
-                    alert("Foto berhasil diupload ke ImgBB!");
-                }
-            } catch (err) {
-                alert("Gagal upload foto!");
-            } finally {
-                document.getElementById('loading').style.display = 'none';
-            }
-        });
-
-        // SIMPAN SEMUA KE FIREBASE
-        document.getElementById('btn-save').addEventListener('click', () => {
-            refBarang.update({
-                nama: document.getElementById('input-nama').value,
-                keterangan: document.getElementById('input-keterangan').value,
-                sisa: parseInt(document.getElementById('input-sisa').value),
-                total: parseInt(document.getElementById('input-total').value),
-                foto_url: document.getElementById('foto-url-hidden').value
-            }).then(() => {
-                alert("Data Tersimpan!");
-                window.location.href = `detail.html?id=${idBarang}`;
+        try {
+            const response = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
+                method: "POST",
+                body: formData
             });
-        });
-    </script>
+            const result = await response.json();
+            if (result.success) {
+                const urlBaru = result.data.url;
+                fotoHidden.value = urlBaru;
+                photoPreview.innerHTML = `<img src="${urlBaru}" style="width:100%; height:100%; object-fit:cover;">`;
+            }
+        } catch (err) {
+            alert("Gagal upload foto ke ImgBB!");
+        } finally {
+            document.getElementById('loading').style.display = 'none';
+        }
+    });
+
+    // --- C. SIMPAN PERUBAHAN KE FIREBASE ---
+    document.getElementById('btn-save').addEventListener('click', (e) => {
+        e.preventDefault(); // Mencegah page reload
+
+        // Kita kumpulkan data terbaru dari form
+        const dataBaru = {
+            nama: inputNama.value,
+            keterangan: inputKet.value,
+            sisa: parseInt(inputSisa.value) || 0,
+            total: parseInt(inputTotal.value) || 0,
+            satuan: inputSatuan.value,
+            foto_url: fotoHidden.value,
+            last_updated: new Date().toLocaleString() // Tambahan info waktu update
+        };
+
+        // Kirim ke Firebase
+        refBarang.update(dataBaru)
+            .then(() => {
+                alert("Muantap! Data berhasil diperbarui.");
+                // Setelah simpan, arahkan balik ke halaman detail
+                window.location.href = `detail.html?id=${idBarang}`;
+            })
+            .catch((error) => {
+                alert("Yah, gagal simpan: " + error.message);
+            });
+    });
+</script>
 </body>
 </html>
