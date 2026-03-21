@@ -3,208 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panduan Teknis Regional 2026</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>Detail Inventaris</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', sans-serif;
-        }
-
-        body {
-            display: flex;
-            background-color: #121212;
-            color: white;
-            min-height: 100vh;
-        }
-
-        /* --- SIDEBAR --- */
-        .sidebar {
-            width: 280px;
-            background-color: #6a41d8;
-            height: 100vh;
-            position: fixed;
-            padding: 20px;
-            transition: all 0.3s ease;
-            z-index: 1000;
-        }
-
-        .sidebar-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            font-weight: bold;
-            font-size: 0.9rem;
-            margin-bottom: 30px;
-        }
-
-        .nav-group {
-            margin-bottom: 25px;
-            border-bottom: 1px solid rgba(255,255,255,0.2);
-            padding-bottom: 15px;
-        }
-
-        .nav-item {
-            display: flex;
-            align-items: center;
-            padding: 12px 15px;
-            color: white;
-            text-decoration: none;
-            border-radius: 8px;
-            margin-bottom: 5px;
-            transition: 0.3s;
-            text-transform: uppercase;
-            font-size: 0.85rem;
-            font-weight: 600;
-        }
-
-        .nav-item i { margin-right: 15px; width: 20px; text-align: center; }
-        .nav-item:hover, .nav-item.active { background-color: rgba(255, 255, 255, 0.2); }
-
-        /* --- MAIN CONTENT --- */
-        .main-content {
-            margin-left: 280px;
-            width: 100%;
-            padding: 40px 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            transition: all 0.3s ease;
-        }
-
-        /* Mobile Header (Hidden on Desktop) */
-        .mobile-top-bar {
-            display: none;
-            width: 100%;
-            background-color: #6a41d8;
-            padding: 15px 20px;
-            position: fixed;
-            top: 0;
-            z-index: 999;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .header-title { text-align: center; margin-bottom: 40px; margin-top: 20px;}
-        .header-title h1 { font-size: clamp(1.8rem, 5vw, 3rem); letter-spacing: 2px; }
-        .header-title p { color: #bbb; letter-spacing: 1px; border-bottom: 1px dotted #555; padding-bottom: 5px; }
-
-        .section-label { align-self: flex-start; max-width: 900px; width: 100%; margin: 0 auto 20px; font-size: 1.5rem; font-weight: bold; }
-
-        /* --- CARDS --- */
-        .card-container { width: 100%; max-width: 900px; }
-        .card {
-            width: 100%;
-            height: 180px;
-            border-radius: 15px;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: flex-end;
-            padding: 20px;
-            text-decoration: none;
-            color: white;
-            font-size: clamp(2rem, 8vw, 4rem);
-            font-weight: bold;
-            background-size: cover;
-            background-position: center;
-            transition: transform 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .card::before {
-            content: "";
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: linear-gradient(to top, rgba(0,0,0,0.6), transparent);
-        }
-        .card span { position: relative; z-index: 1; }
-
-        .card-tv { background-color: #d4a373; }
-        .card-kabel { background-color: #333; }
-        .card-kamera { background-color: #1a1a1a; }
-
-        /* --- RESPONSIVE (MOBILE) --- */
-        @media (max-width: 768px) {
-            .sidebar {
-                left: -280px; /* Sembunyikan sidebar */
-            }
-            .sidebar.active {
-                left: 0;
-            }
-            .main-content {
-                margin-left: 0;
-                padding-top: 80px;
-            }
-            .mobile-top-bar {
-                display: flex;
-            }
-            .header-title { margin-top: 0; }
-            .card { height: 140px; }
-        }
+        body { background: #121212; color: white; font-family: sans-serif; text-align: center; padding: 40px 20px; }
+        .container { max-width: 400px; margin: auto; background: #1e1e1e; padding: 30px; border-radius: 20px; border: 1px solid #333; }
+        .back-link { display: block; text-align: left; color: #6a41d8; text-decoration: none; margin-bottom: 20px; font-weight: bold; }
+        h1 { font-size: 1.5rem; margin-bottom: 10px; }
+        .label-biru { color: #6a41d8; font-weight: bold; font-size: 0.8rem; text-transform: uppercase; display: block; margin-top: 15px; }
+        .text-detail { font-size: 1.1rem; margin-bottom: 15px; display: block; }
+        .big-number { font-size: 4rem; font-weight: bold; color: #6a41d8; margin: 10px 0; }
+        input { background: #2a2a2a; border: 1px solid #444; color: white; padding: 15px; border-radius: 10px; width: 100%; font-size: 1.2rem; text-align: center; margin-bottom: 20px; box-sizing: border-box; }
+        button { background: #6a41d8; color: white; border: none; padding: 15px; border-radius: 10px; width: 100%; font-weight: bold; cursor: pointer; font-size: 1rem; }
     </style>
 </head>
 <body>
 
-    <div class="mobile-top-bar">
-        <span>Panduan Teknis</span>
-        <i class="fas fa-bars" id="menu-toggle" style="font-size: 1.5rem; cursor: pointer;"></i>
+    <div class="container">
+        <a href="invent_index.html" class="back-link">← Kembali</a>
+        
+        <h1 id="nama-barang">Loading...</h1>
+        
+        <span class="label-biru">Keterangan:</span>
+        <span class="text-detail" id="ket-barang">--</span>
+
+        <span class="label-biru">Total Stok:</span>
+        <span class="text-detail" id="total-lengkap">--</span>
+        
+        <hr style="border: 0; border-top: 1px solid #333; margin: 20px 0;">
+
+        <p>Sisa Saat Ini:</p>
+        <div class="big-number" id="sisa-angka">--</div>
+        <p id="satuan-teks" style="color: #888; margin-bottom: 20px;">Unit</p>
+
+        <input type="number" id="input-sisa">
+        <button id="btn-update">💾 Simpan Perubahan</button>
     </div>
 
-    <nav class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <span><i class="fas fa-globe"></i> Panduan Teknis</span>
-            <i class="fas fa-times" id="menu-close" style="cursor: pointer; display: none;"></i>
-        </div>
-
-        <div class="nav-group">
-            <a href="#" class="nav-item active"><i class="fas fa-home"></i> HOME</a>
-            <a href="#" class="nav-item"><i class="fas fa-book"></i> APENDIKS</a>
-            <a href="#" class="nav-item"><i class="fas fa-th-large"></i> DAFTAR INVENTARIS</a>
-        </div>
-
-        <div class="nav-links">
-            <a href="#" class="nav-item"><i class="fas fa-desktop"></i> TV</a>
-            <a href="#" class="nav-item"><i class="fas fa-share-alt"></i> KABEL</a>
-            <a href="#" class="nav-item"><i class="fas fa-video"></i> KAMERA</a>
-            <a href="#" class="nav-item"><i class="fas fa-comment"></i> BOOTH</a>
-            <a href="#" class="nav-item"><i class="fas fa-bars"></i> INVENTARIS</a>
-            <a href="#" class="nav-item"><i class="fas fa-address-book"></i> TEAM PERSONNEL</a>
-        </div>
-    </nav>
-
-    <main class="main-content">
-        <div class="header-title">
-            <h1>PANDUAN TEKNIS</h1>
-            <p>REGIONAL CONVENTION 2026</p>
-        </div>
-
-       <div class="card-container">
-    <a href="detail.html?id=tv" class="card card-tv"><span>tv</span></a>
-    <a href="detail.html?id=kabel" class="card card-kabel"><span>kabel</span></a>
-    <a href="detail.html?id=kamera" class="card card-kamera"><span>kamera</span></a>
-</div>
-    </main>
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
 
     <script>
-        const menuToggle = document.getElementById('menu-toggle');
-        const menuClose = document.getElementById('menu-close');
-        const sidebar = document.getElementById('sidebar');
+        // --- KONFIGURASI FIREBASE (Sama dengan invent_index.html) ---
+        const firebaseConfig = { apiKey: "AIzaSyD...", ... }; 
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
 
-        // Buka menu
-        menuToggle.addEventListener('click', () => {
-            sidebar.classList.add('active');
-        });
+        const urlParams = new URLSearchParams(window.location.search);
+        const idBarang = urlParams.get('id');
 
-        // Tutup menu saat klik area luar atau tombol close (opsional)
-        document.addEventListener('click', (e) => {
-            if (!sidebar.contains(e.target) && !menuToggle.contains(e.target)) {
-                sidebar.classList.remove('active');
+        // Ambil data dari folder '0' lalu sub-folder idBarang
+        const refBarang = database.ref('0/' + idBarang);
+
+        refBarang.on('value', (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                document.getElementById('nama-barang').innerText = data.nama;
+                document.getElementById('ket-barang').innerText = data.keterangan || "-";
+                document.getElementById('total-lengkap').innerText = data.total + " " + data.satuan;
+                document.getElementById('sisa-angka').innerText = data.sisa;
+                document.getElementById('satuan-teks').innerText = data.satuan;
+                document.getElementById('input-sisa').value = data.sisa;
             }
         });
-    </script>
 
+        document.getElementById('btn-update').addEventListener('click', () => {
+            const sisaBaru = document.getElementById('input-sisa').value;
+            refBarang.update({
+                sisa: parseInt(sisaBaru)
+            }).then(() => alert("Data berhasil diperbarui!"));
+        });
+    </script>
 </body>
 </html>
