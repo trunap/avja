@@ -3,96 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tambah Barang - Regional 2026</title>
+    <title>Tambah - Regional 2026</title>
     <link rel="stylesheet" href="../assets/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        .form-container { max-width: 550px; margin: 40px auto; padding: 0 20px; }
-        .form-group { margin-bottom: 25px; }
-        label { display: block; font-weight: 800; font-size: 12px; color: #9ab3d5; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
-        
-        input, select, textarea { 
-            background: rgba(255,255,255,0.05); border: 1px solid var(--line); color: var(--text); 
-            padding: 16px; border-radius: 12px; width: 100%; font-size: 16px; box-sizing: border-box; outline: none;
-        }
-        body.light input, body.light select, body.light textarea { background: #f9f9f9; color: #333; }
-        
-        select option { background-color: #1a1d21; color: white; }
-        body.light select option { background-color: #fff; color: #333; }
-
-        .photo-preview { 
-            width: 100%; height: 250px; border-radius: 16px; border: 2px dashed var(--line); 
-            margin-bottom: 15px; display: flex; align-items: center; justify-content: center; overflow: hidden; background: rgba(0,0,0,0.1);
-        }
-        .photo-preview img { width: 100%; height: 100%; object-fit: cover; }
-        
-        .btn-submit { 
-            background: var(--it); color: white; border: none; padding: 20px; border-radius: 14px; 
-            width: 100%; font-weight: 900; cursor: pointer; margin-top: 20px; font-size: 16px; transition: 0.3s;
-        }
-        #loading { position: fixed; inset: 0; background: rgba(0,0,0,0.85); display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 1000; color: white; }
+        .form-group { margin-bottom: 20px; }
+        input, select, textarea { width: 100%; padding: 15px; border-radius: 12px; background: rgba(255,255,255,0.05); border: 1px solid var(--line); color: var(--text); box-sizing: border-box; }
+        body.light input, body.light select, body.light textarea { background: #f9f9f9; color: #000; }
+        select option { background: #1a1d21; color: white; }
+        body.light select option { background: white; color: black; }
+        .btn-save { width: 100%; padding: 20px; background: var(--it); color: white; border: none; border-radius: 12px; font-weight: 900; cursor: pointer; }
     </style>
 </head>
 <body>
-    <div id="loading"><i class="fas fa-spinner fa-spin fa-2x"></i><p>Mengunggah...</p></div>
-
-    <nav class="navbar">
-        <div class="navbar-inner">
-            <a href="invent_index.html" class="brand">PANDUAN TEKNIS - Regional 2026</a>
-            <button class="theme-toggle" id="themeBtn">🌙 Dark</button>
-        </div>
-    </nav>
-
-    <div class="form-container">
-        <h1 style="font-size: 32px; font-weight: 900; margin-bottom: 30px;">TAMBAH DATA</h1>
-
-        <div class="form-group">
-            <label>ID Registrasi Otomatis</label>
-            <div id="display-id" style="padding: 18px; border: 1px dashed var(--line); border-radius: 12px; color: var(--it); font-weight: 900; font-size: 22px; text-align: center;">Menghitung...</div>
-        </div>
-
-        <div class="form-group">
-            <label>Foto Barang</label>
-            <div class="photo-preview" id="photo-preview"><i class="fas fa-camera fa-3x" style="opacity: 0.1;"></i></div>
-            <input type="file" id="file-input" accept="image/*">
-            <input type="hidden" id="foto-url-hidden">
-        </div>
-
-        <div class="form-group">
-            <label>Nama Barang</label>
-            <input type="text" id="input-nama" placeholder="Monitor LED 24 Inch">
-        </div>
-
-        <div class="form-group">
-            <label>Tim / Kategori</label>
-            <select id="input-kategori">
-                <option value="Audio">Audio</option>
-                <option value="Video">Video</option>
-                <option value="Podium">Podium</option>
-                <option value="IT">IT</option>
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label>Keterangan</label>
-            <textarea id="input-keterangan" rows="3" placeholder="Tambahkan catatan..."></textarea>
-        </div>
-
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-            <div class="form-group"><label>Total Stok</label><input type="number" id="input-total" value="1"></div>
-            <div class="form-group"><label>Satuan</label>
-                <select id="input-satuan">
-                    <option value="Pcs">Pcs</option><option value="Set">Set</option><option value="Unit">Unit</option>
-                </select>
-            </div>
-        </div>
-        <button class="btn-submit" id="btn-save">SIMPAN BARANG</button>
+    <div id="navbar-placeholder"></div>
+    <div class="container" style="max-width: 500px; padding: 0 20px;">
+        <div class="form-group"><label>ID (Otomatis)</label><div id="display-id" style="font-weight: 900; font-size: 24px; color: var(--it);">...</div></div>
+        <div class="form-group"><label>Foto</label><input type="file" id="file-input"></div>
+        <div class="form-group"><label>Nama</label><input type="text" id="input-nama"></div>
+        <div class="form-group"><label>Kategori</label><select id="input-kat"><option value="LED Wall">LED Wall</option><option value="Booth">Booth</option><option value="Kamera">Kamera</option></select></div>
+        <div class="form-group"><label>Satuan</label><select id="input-sat"><option value="Pcs">Pcs</option><option value="Set">Set</option><option value="Unit">Unit</option></select></div>
+        <button class="btn-save" id="btn-save">SIMPAN</button>
     </div>
 
-    <script src="../assets/theme.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
     <script src="config.js"></script>
+    <script src="navbar.js"></script>
+    <script src="../assets/theme.js"></script>
     <script>
         let nextId = "";
         database.ref('/').orderByKey().limitToLast(1).on('value', snap => {
@@ -101,11 +38,14 @@
             document.getElementById('display-id').innerText = "#" + nextId;
         });
 
-        document.getElementById('file-input').addEventListener('change', async e => {
-            const file = e.target.files[0]; if (!file) return;
-            document.getElementById('loading').style.display = 'flex';
-            const fd = new FormData(); fd.append("image", file);
-            try {
-                const res = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, { method: "POST", body: fd });
-                const json = await res.json();
-                if (json.success) {
+        document.getElementById('btn-save').addEventListener('click', () => {
+            const nama = document.getElementById('input-nama').value;
+            if (!nama) return alert("Nama wajib diisi!");
+            database.ref('/' + nextId).set({
+                nama: nama, kategori: document.getElementById('input-kat').value,
+                satuan: document.getElementById('input-sat').value, sisa: 1, total: 1, foto_url: ""
+            }).then(() => window.location.href = "invent_index.html");
+        });
+    </script>
+</body>
+</html>
