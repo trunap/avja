@@ -68,27 +68,20 @@
 
         <button class="btn-save" id="btn-save">SIMPAN PERUBAHAN</button>
     </div>
-
-   <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
-
 <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
 
-<script src="../eden/config.js"></script>
+<script src="config.js"></script>
 
 <script>
     const urlParams = new URLSearchParams(window.location.search);
     const idBarang = urlParams.get('id');
-    
-    // Variabel 'database' dan 'IMGBB_API_KEY' sudah otomatis terbaca dari config.js
     const refBarang = database.ref('/' + idBarang);
 
-    // ... sisa kode fungsi upload dan simpan kamu ...
-    // (Gunakan logika .replace() yang sudah kita buat tadi)
+    const photoPreview = document.getElementById('photo-preview');
+    const fotoHidden = document.getElementById('foto-url-hidden');
 
-
-    // 2. AMBIL DATA REALTIME
+    // --- A. AMBIL DATA REALTIME ---
     refBarang.on('value', (snapshot) => {
         const data = snapshot.val();
         if (data) {
@@ -97,7 +90,7 @@
             document.getElementById('input-sisa').value = data.sisa || 0;
             document.getElementById('input-total').value = data.total || 0;
             
-            // Ambil link dan pastikan tampil dengan .co.com di preview
+            // Perbaikan link saat data dimuat
             let linkAwal = data.foto_url || "";
             let linkFixed = linkAwal.replace('i.ibb.co/', 'i.ibb.co.com/');
             fotoHidden.value = linkFixed;
@@ -108,7 +101,7 @@
         }
     });
 
-    // 3. FUNGSI AUTO-UPLOAD KE IMGBB
+    // --- B. AUTO-UPLOAD KE IMGBB ---
     document.getElementById('file-input').addEventListener('change', async (e) => {
         const file = e.target.files[0];
         if (!file) return;
@@ -125,7 +118,7 @@
             const result = await response.json();
             
             if (result.success) {
-                // Langsung fix link begitu dapet dari ImgBB
+                // Perbaikan link saat upload berhasil
                 let urlBaru = result.data.url.replace('i.ibb.co/', 'i.ibb.co.com/');
                 fotoHidden.value = urlBaru;
                 photoPreview.innerHTML = `<img src="${urlBaru}" style="width:100%; height:100%; object-fit:cover;">`;
@@ -137,11 +130,11 @@
         }
     });
 
-    // 4. FUNGSI SIMPAN (FINAL CHECK LINK)
+    // --- C. SIMPAN KE FIREBASE ---
     document.getElementById('btn-save').addEventListener('click', (e) => {
         e.preventDefault();
         
-        // Ambil link dari hidden input dan bersihkan sekali lagi
+        // Pastikan link sudah pakai .co.com sebelum disimpan
         let linkFinal = fotoHidden.value.replace('i.ibb.co/', 'i.ibb.co.com/');
 
         const dataUpdate = {
@@ -149,7 +142,7 @@
             keterangan: document.getElementById('input-keterangan').value,
             sisa: parseInt(document.getElementById('input-sisa').value) || 0,
             total: parseInt(document.getElementById('input-total').value) || 0,
-            foto_url: linkFinal // Link yang sudah bersih disimpan ke Firebase
+            foto_url: linkFinal
         };
 
         refBarang.update(dataUpdate)
