@@ -154,6 +154,17 @@
             alert("Gagal simpan: " + error.message);
         });
     });
+
+        // DI DALAM FUNGSI SIMPAN
+const dataUpdate = {
+    nama: document.getElementById('input-nama').value,
+    keterangan: document.getElementById('input-keterangan').value,
+    sisa: parseInt(document.getElementById('input-sisa').value) || 0,
+    total: parseInt(document.getElementById('input-total').value) || 0,
+    foto_url: fotoHidden.value,
+    // Tetap simpan status habis yang sudah ada agar tidak ter-reset
+    status_habis: (parseInt(document.getElementById('input-sisa').value) <= 0) 
+};
 </script>
 </body>
 </html>
