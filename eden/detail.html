@@ -48,7 +48,10 @@
             <div class="big-sisa" id="sisa-angka">0</div>
             <div id="satuan-teks" style="font-weight: 700; opacity: 0.8; margin-bottom: 10px;">Unit</div>
             <div style="opacity:0.4; font-size:13px;">Total Aset: <span id="total-stok">0</span></div>
-
+<div style="margin-top:20px; display:flex; justify-content:space-between; align-items:center; padding:15px; background:rgba(255,255,255,0.05); border-radius:12px;">
+    <span style="font-weight:800; font-size:14px;">TERPAKAI SEMUA</span>
+    <input type="checkbox" id="toggle-habis" style="width:40px; height:20px; cursor:pointer;">
+</div>
             <div class="quick-update">
                 <input type="number" id="input-sisa-quick" class="input-mini">
                 <button id="btn-save-quick" class="btn-save-mini">Update Sisa</button>
@@ -123,6 +126,32 @@
             refBarang.update({ sisa: parseInt(val) })
             .then(() => alert("Stok diperbarui!"));
         });
+
+		// BACA STATUS SWITCH
+refBarang.on('value', (snapshot) => {
+    const data = snapshot.val();
+    if(data) {
+        const toggleHabis = document.getElementById('toggle-habis');
+        toggleHabis.checked = data.status_habis || false;
+        
+        // Ganti warna angka sisa secara realtime
+        const sisaAngka = document.getElementById('sisa-angka');
+        sisaAngka.style.color = (data.sisa <= 0 || data.status_habis) ? '#ff4d4d' : 'var(--it)';
+    }
+});
+
+// LOGIKA KLIK SWITCH
+document.getElementById('toggle-habis').addEventListener('change', (e) => {
+    const isChecked = e.target.checked;
+    
+    // Jika diaktifkan, sisa jadi 0. Jika dimatikan, sisa kembali ke total.
+    refBarang.update({
+        status_habis: isChecked,
+        sisa: isChecked ? 0 : parseInt(document.getElementById('total-stok').innerText)
+    }).then(() => {
+        alert(isChecked ? "Barang ditandai habis!" : "Status dikembalikan.");
+    });
+});
     </script>
 
 </body>
