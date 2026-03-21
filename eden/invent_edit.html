@@ -3,45 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Barang - Digital Invitation</title>
+    <title>Edit Barang - Regional 2026</title>
     <link rel="stylesheet" href="../assets/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        .edit-container { max-width: 600px; margin: auto; padding: 20px; }
-        .form-group { margin-bottom: 20px; text-align: left; }
-        label { display: block; font-weight: 800; font-size: 14px; color: #9ab3d5; margin-bottom: 8px; text-transform: uppercase; }
+        .form-container { max-width: 550px; margin: 40px auto; padding: 0 20px; }
+        .form-group { margin-bottom: 25px; }
+        label { display: block; font-weight: 800; font-size: 12px; color: #9ab3d5; margin-bottom: 10px; text-transform: uppercase; }
         input, select, textarea { 
             background: rgba(255,255,255,0.05); border: 1px solid var(--line); color: var(--text); 
-            padding: 15px; border-radius: 10px; width: 100%; font-size: 16px; box-sizing: border-box;
+            padding: 16px; border-radius: 12px; width: 100%; font-size: 16px; box-sizing: border-box; outline: none;
         }
-        .photo-preview { 
-            width: 100%; height: 250px; border-radius: 12px; border: 2px dashed var(--line); 
-            margin-top: 10px; display: flex; align-items: center; justify-content: center; overflow: hidden; background-size: cover; background-position: center;
-        }
+        body.light input, body.light select, body.light textarea { background: #f9f9f9; color: #333; }
+        .photo-preview { width: 100%; height: 250px; border-radius: 16px; border: 1px solid var(--line); margin-bottom: 15px; overflow: hidden; }
         .photo-preview img { width: 100%; height: 100%; object-fit: cover; }
-        .btn-save { background: var(--it); color: white; border: none; padding: 18px; border-radius: 12px; width: 100%; font-weight: 900; cursor: pointer; margin-top: 20px; }
-        
-        /* Loading Overlay */
-        #loading { position: fixed; inset:0; background: rgba(0,0,0,0.7); display: none; align-items: center; justify-content: center; z-index: 100; color: white; flex-direction: column; }
+        .btn-save { background: var(--it); color: white; border: none; padding: 20px; border-radius: 14px; width: 100%; font-weight: 900; cursor: pointer; margin-bottom: 15px; }
+        .btn-delete { background: transparent; color: #ff4d4d; border: 1px solid #ff4d4d; padding: 15px; border-radius: 14px; width: 100%; font-weight: 700; cursor: pointer; }
     </style>
 </head>
 <body>
-
-    <div id="loading"><p>Sedang Mengunggah Foto...</p></div>
-
     <nav class="navbar">
         <div class="navbar-inner">
-            <a href="invent_index.html" class="brand">← CANCEL</a>
-            <h3 style="font-weight:900;">EDIT DATA</h3>
+            <a href="invent_index.html" class="brand">PANDUAN TEKNIS - Regional 2026</a>
+            <button class="theme-toggle" id="themeBtn">🌙 Dark</button>
         </div>
     </nav>
 
-    <div class="edit-container container">
+    <div class="form-container">
+        <h1 id="edit-title" style="font-size: 32px; font-weight: 900; margin-bottom: 30px;">EDIT BARANG</h1>
+
         <div class="form-group">
             <label>Foto Barang</label>
-            <div class="photo-preview" id="photo-preview">
-                <span id="preview-text" style="opacity:0.3">Belum ada foto</span>
-            </div>
-            <input type="file" id="file-input" accept="image/*" style="margin-top: 10px;">
+            <div class="photo-preview" id="photo-preview"></div>
+            <input type="file" id="file-input" accept="image/*">
             <input type="hidden" id="foto-url-hidden">
         </div>
 
@@ -51,120 +45,68 @@
         </div>
 
         <div class="form-group">
-            <label>Keterangan</label>
-            <textarea id="input-keterangan" rows="3"></textarea>
+            <label>Tim / Kategori</label>
+            <select id="input-kategori">
+                <option value="Audio">Audio</option><option value="Video">Video</option>
+                <option value="Podium">Podium</option><option value="IT">IT</option>
+            </select>
         </div>
 
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-            <div class="form-group">
-                <label>Sisa</label>
-                <input type="number" id="input-sisa">
-            </div>
-            <div class="form-group">
-                <label>Total</label>
-                <input type="number" id="input-total">
-            </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <div class="form-group"><label>Sisa Stok</label><input type="number" id="input-sisa"></div>
+            <div class="form-group"><label>Total Stok</label><input type="number" id="input-total"></div>
         </div>
 
         <button class="btn-save" id="btn-save">SIMPAN PERUBAHAN</button>
+        <button class="btn-delete" id="btn-delete">HAPUS BARANG</button>
     </div>
-<script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
 
-<script src="config.js"></script>
+    <script src="../assets/theme.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
+    <script src="config.js"></script>
+    <script>
+        const id = new URLSearchParams(window.location.search).get('id');
+        const ref = database.ref('/' + id);
 
-<script>
-    const urlParams = new URLSearchParams(window.location.search);
-    const idBarang = urlParams.get('id');
-    const refBarang = database.ref('/' + idBarang);
-
-    const photoPreview = document.getElementById('photo-preview');
-    const fotoHidden = document.getElementById('foto-url-hidden');
-
-    // --- A. AMBIL DATA REALTIME ---
-    refBarang.on('value', (snapshot) => {
-        const data = snapshot.val();
-        if (data) {
-            document.getElementById('input-nama').value = data.nama || "";
-            document.getElementById('input-keterangan').value = data.keterangan || "";
-            document.getElementById('input-sisa').value = data.sisa || 0;
-            document.getElementById('input-total').value = data.total || 0;
-            
-            // Perbaikan link saat data dimuat
-            let linkAwal = data.foto_url || "";
-            let linkFixed = linkAwal.replace('i.ibb.co/', 'i.ibb.co.com/');
-            fotoHidden.value = linkFixed;
-            
-            if (linkFixed) {
-                photoPreview.innerHTML = `<img src="${linkFixed}" style="width:100%; height:100%; object-fit:cover;">`;
+        ref.once('value', snap => {
+            const data = snap.val();
+            if (data) {
+                document.getElementById('input-nama').value = data.nama;
+                document.getElementById('input-kategori').value = data.kategori;
+                document.getElementById('input-sisa').value = data.sisa;
+                document.getElementById('input-total').value = data.total;
+                document.getElementById('foto-url-hidden').value = data.foto_url;
+                if (data.foto_url) document.getElementById('photo-preview').innerHTML = `<img src="${data.foto_url}">`;
             }
-        }
-    });
-
-    // --- B. AUTO-UPLOAD KE IMGBB ---
-    document.getElementById('file-input').addEventListener('change', async (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
-
-        document.getElementById('loading').style.display = 'flex';
-        const formData = new FormData();
-        formData.append("image", file);
-
-        try {
-            const response = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
-                method: "POST",
-                body: formData
-            });
-            const result = await response.json();
-            
-            if (result.success) {
-                // Perbaikan link saat upload berhasil
-                let urlBaru = result.data.url.replace('i.ibb.co/', 'i.ibb.co.com/');
-                fotoHidden.value = urlBaru;
-                photoPreview.innerHTML = `<img src="${urlBaru}" style="width:100%; height:100%; object-fit:cover;">`;
-            }
-        } catch (err) {
-            alert("Gagal upload foto!");
-        } finally {
-            document.getElementById('loading').style.display = 'none';
-        }
-    });
-
-    // --- C. SIMPAN KE FIREBASE ---
-    document.getElementById('btn-save').addEventListener('click', (e) => {
-        e.preventDefault();
-        
-        // Pastikan link sudah pakai .co.com sebelum disimpan
-        let linkFinal = fotoHidden.value.replace('i.ibb.co/', 'i.ibb.co.com/');
-
-        const dataUpdate = {
-            nama: document.getElementById('input-nama').value,
-            keterangan: document.getElementById('input-keterangan').value,
-            sisa: parseInt(document.getElementById('input-sisa').value) || 0,
-            total: parseInt(document.getElementById('input-total').value) || 0,
-            foto_url: linkFinal
-        };
-
-        refBarang.update(dataUpdate)
-        .then(() => {
-            alert("Muantap! Data dan Foto Berhasil Diperbarui.");
-            window.location.href = "detail.html?id=" + idBarang;
-        })
-        .catch((error) => {
-            alert("Gagal simpan: " + error.message);
         });
-    });
 
-        // DI DALAM FUNGSI SIMPAN
-const dataUpdate = {
-    nama: document.getElementById('input-nama').value,
-    keterangan: document.getElementById('input-keterangan').value,
-    sisa: parseInt(document.getElementById('input-sisa').value) || 0,
-    total: parseInt(document.getElementById('input-total').value) || 0,
-    foto_url: fotoHidden.value,
-    // Tetap simpan status habis yang sudah ada agar tidak ter-reset
-    status_habis: (parseInt(document.getElementById('input-sisa').value) <= 0) 
-};
-</script>
+        document.getElementById('file-input').addEventListener('change', async e => {
+            const fd = new FormData(); fd.append("image", e.target.files[0]);
+            const res = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, { method: "POST", body: fd });
+            const json = await res.json();
+            if (json.success) {
+                const url = json.data.url.replace('i.ibb.co/', 'i.ibb.co.com/');
+                document.getElementById('foto-url-hidden').value = url;
+                document.getElementById('photo-preview').innerHTML = `<img src="${url}">`;
+            }
+        });
+
+        document.getElementById('btn-save').addEventListener('click', () => {
+            ref.update({
+                nama: document.getElementById('input-nama').value,
+                kategori: document.getElementById('input-kategori').value,
+                sisa: parseInt(document.getElementById('input-sisa').value),
+                total: parseInt(document.getElementById('input-total').value),
+                foto_url: document.getElementById('foto-url-hidden').value
+            }).then(() => window.location.href = "detail.html?id=" + id);
+        });
+
+        document.getElementById('btn-delete').addEventListener('click', () => {
+            if (confirm("Serius mau hapus barang ini?")) {
+                ref.remove().then(() => window.location.href = "invent_index.html");
+            }
+        });
+    </script>
 </body>
 </html>
