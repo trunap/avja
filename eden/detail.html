@@ -48,10 +48,6 @@
             <div class="big-sisa" id="sisa-angka">0</div>
             <div id="satuan-teks" style="font-weight: 700; opacity: 0.8; margin-bottom: 10px;">Unit</div>
             <div style="opacity:0.4; font-size:13px;">Total Aset: <span id="total-stok">0</span></div>
-<div style="margin-top:20px; display:flex; justify-content:space-between; align-items:center; padding:15px; background:rgba(255,255,255,0.05); border-radius:12px;">
-    <span style="font-weight:800; font-size:14px;">TERPAKAI SEMUA</span>
-    <input type="checkbox" id="toggle-habis" style="width:40px; height:20px; cursor:pointer;">
-</div>
             <div class="quick-update">
                 <input type="number" id="input-sisa-quick" class="input-mini">
                 <button id="btn-save-quick" class="btn-save-mini">Update Sisa</button>
@@ -151,6 +147,23 @@ document.getElementById('toggle-habis').addEventListener('change', (e) => {
     }).then(() => {
         alert(isChecked ? "Barang ditandai habis!" : "Status dikembalikan.");
     });
+});
+
+			// BACA DATA REALTIME
+refBarang.on('value', (snapshot) => {
+    const data = snapshot.val();
+    if(data) {
+        const sisaAngka = document.getElementById('sisa-angka');
+        sisaAngka.innerText = data.sisa;
+        
+        // Warna angka sisa: Merah jika 0, Ungu/IT jika masih ada
+        sisaAngka.style.color = (parseInt(data.sisa) <= 0) ? '#ff4d4d' : 'var(--it)';
+        
+        // Isi data lainnya
+        document.getElementById('nama-barang').innerText = data.nama;
+        document.getElementById('total-stok').innerText = data.total + " " + data.satuan;
+        document.getElementById('input-sisa-quick').value = data.sisa;
+    }
 });
     </script>
 
