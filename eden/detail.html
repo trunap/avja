@@ -3,92 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detail & Ubah Stok</title>
+    <title>Detail Inventaris</title>
     <style>
-        body { background: #121212; color: white; font-family: sans-serif; text-align: center; padding: 50px; }
-        .container { max-width: 400px; margin: auto; background: #1e1e1e; padding: 30px; border-radius: 15px; border: 1px solid #333; }
-        .back-link { display: block; text-align: left; color: #888; text-decoration: none; margin-bottom: 20px; font-size: 0.9rem; }
-        .back-link:hover { color: white; }
-        h1 { font-size: 1.8rem; margin-bottom: 5px; }
-        .data-info { color: #888; margin-bottom: 20px; font-size: 0.9rem; }
-        .realtime-text { font-size: 4rem; font-weight: bold; color: #6a41d8; margin: 20px 0; }
-        input { background: #2a2a2a; border: 1px solid #444; color: white; padding: 15px; border-radius: 8px; width: 100%; font-size: 1.2rem; text-align: center; box-sizing: border-box; margin-bottom: 20px; }
-        button { background: #6a41d8; color: white; border: none; padding: 15px 30px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; font-size: 1rem; }
-        button:hover { background: #5a31c8; }
+        body { background: #121212; color: white; font-family: sans-serif; text-align: center; padding: 40px 20px; }
+        .container { max-width: 400px; margin: auto; background: #1e1e1e; padding: 30px; border-radius: 20px; border: 1px solid #333; }
+        .back-link { display: block; text-align: left; color: #6a41d8; text-decoration: none; margin-bottom: 20px; font-weight: bold; }
+        h1 { font-size: 1.5rem; margin-bottom: 10px; }
+        .label-biru { color: #6a41d8; font-weight: bold; font-size: 0.8rem; text-transform: uppercase; display: block; margin-top: 15px; }
+        .text-detail { font-size: 1.1rem; margin-bottom: 15px; display: block; }
+        .big-number { font-size: 4rem; font-weight: bold; color: #6a41d8; margin: 10px 0; }
+        input { background: #2a2a2a; border: 1px solid #444; color: white; padding: 15px; border-radius: 10px; width: 100%; font-size: 1.2rem; text-align: center; margin-bottom: 20px; box-sizing: border-box; }
+        button { background: #6a41d8; color: white; border: none; padding: 15px; border-radius: 10px; width: 100%; font-weight: bold; cursor: pointer; font-size: 1rem; }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <a href="index.html" class="back-link">← Kembali ke Daftar</a>
+        <a href="invent_index.html" class="back-link">← Kembali</a>
         
         <h1 id="nama-barang">Loading...</h1>
-        <div class="data-info">Sumber: <span id="sumber-barang">--</span> | Total: <span id="total-stok">--</span> Pcs</div>
         
-        <p>Tersisa Sekarang:</p>
-        <div class="realtime-text" id="tersisa-stok">--</div>
+        <span class="label-biru">Keterangan:</span>
+        <span class="text-detail" id="ket-barang">--</span>
 
-        <p>Ubah Jumlah Tersisa:</p>
-        <input type="number" id="input-tersisa">
+        <span class="label-biru">Total Stok:</span>
+        <span class="text-detail" id="total-lengkap">--</span>
         
-        <button id="btn-simpan">💾 Simpan Perubahan</button>
+        <hr style="border: 0; border-top: 1px solid #333; margin: 20px 0;">
+
+        <p>Sisa Saat Ini:</p>
+        <div class="big-number" id="sisa-angka">--</div>
+        <p id="satuan-teks" style="color: #888; margin-bottom: 20px;">Unit</p>
+
+        <input type="number" id="input-sisa">
+        <button id="btn-update">💾 Simpan Perubahan</button>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
 
     <script>
-        // 1. Konfigurasi (GANTI DENGAN KODE KAMU)
-        const firebaseConfig = {
-            apiKey: "AIzaSyBNHkgkLR6WEQXDU7OdMyyWuoo-8jcSERo",
-		  authDomain: "panduanteknis-6e258.firebaseapp.com",
-		  databaseURL: "https://panduanteknis-6e258-default-rtdb.firebaseio.com",
-		  projectId: "panduanteknis-6e258",
-		  storageBucket: "panduanteknis-6e258.firebasestorage.app",
-		  messagingSenderId: "202324364776",
-		  appId: "1:202324364776:web:ddaf872764e19e5413685d",
-		  measurementId: "G-VGFJF9L8W0"
-        };
+        // --- KONFIGURASI FIREBASE (Sama dengan invent_index.html) ---
+        const firebaseConfig = { apiKey: "AIzaSyD...", ... }; 
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
-        // 2. Tangkap ID Barang dari URL (Contoh: ?id=barang_03)
         const urlParams = new URLSearchParams(window.location.search);
-        const barangId = urlParams.get('id');
+        const idBarang = urlParams.get('id');
 
-        if (!barangId) {
-            alert("ID Barang tidak ditemukan di URL!");
-            window.location.href = 'index.html'; // Kembalikan ke home jika error
-        }
+        // Ambil data dari folder '0' lalu sub-folder idBarang
+        const refBarang = database.ref('0/' + idBarang);
 
-        // 3. Referensi ke data spesifik barang tersebut (inventaris/barang_03)
-        const refSpesifik = database.ref('inventaris/' + barangId);
-
-        // A. Baca Data Realtime Barang Spesifik
-        refSpesifik.on('value', (snapshot) => {
+        refBarang.on('value', (snapshot) => {
             const data = snapshot.val();
             if (data) {
                 document.getElementById('nama-barang').innerText = data.nama;
-                document.getElementById('sumber-barang').innerText = data.sumber;
-                document.getElementById('total-stok').innerText = data.total;
-                document.getElementById('tersisa-stok').innerText = data.tersisa;
-                document.getElementById('input-tersisa').value = data.tersisa;
-            } else {
-                document.getElementById('nama-barang').innerText = "Barang Tidak Ditemukan";
+                document.getElementById('ket-barang').innerText = data.keterangan || "-";
+                document.getElementById('total-lengkap').innerText = data.total + " " + data.satuan;
+                document.getElementById('sisa-angka').innerText = data.sisa;
+                document.getElementById('satuan-teks').innerText = data.satuan;
+                document.getElementById('input-sisa').value = data.sisa;
             }
         });
 
-        // B. Fungsi Tombol Simpan
-        document.getElementById('btn-simpan').addEventListener('click', () => {
-            const jumlahBaru = document.getElementById('input-tersisa').value;
-            if (jumlahBaru === "" || isNaN(jumlahBaru)) { alert("Masukkan angka valid"); return; }
-
-            // Update data di Firebase
-            refSpesifik.update({
-                tersisa: parseInt(jumlahBaru)
-            }).then(() => {
-                alert("Data diperbarui!");
-            });
+        document.getElementById('btn-update').addEventListener('click', () => {
+            const sisaBaru = document.getElementById('input-sisa').value;
+            refBarang.update({
+                sisa: parseInt(sisaBaru)
+            }).then(() => alert("Data berhasil diperbarui!"));
         });
     </script>
 </body>
