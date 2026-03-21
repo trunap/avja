@@ -7,39 +7,47 @@
     <link rel="stylesheet" href="../assets/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        .detail-container { max-width: 600px; margin: 0 auto; padding: 0 20px 80px; }
+        .detail-container { max-width: 600px; margin: 0 auto; padding: 0 20px 100px; }
         
-        /* Tombol Kembali di Atas Judul */
-        .back-nav { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--it); font-weight: 800; font-size: 14px; margin-bottom: 20px; transition: 0.2s; }
-        .back-nav:hover { opacity: 0.7; transform: translateX(-5px); }
-
         /* Foto Header */
         .img-display { width: 100%; height: 350px; border-radius: 24px; object-fit: cover; border: 1px solid var(--line); background: var(--card); margin-bottom: 30px; }
 
-        /* Nama & Kategori (Emphasis) */
-        .item-header { margin-bottom: 40px; }
-        .item-category { font-size: 13px; font-weight: 800; color: var(--it); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; display: block; }
-        .item-name { font-size: 42px; font-weight: 900; line-height: 1.1; margin: 0; letter-spacing: -1px; color: var(--text); }
+        /* Nama & Kategori */
+        .item-header { margin-bottom: 35px; }
+        .item-category { font-size: 13px; font-weight: 800; color: var(--it); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; display: block; }
+        .item-name { font-size: 38px; font-weight: 900; line-height: 1.1; margin: 0; color: var(--text); letter-spacing: -1px; }
 
         /* Sisa Stok Section */
-        .stock-section { background: var(--card); border: 1px solid var(--line); border-radius: 24px; padding: 35px; text-align: center; margin-bottom: 40px; }
-        .stock-label { font-size: 12px; font-weight: 800; opacity: 0.5; text-transform: uppercase; letter-spacing: 1px; }
+        .stock-section { background: var(--card); border: 1px solid var(--line); border-radius: 24px; padding: 40px 20px; text-align: center; margin-bottom: 35px; }
+        .stock-label { font-size: 12px; font-weight: 800; opacity: 0.5; text-transform: uppercase; }
         
-        #sisa-angka { font-size: 84px; font-weight: 900; line-height: 1; margin: 15px 0; color: var(--text) !important; }
+        /* Angka Sisa Besar */
+        #sisa-angka { font-size: 100px; font-weight: 900; line-height: 1; margin: 10px 0; color: var(--text) !important; }
         body.light #sisa-angka { color: #000000 !important; }
         
-        /* Kontrol Stok Cepat */
-        .stock-actions { display: flex; gap: 15px; justify-content: center; align-items: center; margin-top: 25px; }
-        .qty-input { width: 70px; padding: 12px; border-radius: 12px; border: 1px solid var(--line); background: rgba(255,255,255,0.05); color: var(--text); text-align: center; font-weight: 900; font-size: 16px; }
-        body.light .qty-input { background: #f4f4f4; color: #000; }
+        /* Kontrol Stok (Tanpa Input Tengah) */
+        .stock-controls { display: flex; gap: 25px; justify-content: center; align-items: center; margin-top: 20px; }
+        .btn-qty { 
+            width: 60px; height: 60px; border-radius: 18px; border: 1px solid var(--line); 
+            background: var(--card); color: var(--text); font-size: 24px; cursor: pointer; transition: 0.2s;
+        }
+        .btn-qty:active { transform: scale(0.9); }
+        .btn-plus { background: var(--it) !important; color: white !important; border: none; }
 
-        /* Keterangan (Long Text Area) */
-        .desc-section { margin-bottom: 40px; }
-        .desc-label { font-size: 14px; font-weight: 800; margin-bottom: 15px; display: block; border-left: 4px solid var(--it); padding-left: 12px; }
-        .desc-text { font-size: 16px; line-height: 1.7; opacity: 0.8; white-space: pre-wrap; color: var(--text); }
+        /* Keterangan Area */
+        .desc-section { margin-bottom: 40px; padding: 0 5px; }
+        .desc-label { font-size: 14px; font-weight: 800; margin-bottom: 12px; display: block; opacity: 0.7; }
+        .desc-text { font-size: 16px; line-height: 1.6; opacity: 0.9; white-space: pre-wrap; color: var(--text); }
 
-        .btn-edit-float { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 20px; border-radius: 16px; background: var(--it); color: white; text-decoration: none; font-weight: 900; font-size: 16px; transition: 0.3s; border: none; }
-        .btn-edit-float:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
+        /* Action Buttons di Bawah */
+        .action-group { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
+        .btn-main { 
+            padding: 18px; border-radius: 16px; font-weight: 900; font-size: 15px; 
+            text-align: center; text-decoration: none; border: none; cursor: pointer; transition: 0.3s;
+        }
+        .btn-save { background: var(--it); color: white; }
+        .btn-edit { background: var(--card); color: var(--text); border: 1px solid var(--line); }
+        .btn-main:hover { transform: translateY(-3px); opacity: 0.9; }
     </style>
 </head>
 <body>
@@ -47,11 +55,7 @@
     <div id="navbar-placeholder"></div>
 
     <div class="detail-container">
-        <a href="invent_index.html" class="back-nav">
-            <i class="fas fa-arrow-left"></i> KEMBALI KE LIST
-        </a>
-
-        <img id="detail-img" class="img-display" src="" alt="Loading...">
+        <img id="detail-img" class="img-display" src="" alt="Foto Barang">
 
         <div class="item-header">
             <span id="detail-kategori" class="item-category">KATEGORI</span>
@@ -61,23 +65,23 @@
         <div class="stock-section">
             <span class="stock-label">Sisa Stok Saat Ini</span>
             <div id="sisa-angka">0</div>
-            <span id="detail-satuan" style="font-weight: 800; opacity: 0.4; font-size: 14px;">PCS</span>
+            <span id="detail-satuan" style="font-weight: 800; opacity: 0.4;">UNIT</span>
 
-            <div class="stock-actions">
-                <button onclick="updateStok(-1)" class="btn-pill" style="width: 50px; height: 50px; font-size: 20px;">-</button>
-                <input type="number" id="input-step" class="qty-input" value="1">
-                <button onclick="updateStok(1)" class="btn-pill" style="width: 50px; height: 50px; font-size: 20px; background: var(--it); border-color: var(--it); color: white;">+</button>
+            <div class="stock-controls">
+                <button onclick="changeDisplay(-1)" class="btn-qty"><i class="fas fa-minus"></i></button>
+                <button onclick="changeDisplay(1)" class="btn-qty btn-plus"><i class="fas fa-plus"></i></button>
             </div>
         </div>
 
         <div class="desc-section">
-            <span class="desc-label">Keterangan & Spesifikasi</span>
-            <div id="detail-ket" class="desc-text">Memuat deskripsi barang...</div>
+            <span class="desc-label">Informasi Tambahan</span>
+            <div id="detail-ket" class="desc-text">-</div>
         </div>
 
-        <a id="link-edit" href="#" class="btn-edit-float">
-            <i class="fas fa-pen"></i> EDIT INFORMASI BARANG
-        </a>
+        <div class="action-group">
+            <a id="link-edit" href="#" class="btn-main btn-edit">EDIT DATA</a>
+            <button onclick="saveToFirebase()" class="btn-main btn-save">SIMPAN & LIST</button>
+        </div>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
@@ -88,35 +92,38 @@
     <script>
         const id = new URLSearchParams(window.location.search).get('id');
         const ref = database.ref('/' + id);
+        let currentSisa = 0;
 
-        // Ambil Data Realtime
-        ref.on('value', snap => {
+        // Load Data Awal
+        ref.once('value', snap => {
             const data = snap.val();
             if (!data) return;
 
+            currentSisa = data.sisa || 0;
             document.getElementById('detail-nama').innerText = data.nama;
             document.getElementById('detail-kategori').innerText = data.kategori || 'UMUM';
             document.getElementById('detail-satuan').innerText = data.satuan || 'UNIT';
-            document.getElementById('sisa-angka').innerText = data.sisa;
-            document.getElementById('detail-ket').innerText = data.keterangan || 'Tidak ada keterangan tambahan untuk barang ini.';
+            document.getElementById('sisa-angka').innerText = currentSisa;
+            document.getElementById('detail-ket').innerText = data.keterangan || 'Tidak ada deskripsi.';
             document.getElementById('detail-img').src = data.foto_url || 'https://via.placeholder.com/600x400?text=No+Image';
             document.getElementById('link-edit').href = "invent_edit.html?id=" + id;
         });
 
-        // Update Stok via Transaction (Lebih Aman)
-        function updateStok(dir) {
-            const step = parseInt(document.getElementById('input-step').value) || 1;
-            const change = dir * step;
+        // 1. Fungsi ubah angka di layar (Belum simpan ke database)
+        function changeDisplay(val) {
+            currentSisa += val;
+            if (currentSisa < 0) currentSisa = 0;
+            document.getElementById('sisa-angka').innerText = currentSisa;
+        }
 
-            ref.transaction(current => {
-                if (current) {
-                    let newSisa = (current.sisa || 0) + change;
-                    if (newSisa < 0) newSisa = 0;
-                    current.sisa = newSisa;
-                    current.status_habis = (newSisa <= 0);
-                }
-                return current;
-            });
+        // 2. Fungsi Simpan permanen & Kembali
+        function saveToFirebase() {
+            ref.update({
+                sisa: currentSisa,
+                status_habis: (currentSisa <= 0)
+            }).then(() => {
+                window.location.href = "invent_index.html";
+            }).catch(err => alert("Gagal simpan: " + err.message));
         }
     </script>
 </body>
