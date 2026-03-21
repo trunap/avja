@@ -1,65 +1,42 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<link rel="stylesheet" href="../assets/style.css"> <style>
-	
-	/* Tombol Plus Bulat */
-.btn-plus-circle {
-    width: 42px;
-    height: 42px;
-    background: var(--card);
-    border: 1px solid var(--line);
-    color: var(--text);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-decoration: none;
-    transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-.btn-plus-circle:hover {
-    background: var(--it);
-    color: white;
-    transform: rotate(90deg) scale(1.1);
-    border-color: var(--it);
-}
-
-/* Tombol Kategori Lonjong (Pill) */
-.btn-pill {
-    background: rgba(255,255,255,0.05);
-    border: 1px solid var(--line);
-    color: var(--text);
-    padding: 10px 20px;
-    border-radius: 50px;
-    font-size: 13px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: 0.2s;
-    white-space: nowrap;
-}
-.btn-pill:hover { background: rgba(255,255,255,0.1); }
-.btn-pill.active { 
-    background: var(--audio); 
-    color: white; 
-    border-color: var(--audio);
-    box-shadow: 0 4px 12px rgba(77, 183, 255, 0.3);
-}
-	</style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inventaris - Regional 2026</title>
     <link rel="stylesheet" href="../assets/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* Penyesuaian khusus agar list inventaris rapi dalam tema baru */
-        .list-container { margin-top: 20px; border-radius: 14px; overflow: hidden; border: 1px solid var(--line); background: var(--card); }
-        .list-item { display: flex; align-items: center; padding: 20px; border-bottom: 1px solid var(--line); text-decoration: none; color: inherit; transition: .25s; }
+        /* Desain Khusus Halaman Index */
+        .header-section { padding: 0 20px; }
+        .list-container { margin-top: 10px; border-radius: 14px; overflow: hidden; border: 1px solid var(--line); background: var(--card); }
+        .list-item { display: flex; align-items: center; padding: 18px 20px; border-bottom: 1px solid var(--line); text-decoration: none; color: inherit; transition: .2s; }
         .list-item:hover { background: rgba(255,255,255,0.05); }
-        body.light .list-item:hover { background: rgba(0,0,0,0.03); }
-        .status-circle { width: 12px; height: 12px; border-radius: 50%; margin-right: 15px; }
+        .status-circle { width: 10px; height: 10px; border-radius: 50%; margin-right: 15px; }
         .item-info { flex-grow: 1; }
-        .item-name { font-weight: 800; font-size: 18px; display: block; }
-        .item-meta { opacity: 0.6; font-size: 13px; }
+        .item-name { font-weight: 800; font-size: 17px; display: block; }
+        .item-meta { opacity: 0.5; font-size: 12px; margin-top: 2px; }
+
+        /* Tombol Aksi Bulat (Search & Plus) */
+        .btn-action-circle {
+            width: 40px; height: 40px; background: var(--card); border: 1px solid var(--line);
+            color: var(--text); border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            text-decoration: none; cursor: pointer; transition: 0.3s;
+        }
+        .btn-action-circle:hover { background: var(--it); color: white; border-color: var(--it); transform: scale(1.05); }
+
+        /* Filter Pill */
+        .btn-pill {
+            background: rgba(255,255,255,0.05); border: 1px solid var(--line); color: var(--text);
+            padding: 9px 18px; border-radius: 50px; font-size: 13px; font-weight: 700;
+            cursor: pointer; transition: 0.2s; white-space: nowrap;
+        }
+        .btn-pill.active { background: var(--audio); color: white; border-color: var(--audio); box-shadow: 0 4px 12px rgba(77, 183, 255, 0.2); }
+
+        /* Search Bar Input */
+        #search-container { display: none; margin-bottom: 15px; animation: slideDown 0.3s ease; }
+        #input-search { width: 100%; padding: 14px; border-radius: 10px; background: rgba(255,255,255,0.03); border: 1px solid var(--line); color: white; font-size: 15px; }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
@@ -67,133 +44,110 @@
     <nav class="navbar">
         <div class="navbar-inner">
             <a href="invent_index.html" class="brand">REGIONAL 2026</a>
-            <div class="nav">
-                <button class="theme-toggle" id="themeBtn">🌙 Dark</button>
-            </div>
+            <button class="theme-toggle" id="themeBtn">🌙 Dark</button>
         </div>
     </nav>
 
-<div class="container">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
-        <h1 class="hero-title" style="font-size: 32px; font-weight: 900; margin: 0;">Semua Inventaris</h1>
-        
-        <a href="tambah_barang.html" class="btn-plus-circle" title="Tambah Barang Baru">
-            <i class="fas fa-plus"></i>
-        </a>
-    </div>
-    <p class="hero-sub" style="margin-bottom: 25px;">Daftar perlengkapan teknis regional.</p>
+    <div class="container header-section">
+        <h1 class="hero-title" style="font-size: 32px; font-weight: 900; margin-bottom: 15px;">Semua Inventaris</h1>
 
-    <div class="filter-wrapper" style="display: flex; gap: 8px; overflow-x: auto; padding-bottom: 15px;">
-        <button onclick="filterBarang('Semua')" class="btn-pill active">Semua</button>
-        <button onclick="filterBarang('LED Wall')" class="btn-pill">LED Wall</button>
-        <button onclick="filterBarang('Booth')" class="btn-pill">Booth</button>
-        <button onclick="filterBarang('Kamera')" class="btn-pill">Kamera</button>
-    </div>
-    
-    </div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; gap: 10px;">
+            <div class="filter-wrapper" style="display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none;">
+                <button onclick="filterBarang('Semua')" class="btn-pill active">Semua</button>
+                <button onclick="filterBarang('LED Wall')" class="btn-pill">LED Wall</button>
+                <button onclick="filterBarang('Booth')" class="btn-pill">Booth</button>
+                <button onclick="filterBarang('Kamera')" class="btn-pill">Kamera</button>
+            </div>
 
-   <div class="list-container" id="inventory-list">
-    <p style="padding:20px; opacity:0.3; text-align:center;">Memuat data...</p>
-</div>
-    
+            <div style="display: flex; gap: 10px;">
+                <button onclick="toggleSearch()" class="btn-action-circle"><i class="fas fa-search"></i></button>
+                <a href="tambah_barang.html" class="btn-action-circle"><i class="fas fa-plus"></i></a>
+            </div>
+        </div>
+
+        <div id="search-container">
+            <input type="text" id="input-search" placeholder="Cari nama barang...">
+        </div>
+
+        <div class="list-container" id="inventory-list">
+            <p style="padding:25px; opacity:0.3; text-align:center;">Menghubungkan ke Firebase...</p>
+        </div>
+    </div>
 
     <script src="../assets/theme.js"></script>
-
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
+    
+    <script src="config.js"></script>
 
     <script>
-        const firebaseConfig = {
-			  apiKey: "AIzaSyBNHkgkLR6WEQXDU7OdMyyWuoo-8jcSERo",
-		  authDomain: "panduanteknis-6e258.firebaseapp.com",
-		  databaseURL: "https://panduanteknis-6e258-default-rtdb.firebaseio.com",
-		  projectId: "panduanteknis-6e258",
-		  storageBucket: "panduanteknis-6e258.firebasestorage.app",
-		  messagingSenderId: "202324364776",
-		  appId: "1:202324364776:web:ddaf872764e19e5413685d",
-		  measurementId: "G-VGFJF9L8W0"
-			
-		};
-        firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
+        let currentFilter = "Semua";
+        let allItemsData = {};
 
-// AMBIL DATA DARI CONFIG.JS
-database.ref('/').on('value', (snapshot) => {
-    const allData = snapshot.val();
-    const listContainer = document.getElementById('inventory-list');
-    listContainer.innerHTML = '';
-
-    if (allData) {
-        Object.entries(allData).forEach(([key, data]) => {
-            if (data && data.nama) {
-                // RULE WARNA: Merah jika sisa 0, Biru jika > 0
-                const isHabis = (parseInt(data.sisa) <= 0);
-                const colorTheme = isHabis ? '#ff4d4d' : 'var(--audio)'; // Merah vs Biru
-                
-                const itemHTML = `
-                    <a href="detail.html?id=${key}" class="list-item">
-                        <div class="status-circle" style="background:${colorTheme}"></div>
-                        <div class="item-info">
-                            <span class="item-name" style="color:${isHabis ? '#ff4d4d' : 'inherit'}">${data.nama}</span>
-                            <span class="item-meta">${data.keterangan || '-'} | Sisa: ${data.sisa} ${data.satuan}</span>
-                        </div>
-                        <i class="fas fa-chevron-right" style="opacity:0.3"></i>
-                    </a>
-                `;
-                listContainer.innerHTML += itemHTML;
-            }
+        // 1. Ambil Data Realtime (Sekali panggil, otomatis update)
+        database.ref('/').on('value', (snapshot) => {
+            allItemsData = snapshot.val() || {};
+            renderList();
         });
-    }
-});
-		let currentFilter = "Semua";
 
-function filterBarang(kat) {
-    currentFilter = kat;
+        // 2. Fungsi Render List (Menggabungkan Filter & Search)
+        function renderList() {
+            const listContainer = document.getElementById('inventory-list');
+            const searchQuery = document.getElementById('input-search').value.toLowerCase();
+            listContainer.innerHTML = '';
 
-    // 1. Ambil semua tombol filter
-    const buttons = document.querySelectorAll('.btn-pill');
+            const entries = Object.entries(allItemsData);
+            let hasItems = false;
 
-    // 2. Hapus class 'active' dari semua tombol
-    buttons.forEach(btn => btn.classList.remove('active'));
+            entries.forEach(([key, data]) => {
+                if (!data || !data.nama) return;
 
-    // 3. Cari tombol yang teksnya sama dengan kategori yang diklik, lalu kasih class 'active'
-    // Kita pakai perulangan lagi untuk memastikan tombol mana yang aktif
-    buttons.forEach(btn => {
-        if (btn.innerText === kat) {
-            btn.classList.add('active');
+                const matchKategori = (currentFilter === "Semua" || data.kategori === currentFilter);
+                const matchSearch = data.nama.toLowerCase().includes(searchQuery);
+
+                if (matchKategori && matchSearch) {
+                    hasItems = true;
+                    const isHabis = (parseInt(data.sisa) <= 0);
+                    const colorTheme = isHabis ? '#ff4d4d' : 'var(--audio)';
+                    
+                    listContainer.innerHTML += `
+                        <a href="detail.html?id=${key}" class="list-item">
+                            <div class="status-circle" style="background:${colorTheme}"></div>
+                            <div class="item-info">
+                                <span class="item-name" style="color:${isHabis ? '#ff4d4d' : 'inherit'}">${data.nama}</span>
+                                <span class="item-meta">${data.kategori || 'Lain-lain'} | Sisa: ${data.sisa} ${data.satuan || 'Unit'}</span>
+                            </div>
+                            <i class="fas fa-chevron-right" style="opacity:0.2"></i>
+                        </a>`;
+                }
+            });
+
+            if (!hasItems) {
+                listContainer.innerHTML = `<p style="padding:30px; opacity:0.3; text-align:center;">Barang tidak ditemukan.</p>`;
+            }
         }
-    });
 
-    // 4. Jalankan ulang render list untuk menampilkan data yang disaring
-    renderList();
-}
+        // 3. Fungsi Filter (Update UI Tombol & List)
+        function filterBarang(kat) {
+            currentFilter = kat;
+            document.querySelectorAll('.btn-pill').forEach(btn => {
+                btn.classList.toggle('active', btn.innerText === kat);
+            });
+            renderList();
+        }
 
-function renderList() {
-    database.ref('/').once('value').then((snapshot) => {
-        const allData = snapshot.val();
-        const listContainer = document.getElementById('inventory-list');
-        listContainer.innerHTML = '';
+        // 4. Toggle & Event Search
+        function toggleSearch() {
+            const container = document.getElementById('search-container');
+            const input = document.getElementById('input-search');
+            const isHidden = window.getComputedStyle(container).display === "none";
+            
+            container.style.display = isHidden ? "block" : "none";
+            if (isHidden) input.focus();
+            else { input.value = ""; renderList(); }
+        }
 
-        Object.entries(allData).forEach(([key, data]) => {
-            // Logika Filter: Tampilkan jika kategori cocok atau filter adalah 'Semua'
-            if (currentFilter === "Semua" || data.kategori === currentFilter) {
-                const isHabis = (parseInt(data.sisa) <= 0);
-                const colorTheme = isHabis ? '#ff4d4d' : 'var(--audio)';
-                
-                listContainer.innerHTML += `
-                    <a href="detail.html?id=${key}" class="list-item">
-                        <div class="status-circle" style="background:${colorTheme}"></div>
-                        <div class="item-info">
-                            <span class="item-name" style="color:${isHabis ? '#ff4d4d' : 'inherit'}">${data.nama}</span>
-                            <span class="item-meta">${data.kategori || 'Lain-lain'} | Sisa: ${data.sisa}</span>
-                        </div>
-                    </a>`;
-            }
-        });
-    });
-}
-// Panggil pertama kali saat loading
-renderList();
+        document.getElementById('input-search').addEventListener('input', renderList);
     </script>
 </body>
 </html>
