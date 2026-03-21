@@ -32,9 +32,9 @@
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
 
-    <script>
-        // --- COPY PASTE CONFIG FIREBASE KAMU DI SINI ---
-        const firebaseConfig = {
+   <script>
+    // 1. Konfigurasi Firebase (Tetap pakai punya kamu yang asli)
+    const firebaseConfig = {
 		  apiKey: "AIzaSyBNHkgkLR6WEQXDU7OdMyyWuoo-8jcSERo",
 		  authDomain: "panduanteknis-6e258.firebaseapp.com",
 		  databaseURL: "https://panduanteknis-6e258-default-rtdb.firebaseio.com",
@@ -45,19 +45,26 @@
 		  measurementId: "G-VGFJF9L8W0"
 				};
 
-        firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+    const listContainer = document.getElementById('inventory-list');
 
-        const listContainer = document.getElementById('inventory-list');
+    // 2. Memanggil data dari "Akar" (Root) Database
+    // Karena sekarang 001, 002 langsung ada di depan, kita pakai ref('/')
+    database.ref('/').on('value', (snapshot) => {
+        const allData = snapshot.val();
+        
+        // Bersihkan list sebelum isi baru
+        listContainer.innerHTML = '';
 
-        // Memanggil folder utama (Ganti '0' atau 'inventaris' sesuai folder di Firebase kamu)
-        // Di gambar kamu folder utamanya '0', jadi saya pakai '0'
-        database.ref('0').on('value', (snapshot) => {
-            const allData = snapshot.val();
-            listContainer.innerHTML = '';
-
-            if (allData) {
-                Object.entries(allData).forEach(([key, data]) => {
+        if (allData) {
+            // Kita looping semua "Key" (001, 002, dst)
+            Object.entries(allData).forEach(([key, data]) => {
+                
+                // Cek apakah data ini benar-benar object barang (punya nama)
+                // Ini untuk jaga-jaga kalau ada data "sampah" di database
+                if (data && data.nama) {
+                    
                     const statusClass = (data.sisa > 0) ? 'aman' : 'habis';
 
                     const itemHTML = `
@@ -65,15 +72,18 @@
                             <div class="status-icon"><i class="fas fa-check"></i></div>
                             <div class="item-info">
                                 <div class="item-name">${data.nama}</div>
-                                <div class="item-meta">Ket: ${data.keterangan} | Sisa: ${data.sisa} ${data.satuan}</div>
+                                <div class="item-meta">Ket: ${data.keterangan || '-'} | Sisa: ${data.sisa} ${data.satuan}</div>
                             </div>
                             <i class="fas fa-chevron-right" style="color:#444"></i>
                         </a>
                     `;
                     listContainer.innerHTML += itemHTML;
-                });
-            }
-        });
-    </script>
+                }
+            });
+        } else {
+            listContainer.innerHTML = '<p style="text-align:center; padding: 20px;">Database Kosong atau Belum Terhubung.</p>';
+        }
+    });
+</script>
 </body>
 </html>
