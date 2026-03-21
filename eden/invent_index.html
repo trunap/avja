@@ -3,80 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PANDUAN TEKNIS - Regional 2026</title>
+    <title>Inventaris - Regional 2026</title>
     <link rel="stylesheet" href="../assets/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* Styling khusus halaman list agar tetap rapi */
-        .list-container { margin-top: 10px; border-radius: 14px; overflow: hidden; border: 1px solid var(--line); background: var(--card); }
+        .list-container { border-radius: 14px; overflow: hidden; border: 1px solid var(--line); background: var(--card); }
         .list-item { display: flex; align-items: center; padding: 18px 20px; border-bottom: 1px solid var(--line); text-decoration: none; color: inherit; transition: 0.2s; }
         .list-item:hover { background: rgba(255,255,255,0.05); }
-        body.light .list-item:hover { background: rgba(0,0,0,0.03); }
-        .list-item:last-child { border-bottom: none; }
-
-        .status-circle { width: 10px; height: 10px; border-radius: 50%; margin-right: 15px; flex-shrink: 0; }
-        .item-info { flex-grow: 1; }
+        .status-circle { width: 10px; height: 10px; border-radius: 50%; margin-right: 15px; }
         .item-name { font-weight: 800; font-size: 17px; display: block; }
         .item-meta { opacity: 0.5; font-size: 12px; }
-
-        /* Tombol Aksi */
-        .btn-action-circle {
-            width: 40px; height: 40px; background: var(--card); border: 1px solid var(--line);
-            color: var(--text); border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            cursor: pointer; transition: 0.3s; text-decoration: none;
-        }
-        .btn-action-circle:hover { background: var(--it); color: white; border-color: var(--it); transform: scale(1.1); }
-
+        .btn-action-circle { width: 40px; height: 40px; background: var(--card); border: 1px solid var(--line); color: var(--text); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; text-decoration: none; }
+        .btn-pill.active { background: var(--audio); color: white; border-color: var(--audio); }
         #search-container { display: none; margin-bottom: 20px; }
-        #input-search { 
-            width: 100%; padding: 15px; border-radius: 12px; background: rgba(255,255,255,0.05); 
-            border: 1px solid var(--line); color: var(--text); font-size: 16px; outline: none;
-        }
+        #input-search { width: 100%; padding: 15px; border-radius: 12px; background: rgba(255,255,255,0.05); border: 1px solid var(--line); color: var(--text); outline: none; }
     </style>
 </head>
 <body>
-
     <div id="navbar-placeholder"></div>
-
     <div class="container" style="padding: 0 20px;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; gap: 10px;">
             <div class="filter-wrapper" style="display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none;">
                 <button onclick="filterBarang('Semua')" class="btn-pill active">Semua</button>
-                <button onclick="filterBarang('Audio')" class="btn-pill">Audio</button>
-                <button onclick="filterBarang('Video')" class="btn-pill">Video</button>
-                <button onclick="filterBarang('Podium')" class="btn-pill">Podium</button>
-                <button onclick="filterBarang('IT')" class="btn-pill">IT</button>
+                <button onclick="filterBarang('LED Wall')" class="btn-pill">LED Wall</button>
+                <button onclick="filterBarang('Booth')" class="btn-pill">Booth</button>
+                <button onclick="filterBarang('Kamera')" class="btn-pill">Kamera</button>
             </div>
-
             <div style="display: flex; gap: 10px;">
                 <button onclick="toggleSearch()" class="btn-action-circle"><i class="fas fa-search"></i></button>
                 <a href="tambah_barang.html" class="btn-action-circle"><i class="fas fa-plus"></i></a>
             </div>
         </div>
-
-        <div id="search-container">
-            <input type="text" id="input-search" placeholder="Cari nama barang...">
-        </div>
-
-        <div class="list-container" id="inventory-list">
-            <p style="padding:40px; opacity:0.3; text-align:center;">Memuat data inventaris...</p>
-        </div>
+        <div id="search-container"><input type="text" id="input-search" placeholder="Cari barang..."></div>
+        <div class="list-container" id="inventory-list"></div>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
     <script src="config.js"></script>
-    <script src="navbar.js"></script> <script src="../assets/theme.js"></script>
-
+    <script src="navbar.js"></script>
+    <script src="../assets/theme.js"></script>
     <script>
-        let currentFilter = "Semua";
-        let allItems = {};
-
-        // Ambil Data Realtime
-        database.ref('/').on('value', (snapshot) => {
-            allItems = snapshot.val() || {};
-            renderList();
-        });
-
-        function renderList() {
-            const container = document.getElementById
+        let currentFilter = "Semua"; let allItems = {};
+        database.ref('/').on('value', snap => { allItems = snap.val() || {}; render(); });
+        function render() {
+            const container = document.getElementById('inventory-list');
+            const search = document.getElementById('input-search').value.toLowerCase();
+            container.innerHTML = '';
+            Object.entries(allItems).forEach(([key, data]) => {
+                const matchF = currentFilter === "Semua" || data.kategori === currentFilter;
+                const matchS = data.nama.toLowerCase().includes(search);
+                if (matchF && matchS) {
+                    const isHabis = data.sisa <= 0;
+                    container.innerHTML += `<a href="detail.html?id=${key}" class="list-item">
+                        <div class="status-circle" style="background:${isHabis ? '#ff4d4d' : 'var(--audio)'}"></div>
+                        <div class="item-info">
+                            <span class="item-name" style="color:${isHabis ? '#ff4d4d' : 'inherit'}">${data.nama}</span>
+                            <span class="item-meta">${data.kategori} | Sisa: ${data.sisa} ${data.satuan || 'Unit'}</span>
+                        </div>
+                        <i class="fas fa-chevron-right" style="opacity:0.2"></i>
+                    </a>`;
+                }
+            });
+        }
+        function filterBarang(kat) {
+            currentFilter = kat;
+            document.querySelectorAll('.btn-pill').forEach(b => b.classList.toggle('active', b.innerText === kat));
+            render();
+        }
+        function toggleSearch() { 
+            const box = document.getElementById('search-container');
+            box.style.display = box.style.display === "none" ? "block" : "none";
+        }
+        document.getElementById('input-search').addEventListener('input', render);
+    </script>
+</body>
+</html>
