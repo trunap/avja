@@ -1,5 +1,3 @@
-// eden/config.js
-
 const firebaseConfig = {
     apiKey: "AIzaSyBNHkgkLR6WEQXDU7OdMyyWuoo-8jcSERo",
 		  authDomain: "panduanteknis-6e258.firebaseapp.com",
@@ -11,9 +9,7 @@ const firebaseConfig = {
 		  measurementId: "G-VGFJF9L8W0"
 };
 
-// Simpan API Key ImgBB di sini juga
 const IMGBB_API_KEY = "1ea7916278d418913459909e1a4985ec";
 
-// Inisialisasi Firebase agar bisa dipakai di semua halaman
-firebase.initializeApp(firebaseConfig);
+if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
 const database = firebase.database();
