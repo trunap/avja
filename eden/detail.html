@@ -7,22 +7,19 @@
     <link rel="stylesheet" href="../assets/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        .detail-card { background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: 25px; margin-top: 20px; text-align: center; overflow: hidden; }
+        .detail-card { background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: 25px; margin-top: 20px; text-align: center; }
         
-        /* Frame Foto di Detail */
-        .item-photo-frame { width: 100%; height: 250px; border-radius: 15px; background: rgba(0,0,0,0.2); margin-bottom: 20px; overflow: hidden; border: 1px solid var(--line); }
-        .item-photo-frame img { width: 100%; height: 100%; object-fit: cover; }
-        .no-photo { display: flex; align-items: center; justify-content: center; height: 100%; color: #555; font-weight: 700; }
+        /* Wadah Foto Barang */
+        #photo-frame { width: 100%; height: 250px; border-radius: 15px; background: rgba(0,0,0,0.2); margin-bottom: 20px; overflow: hidden; border: 1px solid var(--line); display: flex; align-items: center; justify-content: center; }
+        #photo-frame img { width: 100%; height: 100%; object-fit: cover; }
 
         .big-sisa { font-size: 80px; font-weight: 900; color: var(--it); line-height: 1; margin: 10px 0; }
         .label-caps { font-size: 12px; font-weight: 800; letter-spacing: 2px; opacity: 0.5; text-transform: uppercase; }
         
-        /* Tombol Navigasi */
         .action-group { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 30px; }
         .btn-edit { background: transparent; color: var(--text); border: 1px solid var(--line); padding: 15px; border-radius: 12px; font-weight: 700; text-decoration: none; transition: .2s; display: flex; align-items: center; justify-content: center; gap: 10px; }
         .btn-edit:hover { background: var(--line); }
         
-        /* Input cepat untuk sisa stok */
         .quick-update { margin-top: 25px; padding-top: 20px; border-top: 1px solid var(--line); }
         .input-mini { background: rgba(255,255,255,0.05); border: 1px solid var(--line); color: white; padding: 12px; border-radius: 8px; width: 80px; text-align: center; font-weight: 700; margin-right: 10px; }
         .btn-save-mini { background: var(--it); color: white; border: none; padding: 12px 20px; border-radius: 8px; font-weight: 700; cursor: pointer; }
@@ -39,17 +36,18 @@
 
     <div class="container" style="max-width: 500px;">
         <div class="detail-card">
-            <div class="item-photo-frame" id="photo-frame">
-                <div class="no-photo">Memuat Foto...</div>
+            
+            <div id="photo-frame">
+                <span style="opacity: 0.3;">Memuat Foto...</span>
             </div>
 
             <h1 id="nama-barang" style="font-weight:900; font-size: 28px;">...</h1>
-            <p id="ket-barang" style="opacity:0.6; margin-bottom: 20px;">-</p>
+            <p id="ket-barang" style="opacity:0.6; margin-bottom: 20px; font-size: 14px; line-height: 1.5;">-</p>
             
             <div class="label-caps">Sisa Stok</div>
             <div class="big-sisa" id="sisa-angka">0</div>
             <div id="satuan-teks" style="font-weight: 700; opacity: 0.8; margin-bottom: 10px;">Unit</div>
-            <div class="item-meta" style="opacity:0.4; font-size:13px;">Total Aset: <span id="total-stok">0</span></div>
+            <div style="opacity:0.4; font-size:13px;">Total Aset: <span id="total-stok">0</span></div>
 
             <div class="quick-update">
                 <input type="number" id="input-sisa-quick" class="input-mini">
@@ -65,99 +63,62 @@
     </div>
 
     <script src="../assets/theme.js"></script>
+
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
 
     <script>
-        // --- CONFIG FIREBASE ---
-        const firebaseConfig = { apiKey: "AIzaSyBNHkgkLR6WEQXDU7OdMyyWuoo-8jcSERo",
+        // --- MASUKKAN CONFIG FIREBASE KAMU DI SINI ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyBNHkgkLR6WEQXDU7OdMyyWuoo-8jcSERo",
 		  authDomain: "panduanteknis-6e258.firebaseapp.com",
 		  databaseURL: "https://panduanteknis-6e258-default-rtdb.firebaseio.com",
 		  projectId: "panduanteknis-6e258",
 		  storageBucket: "panduanteknis-6e258.firebasestorage.app",
 		  messagingSenderId: "202324364776",
 		  appId: "1:202324364776:web:ddaf872764e19e5413685d",
-		  measurementId: "G-VGFJF9L8W0" };
+		  measurementId: "G-VGFJF9L8W0"
+        };
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
-        const idBarang = new URLSearchParams(window.location.search).get('id');
+        // Ambil ID dari URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const idBarang = urlParams.get('id');
         const refBarang = database.ref('/' + idBarang);
 
-        // Pasang ID ke Link Edit
-        document.getElementById('link-edit').href = `invent_edit.html?id=${idBarang}`;
+        // Pasang link edit secara otomatis
+        if (idBarang) {
+            document.getElementById('link-edit').href = `invent_edit.html?id=${idBarang}`;
+        }
 
-        // BACA DATA REALTIME
+        // AMBIL DATA REALTIME
         refBarang.on('value', (snapshot) => {
             const data = snapshot.val();
-            if(data) {
-                document.getElementById('nama-barang').innerText = data.nama;
-                document.getElementById('ket-barang').innerText = data.keterangan || "Tidak ada keterangan";
-                document.getElementById('sisa-angka').innerText = data.sisa;
-                document.getElementById('total-stok').innerText = data.total + " " + data.satuan;
-                document.getElementById('satuan-teks').innerText = data.satuan;
-                document.getElementById('input-sisa-quick').value = data.sisa;
+            if (data) {
+                document.getElementById('nama-barang').innerText = data.nama || "Tanpa Nama";
+                document.getElementById('ket-barang').innerText = data.keterangan || "-";
+                document.getElementById('sisa-angka').innerText = data.sisa || 0;
+                document.getElementById('total-stok').innerText = (data.total || 0) + " " + (data.satuan || "");
+                document.getElementById('satuan-teks').innerText = data.satuan || "";
+                document.getElementById('input-sisa-quick').value = data.sisa || 0;
 
-                // Tampilkan Foto
+                // Tampilkan Foto dari foto_url
                 const frame = document.getElementById('photo-frame');
-                if (data.foto_url) {
+                if (data.foto_url && data.foto_url !== "") {
                     frame.innerHTML = `<img src="${data.foto_url}" alt="${data.nama}">`;
                 } else {
-                    frame.innerHTML = `<div class="no-photo">Tidak ada foto</div>`;
+                    frame.innerHTML = `<span style="opacity: 0.2;">Tidak ada foto</span>`;
                 }
-            } else {
-                document.getElementById('nama-barang').innerText = "Barang Dihapus";
             }
         });
 
-        // FUNGSI UPDATE CEPAT
+        // Simpan perubahan sisa stok saja
         document.getElementById('btn-save-quick').addEventListener('click', () => {
             const val = document.getElementById('input-sisa-quick').value;
             refBarang.update({ sisa: parseInt(val) })
             .then(() => alert("Stok diperbarui!"));
         });
     </script>
-
-	<script>
-    // 1. Inisialisasi Firebase (Tetap pakai config kamu)
-    const firebaseConfig = { /* ... config kamu ... */ };
-    firebase.initializeApp(firebaseConfig);
-    const database = firebase.database();
-
-    const urlParams = new URLSearchParams(window.location.search);
-    const idBarang = urlParams.get('id');
-    const refBarang = database.ref('/' + idBarang);
-
-    // 2. Baca Data Realtime
-    refBarang.on('value', (snapshot) => {
-        const data = snapshot.val();
-        if (data) {
-            // Update teks detail barang
-            document.getElementById('nama-barang').innerText = data.nama || "Tanpa Nama";
-            document.getElementById('ket-barang').innerText = data.keterangan || "-";
-            document.getElementById('sisa-angka').innerText = data.sisa || 0;
-            document.getElementById('total-stok').innerText = (data.total || 0) + " " + (data.satuan || "");
-            document.getElementById('satuan-teks').innerText = data.satuan || "";
-            document.getElementById('input-sisa-quick').value = data.sisa || 0;
-
-            // 3. Logika Menampilkan Foto dari foto_url
-            const frame = document.getElementById('photo-frame');
-            if (data.foto_url && data.foto_url !== "") {
-                // Jika ada link foto, tampilkan gambarnya
-                frame.innerHTML = `<img src="${data.foto_url}" style="width:100%; height:100%; object-fit:cover;">`;
-            } else {
-                // Jika tidak ada foto, tampilkan placeholder atau teks
-                frame.innerHTML = `<div style="display:flex; align-items:center; justify-content:center; height:100%; opacity:0.3;">Tidak ada foto</div>`;
-            }
-        }
-    });
-
-    // Fungsi update cepat sisa stok
-    document.getElementById('btn-save-quick').addEventListener('click', () => {
-        const val = document.getElementById('input-sisa-quick').value;
-        refBarang.update({ sisa: parseInt(val) })
-        .then(() => alert("Stok berhasil diperbarui!"));
-    });
-</script>
 </body>
 </html>
