@@ -3,93 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detail Barang - Regional 2026</title>
+    <title>Detail - Regional 2026</title>
     <link rel="stylesheet" href="../assets/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        .detail-container { max-width: 600px; margin: 0 auto; padding: 0 20px 50px; }
-        
-        /* Foto Detail */
-        .img-header { 
-            width: 100%; height: 300px; border-radius: 20px; object-fit: cover; 
-            margin-bottom: 25px; border: 1px solid var(--line); background: var(--card);
-        }
-
-        /* Card Sisa Stok & Perbaikan Warna Angka */
-        .stock-card { 
-            background: var(--card); border: 1px solid var(--line); padding: 25px; 
-            border-radius: 20px; text-align: center; margin-bottom: 25px;
-        }
-        .stock-label { font-size: 12px; font-weight: 800; opacity: 0.6; text-transform: uppercase; letter-spacing: 1px; }
-        
-        /* FIX: Angka Sisa agar terbaca di Light/Dark Mode */
-        #sisa-angka { 
-            font-size: 64px; font-weight: 900; line-height: 1; margin: 10px 0;
-            color: var(--text) !important; 
-        }
+        #sisa-angka { font-size: 72px; font-weight: 900; color: var(--text); margin: 10px 0; }
         body.light #sisa-angka { color: #000000 !important; }
-
-        /* Quick Update Input */
-        .quick-update { 
-            display: flex; gap: 10px; justify-content: center; align-items: center; margin-top: 15px; 
-        }
-        .input-qty { 
-            width: 80px; padding: 12px; border-radius: 10px; border: 1px solid var(--line); 
-            background: rgba(255,255,255,0.05); color: var(--text); text-align: center; font-weight: 900;
-        }
-        body.light .input-qty { background: #f0f0f0; color: #000; }
-
-        /* Info List */
-        .info-box { margin-bottom: 30px; }
+        .img-header { width: 100%; height: 280px; object-fit: cover; border-radius: 20px; border: 1px solid var(--line); margin-bottom: 20px; }
         .info-row { display: flex; justify-content: space-between; padding: 15px 0; border-bottom: 1px solid var(--line); }
-        .info-label { opacity: 0.5; font-size: 14px; }
-        .info-value { font-weight: 700; text-align: right; }
-
-        .btn-edit { 
-            display: block; width: 100%; padding: 18px; border-radius: 15px; background: var(--card); 
-            color: var(--text); text-align: center; text-decoration: none; font-weight: 800; border: 1px solid var(--line);
-        }
+        .btn-edit-link { display: block; text-align: center; padding: 18px; background: var(--card); border: 1px solid var(--line); border-radius: 12px; text-decoration: none; color: var(--text); font-weight: 800; margin-top: 30px; }
     </style>
 </head>
 <body>
-
     <div id="navbar-placeholder"></div>
-
-    <div class="detail-container">
-        <img id="detail-img" class="img-header" src="" alt="Foto Barang">
-
-        <div class="stock-card">
-            <span class="stock-label">Sisa Stok Saat Ini</span>
+    <div class="container" style="max-width: 600px; padding: 0 20px;">
+        <img id="detail-img" class="img-header" src="">
+        <div style="text-align: center; margin-bottom: 30px;">
+            <p style="font-weight: 800; opacity: 0.5;">SISA STOK</p>
             <div id="sisa-angka">0</div>
-            <span id="detail-satuan" style="font-weight: 700; opacity: 0.5;">Pcs</span>
-
-            <div class="quick-update">
-                <button onclick="updateStok(-1)" class="btn-pill">- 1</button>
-                <input type="number" id="input-manual" class="input-qty" value="1">
-                <button onclick="updateStok(1)" class="btn-pill" style="background:var(--it); border-color:var(--it); color:white;">+ 1</button>
-            </div>
+            <p id="detail-satuan" style="font-weight: 700; opacity: 0.5;"></p>
         </div>
-
-        <div class="info-box">
-            <div class="info-row">
-                <span class="info-label">Nama Barang</span>
-                <span class="info-value" id="detail-nama">-</span>
-            </div>
-            <div class="info-row">
-                <span class="info-label">Kategori / Tim</span>
-                <span class="info-value" id="detail-kategori">-</span>
-            </div>
-            <div class="info-row">
-                <span class="info-label">Total Inventaris</span>
-                <span class="info-value" id="detail-total">-</span>
-            </div>
-            <div class="info-row" style="flex-direction: column; gap: 10px;">
-                <span class="info-label">Keterangan</span>
-                <p id="detail-ket" style="margin:0; font-size: 15px; line-height: 1.5; color: var(--text); opacity: 0.8;">-</p>
-            </div>
-        </div>
-
-        <a id="link-edit" href="#" class="btn-edit"><i class="fas fa-edit"></i> Edit Informasi Barang</a>
+        <div class="info-row"><span>Nama</span><b id="detail-nama"></b></div>
+        <div class="info-row"><span>Kategori</span><b id="detail-kategori"></b></div>
+        <div class="info-row"><span>Total</span><b id="detail-total"></b></div>
+        <a id="link-edit" href="#" class="btn-edit-link">EDIT BARANG</a>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
@@ -97,42 +34,19 @@
     <script src="config.js"></script>
     <script src="navbar.js"></script>
     <script src="../assets/theme.js"></script>
-
     <script>
-        const urlParams = new URLSearchParams(window.location.search);
-        const itemId = urlParams.get('id');
-        const itemRef = database.ref('/' + itemId);
-
-        // Ambil Data
-        itemRef.on('value', (snap) => {
+        const id = new URLSearchParams(window.location.search).get('id');
+        database.ref('/' + id).on('value', snap => {
             const data = snap.val();
             if (!data) return;
-
             document.getElementById('detail-nama').innerText = data.nama;
             document.getElementById('detail-kategori').innerText = data.kategori;
             document.getElementById('detail-total').innerText = data.total + " " + data.satuan;
             document.getElementById('detail-satuan').innerText = data.satuan;
-            document.getElementById('detail-ket').innerText = data.keterangan || "Tidak ada keterangan.";
             document.getElementById('sisa-angka').innerText = data.sisa;
-            document.getElementById('detail-img').src = data.foto_url || 'https://via.placeholder.com/500x300?text=No+Image';
-            document.getElementById('link-edit').href = "invent_edit.html?id=" + itemId;
+            document.getElementById('detail-img').src = data.foto_url;
+            document.getElementById('link-edit').href = "invent_edit.html?id=" + id;
         });
-
-        // Update Stok Cepat
-        function updateStok(change) {
-            const manualVal = parseInt(document.getElementById('input-manual').value) || 1;
-            const step = change * manualVal;
-
-            itemRef.transaction((currentData) => {
-                if (currentData) {
-                    let newSisa = (currentData.sisa || 0) + step;
-                    if (newSisa < 0) newSisa = 0; // Gak boleh minus
-                    currentData.sisa = newSisa;
-                    currentData.status_habis = (newSisa <= 0);
-                }
-                return currentData;
-            });
-        }
     </script>
 </body>
 </html>
