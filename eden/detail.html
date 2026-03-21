@@ -117,5 +117,47 @@
             .then(() => alert("Stok diperbarui!"));
         });
     </script>
+
+	<script>
+    // 1. Inisialisasi Firebase (Tetap pakai config kamu)
+    const firebaseConfig = { /* ... config kamu ... */ };
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const idBarang = urlParams.get('id');
+    const refBarang = database.ref('/' + idBarang);
+
+    // 2. Baca Data Realtime
+    refBarang.on('value', (snapshot) => {
+        const data = snapshot.val();
+        if (data) {
+            // Update teks detail barang
+            document.getElementById('nama-barang').innerText = data.nama || "Tanpa Nama";
+            document.getElementById('ket-barang').innerText = data.keterangan || "-";
+            document.getElementById('sisa-angka').innerText = data.sisa || 0;
+            document.getElementById('total-stok').innerText = (data.total || 0) + " " + (data.satuan || "");
+            document.getElementById('satuan-teks').innerText = data.satuan || "";
+            document.getElementById('input-sisa-quick').value = data.sisa || 0;
+
+            // 3. Logika Menampilkan Foto dari foto_url
+            const frame = document.getElementById('photo-frame');
+            if (data.foto_url && data.foto_url !== "") {
+                // Jika ada link foto, tampilkan gambarnya
+                frame.innerHTML = `<img src="${data.foto_url}" style="width:100%; height:100%; object-fit:cover;">`;
+            } else {
+                // Jika tidak ada foto, tampilkan placeholder atau teks
+                frame.innerHTML = `<div style="display:flex; align-items:center; justify-content:center; height:100%; opacity:0.3;">Tidak ada foto</div>`;
+            }
+        }
+    });
+
+    // Fungsi update cepat sisa stok
+    document.getElementById('btn-save-quick').addEventListener('click', () => {
+        const val = document.getElementById('input-sisa-quick').value;
+        refBarang.update({ sisa: parseInt(val) })
+        .then(() => alert("Stok berhasil diperbarui!"));
+    });
+</script>
 </body>
 </html>
