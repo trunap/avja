@@ -3,16 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detail - Inventaris</title>
+    <title>Detail Inventaris - Regional 2026</title>
     <link rel="stylesheet" href="../assets/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        .detail-card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 30px; margin-top: 20px; text-align: center; }
-        .big-sisa { font-size: 72px; font-weight: 900; color: var(--it); margin: 10px 0; }
-        .input-group { margin-top: 25px; }
-        input { background: rgba(255,255,255,0.05); border: 1px solid var(--line); color: var(--text); padding: 15px; border-radius: 10px; width: 100%; text-align: center; font-size: 20px; margin-bottom: 15px; }
-        body.light input { background: #fff; }
-        .btn-update { background: var(--it); color: white; border: none; padding: 15px; border-radius: 10px; width: 100%; font-weight: 800; cursor: pointer; transition: .2s; }
-        .btn-update:hover { filter: brightness(1.1); transform: translateY(-2px); }
+        .detail-card { background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: 25px; margin-top: 20px; text-align: center; overflow: hidden; }
+        
+        /* Frame Foto di Detail */
+        .item-photo-frame { width: 100%; height: 250px; border-radius: 15px; background: rgba(0,0,0,0.2); margin-bottom: 20px; overflow: hidden; border: 1px solid var(--line); }
+        .item-photo-frame img { width: 100%; height: 100%; object-fit: cover; }
+        .no-photo { display: flex; align-items: center; justify-content: center; height: 100%; color: #555; font-weight: 700; }
+
+        .big-sisa { font-size: 80px; font-weight: 900; color: var(--it); line-height: 1; margin: 10px 0; }
+        .label-caps { font-size: 12px; font-weight: 800; letter-spacing: 2px; opacity: 0.5; text-transform: uppercase; }
+        
+        /* Tombol Navigasi */
+        .action-group { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 30px; }
+        .btn-edit { background: transparent; color: var(--text); border: 1px solid var(--line); padding: 15px; border-radius: 12px; font-weight: 700; text-decoration: none; transition: .2s; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .btn-edit:hover { background: var(--line); }
+        
+        /* Input cepat untuk sisa stok */
+        .quick-update { margin-top: 25px; padding-top: 20px; border-top: 1px solid var(--line); }
+        .input-mini { background: rgba(255,255,255,0.05); border: 1px solid var(--line); color: white; padding: 12px; border-radius: 8px; width: 80px; text-align: center; font-weight: 700; margin-right: 10px; }
+        .btn-save-mini { background: var(--it); color: white; border: none; padding: 12px 20px; border-radius: 8px; font-weight: 700; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -26,16 +39,27 @@
 
     <div class="container" style="max-width: 500px;">
         <div class="detail-card">
-            <h1 id="nama-barang" style="font-weight:900;">...</h1>
+            <div class="item-photo-frame" id="photo-frame">
+                <div class="no-photo">Memuat Foto...</div>
+            </div>
+
+            <h1 id="nama-barang" style="font-weight:900; font-size: 28px;">...</h1>
             <p id="ket-barang" style="opacity:0.6; margin-bottom: 20px;">-</p>
             
-            <p style="font-size: 14px; font-weight: 800; letter-spacing: 1px; opacity: 0.5;">SISA SAAT INI</p>
+            <div class="label-caps">Sisa Stok</div>
             <div class="big-sisa" id="sisa-angka">0</div>
-            <p id="satuan-teks" style="font-weight: 600; opacity: 0.7;">Unit</p>
+            <div id="satuan-teks" style="font-weight: 700; opacity: 0.8; margin-bottom: 10px;">Unit</div>
+            <div class="item-meta" style="opacity:0.4; font-size:13px;">Total Aset: <span id="total-stok">0</span></div>
 
-            <div class="input-group">
-                <input type="number" id="input-sisa" placeholder="Update angka...">
-                <button id="btn-update" class="btn-update">SIMPAN PERUBAHAN</button>
+            <div class="quick-update">
+                <input type="number" id="input-sisa-quick" class="input-mini">
+                <button id="btn-save-quick" class="btn-save-mini">Update Sisa</button>
+            </div>
+
+            <div class="action-group">
+                <a id="link-edit" href="#" class="btn-edit">
+                    <i class="fas fa-edit"></i> Edit Informasi Lengkap
+                </a>
             </div>
         </div>
     </div>
@@ -45,34 +69,45 @@
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
 
     <script>
-        const firebaseConfig = { apiKey: "AIzaSyBNHkgkLR6WEQXDU7OdMyyWuoo-8jcSERo",
-		  authDomain: "panduanteknis-6e258.firebaseapp.com",
-		  databaseURL: "https://panduanteknis-6e258-default-rtdb.firebaseio.com",
-		  projectId: "panduanteknis-6e258",
-		  storageBucket: "panduanteknis-6e258.firebasestorage.app",
-		  messagingSenderId: "202324364776",
-		  appId: "1:202324364776:web:ddaf872764e19e5413685d",
-		  measurementId: "G-VGFJF9L8W0" };
+        // --- CONFIG FIREBASE ---
+        const firebaseConfig = { /* PASTE CONFIG KAMU */ };
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
         const idBarang = new URLSearchParams(window.location.search).get('id');
         const refBarang = database.ref('/' + idBarang);
 
+        // Pasang ID ke Link Edit
+        document.getElementById('link-edit').href = `invent_edit.html?id=${idBarang}`;
+
+        // BACA DATA REALTIME
         refBarang.on('value', (snapshot) => {
             const data = snapshot.val();
             if(data) {
                 document.getElementById('nama-barang').innerText = data.nama;
-                document.getElementById('ket-barang').innerText = data.keterangan || "-";
+                document.getElementById('ket-barang').innerText = data.keterangan || "Tidak ada keterangan";
                 document.getElementById('sisa-angka').innerText = data.sisa;
+                document.getElementById('total-stok').innerText = data.total + " " + data.satuan;
                 document.getElementById('satuan-teks').innerText = data.satuan;
-                document.getElementById('input-sisa').value = data.sisa;
+                document.getElementById('input-sisa-quick').value = data.sisa;
+
+                // Tampilkan Foto
+                const frame = document.getElementById('photo-frame');
+                if (data.foto_url) {
+                    frame.innerHTML = `<img src="${data.foto_url}" alt="${data.nama}">`;
+                } else {
+                    frame.innerHTML = `<div class="no-photo">Tidak ada foto</div>`;
+                }
+            } else {
+                document.getElementById('nama-barang').innerText = "Barang Dihapus";
             }
         });
 
-        document.getElementById('btn-update').addEventListener('click', () => {
-            refBarang.update({ sisa: parseInt(document.getElementById('input-sisa').value) })
-            .then(() => alert("Data Berhasil Diupdate!"));
+        // FUNGSI UPDATE CEPAT
+        document.getElementById('btn-save-quick').addEventListener('click', () => {
+            const val = document.getElementById('input-sisa-quick').value;
+            refBarang.update({ sisa: parseInt(val) })
+            .then(() => alert("Stok diperbarui!"));
         });
     </script>
 </body>
