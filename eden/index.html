@@ -1,77 +1,9 @@
 <!DOCTYPE html>
-<html lang="id">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detail Inventaris</title>
-    <style>
-        body { background: #121212; color: white; font-family: sans-serif; text-align: center; padding: 40px 20px; }
-        .container { max-width: 400px; margin: auto; background: #1e1e1e; padding: 30px; border-radius: 20px; border: 1px solid #333; }
-        .back-link { display: block; text-align: left; color: #6a41d8; text-decoration: none; margin-bottom: 20px; font-weight: bold; }
-        h1 { font-size: 1.5rem; margin-bottom: 10px; }
-        .label-biru { color: #6a41d8; font-weight: bold; font-size: 0.8rem; text-transform: uppercase; display: block; margin-top: 15px; }
-        .text-detail { font-size: 1.1rem; margin-bottom: 15px; display: block; }
-        .big-number { font-size: 4rem; font-weight: bold; color: #6a41d8; margin: 10px 0; }
-        input { background: #2a2a2a; border: 1px solid #444; color: white; padding: 15px; border-radius: 10px; width: 100%; font-size: 1.2rem; text-align: center; margin-bottom: 20px; box-sizing: border-box; }
-        button { background: #6a41d8; color: white; border: none; padding: 15px; border-radius: 10px; width: 100%; font-weight: bold; cursor: pointer; font-size: 1rem; }
-    </style>
+    <meta http-equiv="refresh" content="0; url=invent_index.html">
 </head>
 <body>
-
-    <div class="container">
-        <a href="invent_index.html" class="back-link">← Kembali</a>
-        
-        <h1 id="nama-barang">Loading...</h1>
-        
-        <span class="label-biru">Keterangan:</span>
-        <span class="text-detail" id="ket-barang">--</span>
-
-        <span class="label-biru">Total Stok:</span>
-        <span class="text-detail" id="total-lengkap">--</span>
-        
-        <hr style="border: 0; border-top: 1px solid #333; margin: 20px 0;">
-
-        <p>Sisa Saat Ini:</p>
-        <div class="big-number" id="sisa-angka">--</div>
-        <p id="satuan-teks" style="color: #888; margin-bottom: 20px;">Unit</p>
-
-        <input type="number" id="input-sisa">
-        <button id="btn-update">💾 Simpan Perubahan</button>
-    </div>
-
-    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
-
-    <script>
-        // --- KONFIGURASI FIREBASE (Sama dengan invent_index.html) ---
-        const firebaseConfig = { apiKey: "AIzaSyD...", ... }; 
-        firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
-
-        const urlParams = new URLSearchParams(window.location.search);
-        const idBarang = urlParams.get('id');
-
-        // Ambil data dari folder '0' lalu sub-folder idBarang
-        const refBarang = database.ref('0/' + idBarang);
-
-        refBarang.on('value', (snapshot) => {
-            const data = snapshot.val();
-            if (data) {
-                document.getElementById('nama-barang').innerText = data.nama;
-                document.getElementById('ket-barang').innerText = data.keterangan || "-";
-                document.getElementById('total-lengkap').innerText = data.total + " " + data.satuan;
-                document.getElementById('sisa-angka').innerText = data.sisa;
-                document.getElementById('satuan-teks').innerText = data.satuan;
-                document.getElementById('input-sisa').value = data.sisa;
-            }
-        });
-
-        document.getElementById('btn-update').addEventListener('click', () => {
-            const sisaBaru = document.getElementById('input-sisa').value;
-            refBarang.update({
-                sisa: parseInt(sisaBaru)
-            }).then(() => alert("Data berhasil diperbarui!"));
-        });
-    </script>
+    <p>Mohon tunggu, sedang dialihkan...</p>
 </body>
 </html>
