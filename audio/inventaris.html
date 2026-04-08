@@ -3,89 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inventaris Audio - AVJA</title>
+    <title>Inventaris AV 2026 - AVJA</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .card-img { height: 220px; object-fit: cover; width: 100%; }
+        .glass-nav { background: rgba(15, 23, 42, 0.9); backdrop-filter: blur(10px); }
+    </style>
 </head>
-<body class="bg-gray-50 min-h-screen">
+<body class="bg-gray-100 font-sans">
 
-    <nav class="bg-slate-900 text-white p-4 shadow-lg sticky top-0 z-50">
+    <nav class="glass-nav text-white p-4 shadow-xl sticky top-0 z-50">
         <div class="container mx-auto flex justify-between items-center">
-            <h1 class="text-xl font-bold tracking-wider"><i class="fas fa-boxes-stacked mr-2"></i>AVJA INVENTORY</h1>
-            <a href="../index.html" class="text-sm hover:text-blue-400 transition">Kembali ke Home</a>
+            <h1 class="text-xl font-black tracking-widest text-blue-500">AVJA <span class="text-white">INVENTORY</span></h1>
+            <a href="../index.html" class="text-sm font-bold hover:text-blue-400 transition">KEMBALI KE HOME</a>
         </div>
     </nav>
 
-    <div class="container mx-auto px-4 py-8">
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+    <div class="container mx-auto px-4 py-10">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
             <div>
-                <h2 class="text-3xl font-extrabold text-slate-800">Daftar Inventaris</h2>
-                <p class="text-slate-500">Manajemen aset Audio Video Department</p>
+                <h2 class="text-4xl font-bold text-slate-800">Daftar Inventaris</h2>
+                <p class="text-slate-500 mt-1">Data aset Audio Video terupdate secara real-time.</p>
             </div>
-            <div class="relative w-full md:w-96">
-                <input type="text" id="searchInput" placeholder="Cari nama barang..." 
-                    class="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:outline-none shadow-sm transition-all">
-                <i class="fas fa-search absolute left-3 top-4 text-gray-400"></i>
+            
+            <div class="relative w-full md:w-1/3">
+                <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                <input type="text" id="searchInput" placeholder="Cari nama barang atau tim..." 
+                    class="w-full pl-12 pr-4 py-4 rounded-2xl border-none shadow-lg focus:ring-2 focus:ring-blue-500 text-slate-700 outline-none">
             </div>
         </div>
 
-        <div id="loading" class="flex justify-center items-center py-20">
-            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        <div id="loading" class="flex flex-col items-center py-20">
+            <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-600 mb-4"></div>
+            <p class="text-slate-500 font-medium">Menghubungkan ke database...</p>
         </div>
 
-        <div id="inventoryGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div id="inventoryGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
             </div>
     </div>
 
     <script>
-        // GANTI URL INI DENGAN URL WEB APP GOOGLE APPS SCRIPT ANDA
-        const API_URL = "URL_WEB_APP_ANDA_DI_SINI"; 
+        // MASUKKAN URL WEB APP GOOGLE APPS SCRIPT ANDA DI SINI
+        const API_URL = "https://script.google.com/macros/s/AKfycbzxi0pJ7dZZEHB_rG5Hcby0O2qYhFC9GNZDy6D67Jg6QFpZ6zQVbWsH6VsEwU8b2Yn_/exec"; 
 
         let inventoryData = [];
 
-        async function fetchInventory() {
+        async function fetchData() {
             try {
                 const response = await fetch(API_URL);
                 inventoryData = await response.json();
                 renderCards(inventoryData);
                 document.getElementById('loading').classList.add('hidden');
             } catch (error) {
-                console.error("Gagal mengambil data:", error);
-                document.getElementById('loading').innerHTML = `<p class="text-red-500">Gagal memuat data. Periksa koneksi atau URL API.</p>`;
+                console.error("Gagal load data:", error);
+                document.getElementById('loading').innerHTML = "<p class='text-red-500 font-bold'>Gagal mengambil data dari Google Sheets!</p>";
             }
         }
 
         function renderCards(data) {
             const grid = document.getElementById('inventoryGrid');
-            grid.innerHTML = '';
+            grid.innerHTML = "";
 
             data.forEach(item => {
-                // Logika Badge Kondisi
-                const statusColor = item.kondisi === "Bagus" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700";
-                
-                // Mengambil Foto 1 (pastikan nama kolom di sheet Anda 'foto_1')
-                const photoUrl = item.foto_1 || 'https://via.placeholder.com/300x200?text=No+Image';
+                // Penyesuaian nama kolom (di JS spasi jadi underscore dan huruf kecil)
+                const img = item.foto_1 || "https://via.placeholder.com/400x300?text=No+Photo";
+                const badgeColor = item.kondisi === "Bagus" ? "bg-green-100 text-green-700" : "bg-orange-100 text-orange-700";
 
                 grid.innerHTML += `
-                    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow duration-300">
-                        <div class="h-48 overflow-hidden bg-gray-200">
-                            <img src="${photoUrl}" alt="${item.nama_barang}" class="w-full h-full object-cover">
-                        </div>
-                        <div class="p-5">
-                            <div class="flex justify-between items-start mb-2">
-                                <h3 class="font-bold text-lg text-slate-800 uppercase leading-tight">${item.nama_barang}</h3>
-                                <span class="px-2 py-1 rounded-md text-xs font-bold ${statusColor}">${item.kondisi || 'N/A'}</span>
+                    <div class="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-300 border border-gray-200 group">
+                        <div class="relative overflow-hidden">
+                            <img src="${img}" alt="${item.nama_barang}" class="card-img group-hover:scale-110 transition-transform duration-500">
+                            <div class="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-black text-slate-800 shadow-sm">
+                                ${item.tim ? item.tim.toUpperCase() : 'UMUM'}
                             </div>
-                            <p class="text-sm text-gray-500 mb-4 line-clamp-2">${item.keterangan || '-'}</p>
-                            <div class="flex items-center justify-between pt-4 border-t border-gray-50">
-                                <div class="flex flex-col">
-                                    <span class="text-[10px] uppercase text-gray-400 font-bold tracking-widest">Jumlah</span>
-                                    <span class="text-xl font-black text-blue-600">${item.jumlah} <small class="text-xs text-gray-400 font-normal">Unit</small></span>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-lg font-bold text-slate-800 uppercase leading-tight mb-2">${item.nama_barang}</h3>
+                            <p class="text-gray-400 text-xs italic mb-4">"${item.keterangan || '-'}"</p>
+                            
+                            <div class="flex items-center justify-between pt-4 border-t border-gray-100">
+                                <div>
+                                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Jumlah</p>
+                                    <p class="text-2xl font-black text-blue-600">${item.jumlah}</p>
                                 </div>
-                                <div class="text-right">
-                                    <span class="text-[10px] uppercase text-gray-400 font-bold tracking-widest">Tim</span>
-                                    <p class="text-xs font-semibold text-slate-600">${item.tim || '-'}</p>
-                                </div>
+                                <span class="px-3 py-1 rounded-lg text-[10px] font-bold ${badgeColor}">
+                                    ${item.kondisi || 'CHECKED'}
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -93,18 +97,17 @@
             });
         }
 
-        // Fitur Pencarian Real-time
+        // Fungsi Pencarian
         document.getElementById('searchInput').addEventListener('input', (e) => {
-            const keyword = e.target.value.toLowerCase();
+            const val = e.target.value.toLowerCase();
             const filtered = inventoryData.filter(item => 
-                item.nama_barang.toLowerCase().includes(keyword) || 
-                (item.tim && item.tim.toLowerCase().includes(keyword))
+                item.nama_barang.toLowerCase().includes(val) || 
+                (item.tim && item.tim.toLowerCase().includes(val))
             );
             renderCards(filtered);
         });
 
-        // Jalankan saat halaman dibuka
-        fetchInventory();
+        window.onload = fetchData;
     </script>
 </body>
 </html>
