@@ -5,8 +5,8 @@
   <title>Inventory</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <!-- Tailwind CSS -->
-  https://cdn.tailwindcss.com
+  <!-- ✅ TAILWIND BENAR -->
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
 <body class="bg-slate-50 font-sans">
@@ -47,12 +47,10 @@ fetch(API_URL)
     document.getElementById("loading").remove();
 
     data.forEach(item => {
-
       if (!item.nama_barang || item.nama_barang === "Nama Barang") return;
 
       const photos = [item.foto_1, item.foto_2, item.foto_3, item.foto_4].filter(Boolean);
 
-      /* CARD */
       const card = document.createElement("div");
       card.className = "bg-white rounded-xl shadow overflow-hidden cursor-pointer";
 
@@ -72,42 +70,25 @@ fetch(API_URL)
         modal.classList.add("flex");
       };
 
-      /* IMAGE */
       const img = document.createElement("img");
       img.src = item.foto_1 || "https://via.placeholder.com/400";
       img.className = "w-full h-40 object-cover";
 
-      /* BODY */
       const body = document.createElement("div");
       body.className = "p-4";
 
-      /* NAME */
       const name = document.createElement("h3");
       name.className = "font-bold text-sm uppercase mb-1";
       name.textContent = item.nama_barang;
 
-      /* TIM BADGE */
       const tim = document.createElement("span");
       tim.textContent = item.tim || "-";
-      tim.className = "inline-block text-xs font-semibold px-2 py-0.5 rounded mb-1";
+      tim.className = "inline-block text-xs font-semibold px-2 py-0.5 rounded mb-1 bg-slate-100";
 
-      if (item.tim && item.tim.indexOf("Booth") !== -1) {
-        tim.className += " bg-blue-100 text-blue-700";
-      } else if (item.tim && item.tim.indexOf("Speaker") !== -1) {
-        tim.className += " bg-purple-100 text-purple-700";
-      } else if (item.tim && item.tim.indexOf("Kabel") !== -1) {
-        tim.className += " bg-yellow-100 text-yellow-700";
-      } else {
-        tim.className += " bg-slate-100 text-slate-600";
-      }
-
-      /* DESC */
       const desc = document.createElement("p");
       desc.className = "text-xs italic text-slate-500 mb-2 mt-1";
-      desc.textContent = item.keterangan && item.keterangan.trim() !== ""
-        ? item.keterangan : "-";
+      desc.textContent = item.keterangan && item.keterangan.trim() !== "" ? item.keterangan : "-";
 
-      /* QTY */
       const qty = document.createElement("p");
       qty.className = "text-xs font-bold text-slate-800";
       qty.textContent = "QTY: " + item.jumlah;
@@ -121,10 +102,6 @@ fetch(API_URL)
       card.appendChild(body);
       grid.appendChild(card);
     });
-  })
-  .catch(err => {
-    document.getElementById("loading").textContent = "Gagal memuat data";
-    console.error(err);
   });
 </script>
 
