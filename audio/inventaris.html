@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Inventory</title>
 
-  <!-- Tailwind -->
+  <!-- ✅ TAILWIND FIXED -->
   <script src="https://cdn.tailwindcss.com"></script>
 
   <style>
@@ -23,7 +23,7 @@
 <!-- MODAL GALERI -->
 <div id="modal" class="fixed inset-0 bg-black/80 hidden items-center justify-center z-50">
   <div class="bg-white rounded-xl max-w-3xl w-full p-4 relative">
-    <button onclick="closeModal()" class="absolute top-2 right-2 text-slate-500">✕</button>
+    <button onclick="closeModal()" class="absolute top-2 right-2 text-slate-600 text-xl">×</button>
     <img id="modalImage" class="w-full h-80 object-contain rounded bg-slate-100 mb-4">
     <div id="modalThumbs" class="grid grid-cols-4 gap-2"></div>
   </div>
@@ -33,23 +33,19 @@
 <nav class="bg-slate-900 text-white p-5 sticky top-0 z-40">
   <div class="max-w-7xl mx-auto flex justify-between items-center gap-4">
     <h1 class="font-black uppercase">Inventory</h1>
-
     <div class="flex gap-2">
-      <select id="filterTim" class="text-black text-sm rounded px-2 py-1">
+      <select id="filterTim" class="rounded px-2 py-1 text-black text-sm">
         <option value="">Semua Tim</option>
       </select>
-      <input id="searchInput" placeholder="Cari barang..." class="rounded px-3 py-1 text-sm text-black">
+      <input id="searchInput" placeholder="Cari barang..." class="rounded px-3 py-1 text-black text-sm">
     </div>
   </div>
 </nav>
 
 <!-- CONTENT -->
 <main class="max-w-7xl mx-auto px-4 py-8">
-
-  <p id="loading" class="text-slate-500">Sinkronisasi data…</p>
-
+  <p id="loading" class="text-slate-500 mb-6">Sinkronisasi data…</p>
   <div id="grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"></div>
-
 </main>
 
 <script>
@@ -59,17 +55,22 @@ let allData = [];
 let filteredData = [];
 
 async function init() {
-  const res = await fetch(API_URL);
-  const raw = await res.json();
+  try {
+    const res = await fetch(API_URL);
+    const raw = await res.json();
 
-  allData = raw.filter(
-    d => d.nama_barang && d.nama_barang !== "Nama Barang"
-  );
+    allData = raw.filter(
+      d => d.nama_barang && d.nama_barang !== "Nama Barang"
+    );
 
-  setupFilter();
-  applyFilter();
+    setupFilter();
+    applyFilter();
 
-  document.getElementById("loading").remove();
+    document.getElementById("loading").remove();
+  } catch (e) {
+    document.getElementById("loading").innerText = "Gagal memuat data";
+    console.error(e);
+  }
 }
 
 function setupFilter() {
@@ -83,8 +84,8 @@ function setupFilter() {
     select.appendChild(opt);
   });
 
-  select.addEventListener("change", applyFilter);
-  document.getElementById("searchInput").addEventListener("input", applyFilter);
+  select.onchange = applyFilter;
+  document.getElementById("searchInput").oninput = applyFilter;
 }
 
 function applyFilter() {
@@ -103,18 +104,14 @@ function render() {
   const grid = document.getElementById("grid");
 
   grid.innerHTML = filteredData.map((item, i) => `
-    <div class="bg-white rounded-xl shadow overflow-hidden cursor-pointer hover:shadow-lg transition"
+    <div class="bg-white rounded-xl shadow hover:shadow-lg transition cursor-pointer overflow-hidden"
          onclick="openModal(${i})">
 
       <img src="${item.foto_1 || 'https://via.placeholder.com/400'}"
-           class="w-full h-40arang}</h3>
+           class="w-full h-40</h3>
 
-        <span class="inline-block text-xs mb-2 px-2 py-0.5 rounded font-semibold
-          ${item.tim.includes('Booth') ? 'bg-blue-100 text-blue-700' :
-            item.tim.includes('Speaker') ? 'bg-purple-100 text-purple-700' :
-            item.tim.includes('Kabel') ? 'bg-yellow-100 text-yellow-700' :
-            'bg-slate-100 text-slate-700'}">
-          ${item.tim}
+        <span class="inline-block text-xs mb-2 px-2 py-0.5 rounded bg-slate-100">
+          ${item.tim || '-'}
         </span>
 
         <p class="text-xs italic text-slate-600 mb-3 line-clamp-2">
@@ -123,7 +120,6 @@ function render() {
 
         <div class="flex justify-between items-center">
           <span class="text-sm font-bold">QTY: ${item.jumlah}</span>
-
           <span class="text-xs font-bold px-2 py-1 rounded
             ${(item.kondisi || '').toLowerCase().includes('bagus')
               ? 'bg-green-100 text-green-700'
@@ -136,16 +132,15 @@ function render() {
   `).join("");
 }
 
-/* ===== GALERI ===== */
+/* GALERI */
 function openModal(index) {
   const item = filteredData[index];
-
   const photos = [item.foto_1, item.foto_2, item.foto_3, item.foto_4].filter(Boolean);
 
   document.getElementById("modalImage").src = photos[0] || "";
   document.getElementById("modalThumbs").innerHTML = photos.map(p => `
     <img src="${p}" class="h-20 w-full object-cover rounded cursor-pointer hover:ring"
-         onclick="document.getElementById('modalImage').src='${p}'tion closeModal() {
+         onclick="document.getElementById('modalImage').src='${unction closeModal() {
   document.getElementById("modal").classList.add("hidden");
   document.getElementById("modal").classList.remove("flex");
 }
