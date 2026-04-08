@@ -1,39 +1,110 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Inventaris Audio</title>
-
-  <link rel="stylesheet" href="../assets/style.css?v=5">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventaris Audio - AVJA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
+<body class="bg-gray-50 min-h-screen">
 
-<body>
-
-<div class="navbar">
-  <div class="navbar-inner">
-    <a class="brand" href="../index.html">PANDUAN TEKNIS</a>
-
-    <nav class="nav">
-      <a href="../index.html">Home</a>
-      <a href="../audio.html">Audio</a>
-      <a href="../video.html">Video</a>
-      <a href="../stage.html">Stage</a>
-      <a href="../it.html">IT</a>
-      <button id="themeBtn" class="theme-toggle">Dark</button>
+    <nav class="bg-slate-900 text-white p-4 shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-xl font-bold tracking-wider"><i class="fas fa-boxes-stacked mr-2"></i>AVJA INVENTORY</h1>
+            <a href="../index.html" class="text-sm hover:text-blue-400 transition">Kembali ke Home</a>
+        </div>
     </nav>
-  </div>
-</div>
 
-<main class="container">
-  <h1 class="hero-title">Inventaris Audio</h1>
-  <p class="hero-sub">List dan panduan inventaris Audio</p>
+    <div class="container mx-auto px-4 py-8">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+            <div>
+                <h2 class="text-3xl font-extrabold text-slate-800">Daftar Inventaris</h2>
+                <p class="text-slate-500">Manajemen aset Audio Video Department</p>
+            </div>
+            <div class="relative w-full md:w-96">
+                <input type="text" id="searchInput" placeholder="Cari nama barang..." 
+                    class="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:outline-none shadow-sm transition-all">
+                <i class="fas fa-search absolute left-3 top-4 text-gray-400"></i>
+            </div>
+        </div>
 
-  <div class="page-card">
-    <p>Tulis materi inventaris audio di sini…</p>
-  </div>
-</main>
+        <div id="loading" class="flex justify-center items-center py-20">
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        </div>
 
-<script src="../assets/theme.js"></script>
+        <div id="inventoryGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            </div>
+    </div>
+
+    <script>
+        // GANTI URL INI DENGAN URL WEB APP GOOGLE APPS SCRIPT ANDA
+        const API_URL = "URL_WEB_APP_ANDA_DI_SINI"; 
+
+        let inventoryData = [];
+
+        async function fetchInventory() {
+            try {
+                const response = await fetch(API_URL);
+                inventoryData = await response.json();
+                renderCards(inventoryData);
+                document.getElementById('loading').classList.add('hidden');
+            } catch (error) {
+                console.error("Gagal mengambil data:", error);
+                document.getElementById('loading').innerHTML = `<p class="text-red-500">Gagal memuat data. Periksa koneksi atau URL API.</p>`;
+            }
+        }
+
+        function renderCards(data) {
+            const grid = document.getElementById('inventoryGrid');
+            grid.innerHTML = '';
+
+            data.forEach(item => {
+                // Logika Badge Kondisi
+                const statusColor = item.kondisi === "Bagus" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700";
+                
+                // Mengambil Foto 1 (pastikan nama kolom di sheet Anda 'foto_1')
+                const photoUrl = item.foto_1 || 'https://via.placeholder.com/300x200?text=No+Image';
+
+                grid.innerHTML += `
+                    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow duration-300">
+                        <div class="h-48 overflow-hidden bg-gray-200">
+                            <img src="${photoUrl}" alt="${item.nama_barang}" class="w-full h-full object-cover">
+                        </div>
+                        <div class="p-5">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="font-bold text-lg text-slate-800 uppercase leading-tight">${item.nama_barang}</h3>
+                                <span class="px-2 py-1 rounded-md text-xs font-bold ${statusColor}">${item.kondisi || 'N/A'}</span>
+                            </div>
+                            <p class="text-sm text-gray-500 mb-4 line-clamp-2">${item.keterangan || '-'}</p>
+                            <div class="flex items-center justify-between pt-4 border-t border-gray-50">
+                                <div class="flex flex-col">
+                                    <span class="text-[10px] uppercase text-gray-400 font-bold tracking-widest">Jumlah</span>
+                                    <span class="text-xl font-black text-blue-600">${item.jumlah} <small class="text-xs text-gray-400 font-normal">Unit</small></span>
+                                </div>
+                                <div class="text-right">
+                                    <span class="text-[10px] uppercase text-gray-400 font-bold tracking-widest">Tim</span>
+                                    <p class="text-xs font-semibold text-slate-600">${item.tim || '-'}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // Fitur Pencarian Real-time
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const keyword = e.target.value.toLowerCase();
+            const filtered = inventoryData.filter(item => 
+                item.nama_barang.toLowerCase().includes(keyword) || 
+                (item.tim && item.tim.toLowerCase().includes(keyword))
+            );
+            renderCards(filtered);
+        });
+
+        // Jalankan saat halaman dibuka
+        fetchInventory();
+    </script>
 </body>
 </html>
