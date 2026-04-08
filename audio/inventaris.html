@@ -50,17 +50,22 @@
 const API_URL = "https://script.google.com/macros/s/AKfycbxqYuDc3sd9VCJj6tw7Ikb9yFc9VisS4E3iFTPTqE7UEG190owRXFlcxaG0vkVt1veU/exec";
 let currentData = [];
 
-async function init() {
-  try {
+async function init(){
+  try{
     const res = await fetch(API_URL);
-    currentData = await res.json();
+    const rawData = await res.json();
+
+    // ✅ BUANG BARIS KOSONG & HEADER
+    currentData = rawData.filter(item =>
+      item.nama_barang && item.nama_barang !== "Nama Barang"
+    );
+
     render(currentData);
     document.getElementById("loading").remove();
-  } catch (e) {
+  }catch(e){
     document.getElementById("loading").innerText = "Gagal memuat data";
     console.error(e);
   }
-}
 
 function render(data) {
   const grid = document.getElementById("grid");
