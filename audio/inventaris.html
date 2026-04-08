@@ -5,17 +5,20 @@
   <title>Inventory</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
 <body class="bg-slate-50 font-sans">
 
+<!-- NAVBAR -->
 <nav class="bg-slate-900 text-white p-4">
-  <h1 class="font-bold">INVENTORY</h1>
+  <h1 class="font-bold uppercase">Inventory</h1>
 </nav>
 
+<!-- CONTENT -->
 <main class="p-4">
-  <p id="loading">Sinkronisasi data...</p>
+  <p id="loading" class="text-slate-500">Sinkronisasi data...</p>
   <div id="grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-4"></div>
 </main>
 
@@ -25,41 +28,59 @@ const API_URL = "https://script.google.com/macros/s/AKfycbxqYuDc3sd9VCJj6tw7Ikb9
 fetch(API_URL)
   .then(res => res.json())
   .then(data => {
+
     const grid = document.getElementById("grid");
     document.getElementById("loading").remove();
 
     data.forEach(item => {
+
+      // buang baris kosong & header
       if (!item.nama_barang || item.nama_barang === "Nama Barang") return;
 
+      // CARD
       const card = document.createElement("div");
-      card.className = "bg-white rounded shadow overflow-hidden";
+      card.className = "bg-white rounded-xl shadow overflow-hidden";
 
+      // IMAGE
       const img = document.createElement("img");
       img.src = item.foto_1 || "https://via.placeholder.com/400";
       img.className = "w-full h-40 object-cover";
 
+      // BODY
       const body = document.createElement("div");
-      body.className = "p-3";
+      body.className = "p-4";
 
+      // NAMA BARANG
       const name = document.createElement("h3");
-      name.className = "font-bold text-sm mb-1";
+      name.className = "font-bold text-sm uppercase mb-1";
       name.textContent = item.nama_barang;
 
+      // TIM
       const tim = document.createElement("p");
-      tim.className = "text-xs text-slate-600";
+      tim.className = "text-xs text-slate-600 mb-1";
       tim.textContent = item.tim || "-";
 
+      // ✅ KETERANGAN (STEP A)
+      const desc = document.createElement("p");
+      desc.className = "text-xs italic text-slate-500 mb-2";
+      desc.textContent =
+        item.keterangan && item.keterangan.trim() !== ""
+          ? item.keterangan
+          : "-";
+
+      // QTY
       const qty = document.createElement("p");
-      qty.className = "text-xs font-bold mt-2";
+      qty.className = "text-xs font-bold text-slate-800";
       qty.textContent = "QTY: " + item.jumlah;
 
+      // SUSUN
       body.appendChild(name);
       body.appendChild(tim);
+      body.appendChild(desc);
       body.appendChild(qty);
 
       card.appendChild(img);
       card.appendChild(body);
-
       grid.appendChild(card);
     });
   })
@@ -71,4 +92,3 @@ fetch(API_URL)
 
 </body>
 </html>
-``
