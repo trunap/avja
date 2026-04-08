@@ -3,47 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inventaris AV 2026 - AVJA</title>
+    <title>AVJA Inventory - Gallery Mode</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        .card-img { height: 220px; object-fit: cover; width: 100%; background-color: #f3f4f6; }
-        .glass-nav { background: rgba(15, 23, 42, 0.9); backdrop-filter: blur(10px); }
+        .card-img { height: 200px; object-fit: cover; width: 100%; border-radius: 1.5rem 1.5rem 0 0; }
+        .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); backdrop-filter: blur(5px); }
+        .modal-content { max-width: 900px; margin: auto; padding: 20px; top: 50%; transform: translateY(-50%); position: relative; }
+        .thumb { cursor: pointer; transition: 0.3s; border-radius: 10px; height: 80px; object-fit: cover; border: 2px solid transparent; }
+        .thumb:hover, .active-thumb { border-color: #3b82f6; opacity: 1; }
     </style>
 </head>
-<body class="bg-gray-50 font-sans text-slate-900">
+<body class="bg-slate-50 font-sans">
 
-    <nav class="glass-nav text-white p-4 shadow-xl sticky top-0 z-50">
+    <div id="imageModal" class="modal" onclick="closeModal(event)">
+        <div class="modal-content text-white" onclick="event.stopPropagation()">
+            <button onclick="closeModal()" class="absolute -top-10 right-0 text-3xl">&times;</button>
+            <img id="mainModalImg" src="" class="w-full max-h-[60vh] object-contain rounded-2xl mb-4 shadow-2xl">
+            <h2 id="modalTitle" class="text-2xl font-bold mb-1"></h2>
+            <p id="modalDesc" class="text-slate-400 text-sm mb-6"></p>
+            <div id="thumbContainer" class="grid grid-cols-4 gap-4"></div>
+        </div>
+    </div>
+
+    <nav class="bg-slate-900 text-white p-5 shadow-2xl sticky top-0 z-50">
         <div class="container mx-auto flex justify-between items-center">
-            <h1 class="text-xl font-black tracking-widest text-blue-500 uppercase">AVJA <span class="text-white">Inventory</span></h1>
-            <a href="../index.html" class="text-xs font-bold bg-white/10 px-4 py-2 rounded-lg hover:bg-white/20 transition">KEMBALI KE HOME</a>
+            <h1 class="text-xl font-black text-blue-500 tracking-widest">AVJA <span class="text-white text-sm">INVENTORY</span></h1>
+            <a href="../index.html" class="text-xs font-bold opacity-70 hover:opacity-100 transition">KEMBALI</a>
         </div>
     </nav>
 
-    <div class="container mx-auto px-4 py-10">
-        <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
-            <div>
-                <h2 class="text-4xl font-extrabold text-slate-800 tracking-tight">Inventaris AV 2026</h2>
-                <p class="text-slate-500 mt-2">Data real-time: Gunting, Marning, Pulpen, dll.</p>
+    <div class="container mx-auto px-4 py-12">
+        <div id="inventoryGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             </div>
-            <div class="relative w-full md:w-96">
-                <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                <input type="text" id="searchInput" placeholder="Cari nama barang..." 
-                    class="w-full pl-12 pr-4 py-4 rounded-2xl border-none shadow-lg outline-none focus:ring-2 focus:ring-blue-500">
-            </div>
-        </div>
-
-        <div id="loading" class="flex flex-col items-center py-20">
-            <div class="animate-spin rounded-full h-14 w-14 border-t-4 border-b-4 border-blue-600 mb-4"></div>
-            <p class="text-slate-400 font-medium">Sinkronisasi Baris 3 Google Sheets...</p>
-        </div>
-
-        <div id="inventoryGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"></div>
     </div>
 
     <script>
-        const API_URL = "https://script.google.com/macros/s/AKfycbzeAf9mygx7ibmeFk1_-iFyTfkd8E9j2HkLjJdBzoyJA5PdUbNZeestONnXyAh_QYG7/exec"; 
-
+        const API_URL = "https://script.google.com/macros/s/AKfycbzMaATigyG-2Amhog9WS2MKVvb80AbHdeKn8zPApQGKTA6qPG-hcnR71yQMa1J_UnlH/exec"; 
         let inventoryData = [];
 
         async function fetchData() {
@@ -51,58 +47,60 @@
                 const response = await fetch(API_URL);
                 inventoryData = await response.json();
                 renderCards(inventoryData);
-                document.getElementById('loading').classList.add('hidden');
-            } catch (error) {
-                document.getElementById('loading').innerHTML = "<p class='text-red-500'>Koneksi gagal. Cek Deployment Apps Script.</p>";
-            }
+            } catch (e) { alert("Gagal sinkron data!"); }
         }
 
         function renderCards(data) {
             const grid = document.getElementById('inventoryGrid');
-            grid.innerHTML = "";
-
-            data.forEach(item => {
-                const nama = item.nama_barang || "Tanpa Nama";
-                const jumlah = item.jumlah || "0";
-                const kondisi = item.kondisi || "Check";
-                const tim = item.tim || "AVJA";
-                const foto = item.foto_1 || "https://via.placeholder.com/400x300?text=No+Photo";
-                
-                let badgeClass = "bg-gray-100 text-gray-700";
-                if(kondisi.toLowerCase().includes("bagus")) badgeClass = "bg-green-100 text-green-700";
-                if(kondisi.toLowerCase().includes("rusak")) badgeClass = "bg-red-100 text-red-700";
-
-                grid.innerHTML += `
-                    <div class="bg-white rounded-[2rem] overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 border border-gray-100 group">
-                        <div class="relative overflow-hidden">
-                            <img src="${foto}" alt="${nama}" class="card-img group-hover:scale-110 transition-transform duration-700">
-                            <div class="absolute top-5 left-5 bg-white/90 backdrop-blur-md px-4 py-1.5 rounded-xl text-[10px] font-black text-slate-800 shadow-sm uppercase tracking-widest">
-                                ${tim}
-                            </div>
+            grid.innerHTML = data.map((item, index) => `
+                <div onclick="openModal(${index})" class="bg-white rounded-[2rem] shadow-sm hover:shadow-2xl transition-all duration-500 cursor-pointer border border-slate-100 group">
+                    <img src="${item.foto_1 || 'https://via.placeholder.com/400x300?text=No+Photo'}" class="card-img group-hover:scale-105 transition-transform duration-700">
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="font-bold text-slate-800 uppercase leading-tight">${item.nama_barang}</h3>
+                            <span class="text-[10px] bg-slate-100 px-2 py-1 rounded-md font-bold">${item.tim || 'AV'}</span>
                         </div>
-                        <div class="p-8">
-                            <h3 class="text-xl font-bold text-slate-800 uppercase leading-tight mb-2">${nama}</h3>
-                            <p class="text-slate-400 text-xs italic mb-6">"${item.keterangan || '-'}"</p>
-                            <div class="flex items-center justify-between pt-6 border-t border-gray-50">
-                                <div>
-                                    <p class="text-[10px] font-bold text-slate-300 uppercase">Qty</p>
-                                    <p class="text-3xl font-black text-slate-800">${jumlah}</p>
-                                </div>
-                                <span class="px-4 py-2 rounded-xl text-[10px] font-black uppercase ${badgeClass}">
-                                    ${kondisi}
-                                </span>
-                            </div>
+                        <p class="text-slate-400 text-[10px] italic mb-4 line-clamp-2">${item.keterangan || '-'}</p>
+                        <div class="flex justify-between items-center border-t pt-4">
+                            <span class="text-2xl font-black text-blue-600">${item.jumlah} <small class="text-[10px] text-slate-400">QTY</small></span>
+                            <span class="text-[10px] font-bold uppercase px-3 py-1 rounded-full ${item.kondisi == 'Bagus' ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'}">
+                                ${item.kondisi}
+                            </span>
                         </div>
                     </div>
-                `;
-            });
+                </div>
+            `).join('');
         }
 
-        document.getElementById('searchInput').addEventListener('input', (e) => {
-            const val = e.target.value.toLowerCase();
-            const filtered = inventoryData.filter(item => item.nama_barang.toLowerCase().includes(val));
-            renderCards(filtered);
-        });
+        function openModal(index) {
+            const item = inventoryData[index];
+            const modal = document.getElementById('imageModal');
+            const mainImg = document.getElementById('mainModalImg');
+            const thumbContainer = document.getElementById('thumbContainer');
+            
+            document.getElementById('modalTitle').innerText = item.nama_barang;
+            document.getElementById('modalDesc').innerText = item.keterangan || "Tidak ada detail tambahan.";
+            
+            // Ambil semua foto yang ada (1-4)
+            const photos = [item.foto_1, item.foto_2, item.foto_3, item.foto_4].filter(p => p);
+            
+            mainImg.src = photos[0] || 'https://via.placeholder.com/600x400?text=No+Photo';
+            thumbContainer.innerHTML = photos.map((p, i) => `
+                <img src="${p}" onclick="changeMainImg('${p}', this)" class="thumb ${i===0?'active-thumb':''}">
+            `).join('');
+            
+            modal.style.display = "block";
+        }
+
+        function changeMainImg(src, el) {
+            document.getElementById('mainModalImg').src = src;
+            document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active-thumb'));
+            el.classList.add('active-thumb');
+        }
+
+        function closeModal() {
+            document.getElementById('imageModal').style.display = "none";
+        }
 
         window.onload = fetchData;
     </script>
