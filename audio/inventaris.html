@@ -34,7 +34,6 @@ fetch(API_URL)
 
     data.forEach(item => {
 
-      // buang baris kosong & header
       if (!item.nama_barang || item.nama_barang === "Nama Barang") return;
 
       // CARD
@@ -55,14 +54,26 @@ fetch(API_URL)
       name.className = "font-bold text-sm uppercase mb-1";
       name.textContent = item.nama_barang;
 
-      // TIM
-      const tim = document.createElement("p");
-      tim.className = "text-xs text-slate-600 mb-1";
+      // ✅ TIM BADGE (STEP B)
+      const tim = document.createElement("span");
       tim.textContent = item.tim || "-";
+      tim.className = "inline-block text-xs font-semibold px-2 py-0.5 rounded mb-1";
 
-      // ✅ KETERANGAN (STEP A)
+      if (item.tim && item.tim.indexOf("Booth") !== -1) {
+        tim.className += " bg-blue-100 text-blue-700";
+      } else if (item.tim && item.tim.indexOf("Speaker") !== -1) {
+        tim.className += " bg-purple-100 text-purple-700";
+      } else if (item.tim && item.tim.indexOf("Kabel") !== -1) {
+        tim.className += " bg-yellow-100 text-yellow-700";
+      } else if (item.tim && item.tim.indexOf("Toolbox") !== -1) {
+        tim.className += " bg-slate-200 text-slate-700";
+      } else {
+        tim.className += " bg-slate-100 text-slate-600";
+      }
+
+      // KETERANGAN
       const desc = document.createElement("p");
-      desc.className = "text-xs italic text-slate-500 mb-2";
+      desc.className = "text-xs italic text-slate-500 mb-2 mt-1";
       desc.textContent =
         item.keterangan && item.keterangan.trim() !== ""
           ? item.keterangan
@@ -92,3 +103,4 @@ fetch(API_URL)
 
 </body>
 </html>
+``
