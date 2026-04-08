@@ -5,7 +5,7 @@
   <title>Inventory</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <!-- ✅ TAILWIND BENAR -->
+  <!-- ✅ Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
@@ -13,7 +13,22 @@
 
 <!-- NAVBAR -->
 <nav class="bg-slate-900 text-white p-4">
-  <h1 class="font-bold uppercase">Inventory</h1>
+  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+    <h1 class="font-bold uppercase">Inventory</h1>
+
+    <!-- ✅ FILTER & SEARCH -->
+    <div class="flex gap-2">
+      <select id="filterTim" class="text-black text-sm rounded px-2 py-1">
+        <option value="">Semua Tim</option>
+      </select>
+      <input
+        id="searchInput"
+        type="text"
+        placeholder="Cari barang..."
+        class="text-sm rounded px-2 py-1 text-black"
+      >
+    </div>
+  </div>
 </nav>
 
 <!-- MODAL GALERI -->
@@ -34,75 +49,136 @@
 <script>
 const API_URL = "https://script.google.com/macros/s/AKfycbxqYuDc3sd9VCJj6tw7Ikb9yFc9VisS4E3iFTPTqE7UEG190owRXFlcxaG0vkVt1veU/exec";
 
+const grid = document.getElementById("grid");
+const filterTim = document.getElementById("filterTim");
+const searchInput = document.getElementById("searchInput");
+
 const modal = document.getElementById("modal");
 const modalImage = document.getElementById("modalImage");
 const modalThumbs = document.getElementById("modalThumbs");
 document.getElementById("closeModal").onclick = () => modal.classList.add("hidden");
 
+let allItems = [];
+
 fetch(API_URL)
   .then(res => res.json())
   .then(data => {
-
-    const grid = document.getElementById("grid");
     document.getElementById("loading").remove();
 
-    data.forEach(item => {
-      if (!item.nama_barang || item.nama_barang === "Nama Barang") return;
+    // simpan data valid
+    allItems = data.filter(i =>
+      i.nama_barang && i.nama_barang !== "Nama Barang"
+    );
 
-      const photos = [item.foto_1, item.foto_2, item.foto_3, item.foto_4].filter(Boolean);
-
-      const card = document.createElement("div");
-      card.className = "bg-white rounded-xl shadow overflow-hidden cursor-pointer";
-
-      card.onclick = () => {
-        modalImage.src = photos[0] || "";
-        modalThumbs.innerHTML = "";
-
-        photos.forEach(p => {
-          const t = document.createElement("img");
-          t.src = p;
-          t.className = "h-20 w-full object-cover rounded cursor-pointer";
-          t.onclick = () => modalImage.src = p;
-          modalThumbs.appendChild(t);
-        });
-
-        modal.classList.remove("hidden");
-        modal.classList.add("flex");
-      };
-
-      const img = document.createElement("img");
-      img.src = item.foto_1 || "https://via.placeholder.com/400";
-      img.className = "w-full h-40 object-cover";
-
-      const body = document.createElement("div");
-      body.className = "p-4";
-
-      const name = document.createElement("h3");
-      name.className = "font-bold text-sm uppercase mb-1";
-      name.textContent = item.nama_barang;
-
-      const tim = document.createElement("span");
-      tim.textContent = item.tim || "-";
-      tim.className = "inline-block text-xs font-semibold px-2 py-0.5 rounded mb-1 bg-slate-100";
-
-      const desc = document.createElement("p");
-      desc.className = "text-xs italic text-slate-500 mb-2 mt-1";
-      desc.textContent = item.keterangan && item.keterangan.trim() !== "" ? item.keterangan : "-";
-
-      const qty = document.createElement("p");
-      qty.className = "text-xs font-bold text-slate-800";
-      qty.textContent = "QTY: " + item.jumlah;
-
-      body.appendChild(name);
-      body.appendChild(tim);
-      body.appendChild(desc);
-      body.appendChild(qty);
-
-      card.appendChild(img);
-      card.appendChild(body);
-      grid.appendChild(card);
-    });
+    populateTimFilter();
+    renderItems();
+  })
+  .catch(err => {
+    document.getElementById("loading").textContent = "Gagal memuat data";
+    console.error(err);
   });
+
+/* ===== FILTER TIM ===== */
+function populateTimFilter() {
+  const timSet = new Set();
+  allItems.forEach(i => {
+    if (i.tim) timSet.add(i.tim);
+  });
+
+  timSet.forEach(t => {
+    const opt = document.createElement("option");
+    opt.value = t;
+    opt.textContent = t;
+    filterTim.appendChild(opt);
+  });
+}
+
+/* ===== RENDER ===== */
+function renderItems() {
+  grid.innerHTML = "";
+
+  const timValue = filterTim.value.toLowerCase();
+  const keyword = searchInput.value.toLowerCase();
+
+  allItems.forEach(item => {
+    const cocokTim =
+      !timValue || (item.tim && item.tim.toLowerCase() === timValue);
+
+    const cocokSearch =
+      !keyword || item.nama_barang.toLowerCase().includes(keyword);
+
+    if (!cocokTim || !cocokSearch) return;
+
+    const photos = [item.foto_1, item.foto_2, item.foto_3, item.foto_4].filter(Boolean);
+
+    const card = document.createElement("div");
+    card.className = "bg-white rounded-xl shadow overflow-hidden cursor-pointer";
+
+    card.onclick = () => {
+      modalImage.src = photos[0] || "";
+      modalThumbs.innerHTML = "";
+
+      photos.forEach(p => {
+        const t = document.createElement("img");
+        t.src = p;
+        t.className = "h-20 w-full object-cover rounded cursor-pointer";
+        t.onclick = () => modalImage.src = p;
+        modalThumbs.appendChild(t);
+      });
+
+      modal.classList.remove("hidden");
+      modal.classList.add("flex");
+    };
+
+    const img = document.createElement("img");
+    img.src = item.foto_1 || "https://via.placeholder.com/400";
+    img.className = "w-full h-40 object-cover";
+
+    const body = document.createElement("div");
+    body.className = "p-4";
+
+    const name = document.createElement("h3");
+    name.className = "font-bold text-sm uppercase mb-1";
+    name.textContent = item.nama_barang;
+
+    const tim = document.createElement("span");
+    tim.textContent = item.tim || "-";
+    tim.className = "inline-block text-xs font-semibold px-2 py-0.5 rounded mb-1";
+
+    if (item.tim && item.tim.includes("Booth")) {
+      tim.className += " bg-blue-100 text-blue-700";
+    } else if (item.tim && item.tim.includes("Speaker")) {
+      tim.className += " bg-purple-100 text-purple-700";
+    } else if (item.tim && item.tim.includes("Kabel")) {
+      tim.className += " bg-yellow-100 text-yellow-700";
+    } else {
+      tim.className += " bg-slate-100 text-slate-600";
+    }
+
+    const desc = document.createElement("p");
+    desc.className = "text-xs italic text-slate-500 mb-2 mt-1";
+    desc.textContent = item.keterangan && item.keterangan.trim() !== ""
+      ? item.keterangan
+      : "-";
+
+    const qty = document.createElement("p");
+    qty.className = "text-xs font-bold text-slate-800";
+    qty.textContent = "QTY: " + item.jumlah;
+
+    body.appendChild(name);
+    body.appendChild(tim);
+    body.appendChild(desc);
+    body.appendChild(qty);
+
+    card.appendChild(img);
+    card.appendChild(body);
+    grid.appendChild(card);
+  });
+}
+
+/* ===== EVENTS ===== */
+filterTim.onchange = renderItems;
+searchInput.oninput = renderItems;
 </script>
 
 </body>
