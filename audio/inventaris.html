@@ -3,93 +3,97 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AVJA Inventory - Gallery Mode</title>
+    <title>AVJA Inventory - Fix Gallery</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        .card-img { height: 200px; object-fit: cover; width: 100%; border-radius: 1.5rem 1.5rem 0 0; }
-        .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); backdrop-filter: blur(5px); }
-        .modal-content { max-width: 900px; margin: auto; padding: 20px; top: 50%; transform: translateY(-50%); position: relative; }
-        .thumb { cursor: pointer; transition: 0.3s; border-radius: 10px; height: 80px; object-fit: cover; border: 2px solid transparent; }
-        .thumb:hover, .active-thumb { border-color: #3b82f6; opacity: 1; }
+        .card-img { height: 200px; object-fit: cover; width: 100%; border-radius: 1.5rem 1.5rem 0 0; background: #f1f5f9; }
+        .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); backdrop-filter: blur(8px); }
+        .modal-content { max-width: 800px; margin: auto; padding: 20px; top: 50%; transform: translateY(-50%); position: relative; }
+        .thumb { cursor: pointer; opacity: 0.6; transition: 0.3s; border-radius: 8px; height: 70px; object-fit: cover; border: 2px solid transparent; }
+        .active-thumb { border-color: #3b82f6; opacity: 1; }
     </style>
 </head>
-<body class="bg-slate-50 font-sans">
+<body class="bg-slate-50">
 
-    <div id="imageModal" class="modal" onclick="closeModal(event)">
+    <div id="imageModal" class="modal" onclick="closeModal()">
         <div class="modal-content text-white" onclick="event.stopPropagation()">
-            <button onclick="closeModal()" class="absolute -top-10 right-0 text-3xl">&times;</button>
-            <img id="mainModalImg" src="" class="w-full max-h-[60vh] object-contain rounded-2xl mb-4 shadow-2xl">
-            <h2 id="modalTitle" class="text-2xl font-bold mb-1"></h2>
+            <img id="mainModalImg" src="" class="w-full max-h-[65vh] object-contain rounded-2xl mb-4">
+            <h2 id="modalTitle" class="text-2xl font-bold uppercase tracking-tight"></h2>
             <p id="modalDesc" class="text-slate-400 text-sm mb-6"></p>
-            <div id="thumbContainer" class="grid grid-cols-4 gap-4"></div>
+            <div id="thumbContainer" class="grid grid-cols-4 gap-3"></div>
         </div>
     </div>
 
-    <nav class="bg-slate-900 text-white p-5 shadow-2xl sticky top-0 z-50">
+    <nav class="bg-slate-900 text-white p-5 sticky top-0 z-50 shadow-xl">
         <div class="container mx-auto flex justify-between items-center">
-            <h1 class="text-xl font-black text-blue-500 tracking-widest">AVJA <span class="text-white text-sm">INVENTORY</span></h1>
-            <a href="../index.html" class="text-xs font-bold opacity-70 hover:opacity-100 transition">KEMBALI</a>
+            <h1 class="text-xl font-black text-blue-500 tracking-tighter uppercase">AVJA <span class="text-white">STOCK</span></h1>
+            <input type="text" id="searchInput" placeholder="Cari..." class="bg-slate-800 text-xs px-4 py-2 rounded-full outline-none focus:ring-1 ring-blue-500 w-32 md:w-64">
         </div>
     </nav>
 
-    <div class="container mx-auto px-4 py-12">
-        <div id="inventoryGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            </div>
+    <div class="container mx-auto px-4 py-10">
+        <div id="loading" class="text-center py-20">
+            <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600 mx-auto mb-4"></div>
+            <p class="text-slate-400 text-sm italic">Menghubungkan ke Baris 3...</p>
+        </div>
+        <div id="inventoryGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"></div>
     </div>
 
     <script>
-        const API_URL = "https://script.google.com/macros/s/AKfycbzMaATigyG-2Amhog9WS2MKVvb80AbHdeKn8zPApQGKTA6qPG-hcnR71yQMa1J_UnlH/exec"; 
+        const API_URL = "https://script.google.com/macros/s/AKfycbzPd5zO4PUDMB6Y0YnAZXomqpC608t0WPSiMD0j-X5PdBEM_X1dLF1DVKEJXI4rbLs/exec"; 
         let inventoryData = [];
+
+        // Fungsi sakti untuk bersihkan link Google Drive
+        function cleanLink(str) {
+            if (!str) return '';
+            let id = "";
+            if (str.includes("id=")) id = str.split("id=")[1].split(/[& "]/)[0];
+            else if (str.includes("/d/")) id = str.split("/d/")[1].split("/")[0];
+            return id ? `https://lh3.googleusercontent.com/d/${id}` : '';
+        }
 
         async function fetchData() {
             try {
                 const response = await fetch(API_URL);
                 inventoryData = await response.json();
                 renderCards(inventoryData);
-            } catch (e) { alert("Gagal sinkron data!"); }
+                document.getElementById('loading').style.display = 'none';
+            } catch (e) { document.getElementById('loading').innerText = "Gagal Load Data."; }
         }
 
         function renderCards(data) {
             const grid = document.getElementById('inventoryGrid');
-            grid.innerHTML = data.map((item, index) => `
-                <div onclick="openModal(${index})" class="bg-white rounded-[2rem] shadow-sm hover:shadow-2xl transition-all duration-500 cursor-pointer border border-slate-100 group">
-                    <img src="${item.foto_1 || 'https://via.placeholder.com/400x300?text=No+Photo'}" class="card-img group-hover:scale-105 transition-transform duration-700">
-                    <div class="p-6">
-                        <div class="flex justify-between items-start mb-2">
-                            <h3 class="font-bold text-slate-800 uppercase leading-tight">${item.nama_barang}</h3>
-                            <span class="text-[10px] bg-slate-100 px-2 py-1 rounded-md font-bold">${item.tim || 'AV'}</span>
-                        </div>
-                        <p class="text-slate-400 text-[10px] italic mb-4 line-clamp-2">${item.keterangan || '-'}</p>
-                        <div class="flex justify-between items-center border-t pt-4">
-                            <span class="text-2xl font-black text-blue-600">${item.jumlah} <small class="text-[10px] text-slate-400">QTY</small></span>
-                            <span class="text-[10px] font-bold uppercase px-3 py-1 rounded-full ${item.kondisi == 'Bagus' ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'}">
-                                ${item.kondisi}
-                            </span>
+            grid.innerHTML = data.map((item, index) => {
+                const img1 = cleanLink(item.foto_1);
+                return `
+                <div onclick="openModal(${index})" class="bg-white rounded-[1.5rem] shadow-sm hover:shadow-xl transition-all border border-slate-100 cursor-pointer overflow-hidden group">
+                    <img src="${img1 || 'https://via.placeholder.com/400x300?text=No+Photo'}" class="card-img group-hover:scale-105 transition-all">
+                    <div class="p-5">
+                        <h3 class="font-black text-slate-800 uppercase text-sm mb-1">${item.nama_barang}</h3>
+                        <p class="text-slate-400 text-[10px] mb-4">${item.keterangan || '-'}</p>
+                        <div class="flex justify-between items-end">
+                            <span class="text-2xl font-black text-blue-600">${item.jumlah}</span>
+                            <span class="text-[9px] font-bold px-3 py-1 rounded-lg uppercase ${item.kondisi.toLowerCase().includes('bagus') ? 'bg-green-100 text-green-600' : 'bg-amber-100 text-amber-600'}">${item.kondisi}</span>
                         </div>
                     </div>
-                </div>
-            `).join('');
+                </div>`;
+            }).join('');
         }
 
         function openModal(index) {
             const item = inventoryData[index];
-            const modal = document.getElementById('imageModal');
-            const mainImg = document.getElementById('mainModalImg');
-            const thumbContainer = document.getElementById('thumbContainer');
+            const photos = [item.foto_1, item.foto_2, item.foto_3, item.foto_4].map(p => cleanLink(p)).filter(p => p);
             
             document.getElementById('modalTitle').innerText = item.nama_barang;
-            document.getElementById('modalDesc').innerText = item.keterangan || "Tidak ada detail tambahan.";
+            document.getElementById('modalDesc').innerText = item.keterangan || "Departemen Audio Video";
+            document.getElementById('mainModalImg').src = photos[0] || 'https://via.placeholder.com/600x400?text=No+Photo';
             
-            // Ambil semua foto yang ada (1-4)
-            const photos = [item.foto_1, item.foto_2, item.foto_3, item.foto_4].filter(p => p);
-            
-            mainImg.src = photos[0] || 'https://via.placeholder.com/600x400?text=No+Photo';
-            thumbContainer.innerHTML = photos.map((p, i) => `
-                <img src="${p}" onclick="changeMainImg('${p}', this)" class="thumb ${i===0?'active-thumb':''}">
+            document.getElementById('thumbContainer').innerHTML = photos.map((p, i) => `
+                <img src="${p}" onclick="event.stopPropagation(); changeMainImg('${p}', this)" class="thumb ${i===0?'active-thumb':''}">
             `).join('');
             
-            modal.style.display = "block";
+            document.getElementById('imageModal').style.display = "block";
         }
 
         function changeMainImg(src, el) {
@@ -98,9 +102,13 @@
             el.classList.add('active-thumb');
         }
 
-        function closeModal() {
-            document.getElementById('imageModal').style.display = "none";
-        }
+        function closeModal() { document.getElementById('imageModal').style.display = "none"; }
+
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const val = e.target.value.toLowerCase();
+            const filtered = inventoryData.filter(item => item.nama_barang.toLowerCase().includes(val));
+            renderCards(filtered);
+        });
 
         window.onload = fetchData;
     </script>
