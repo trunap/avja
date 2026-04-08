@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
+  https://cdn.tailwindcss.com
 </head>
 
 <body class="bg-slate-50 font-sans">
@@ -16,6 +16,15 @@
   <h1 class="font-bold uppercase">Inventory</h1>
 </nav>
 
+<!-- MODAL GALERI -->
+<div id="modal" class="fixed inset-0 bg-black/80 hidden items-center justify-center z-50">
+  <div class="bg-white rounded-xl max-w-3xl w-full p-4 relative">
+    <button id="closeModal" class="absolute top-3 right-3 text-xl">✕</button>
+    <img id="modalImage" class="w-full h-80 object-contain rounded bg-slate-100 mb-4">
+    <div id="modalThumbs" class="grid grid-cols-4 gap-2"></div>
+  </div>
+</div>
+
 <!-- CONTENT -->
 <main class="p-4">
   <p id="loading" class="text-slate-500">Sinkronisasi data...</p>
@@ -24,6 +33,11 @@
 
 <script>
 const API_URL = "https://script.google.com/macros/s/AKfycbxqYuDc3sd9VCJj6tw7Ikb9yFc9VisS4E3iFTPTqE7UEG190owRXFlcxaG0vkVt1veU/exec";
+
+const modal = document.getElementById("modal");
+const modalImage = document.getElementById("modalImage");
+const modalThumbs = document.getElementById("modalThumbs");
+document.getElementById("closeModal").onclick = () => modal.classList.add("hidden");
 
 fetch(API_URL)
   .then(res => res.json())
@@ -36,25 +50,43 @@ fetch(API_URL)
 
       if (!item.nama_barang || item.nama_barang === "Nama Barang") return;
 
-      // CARD
-      const card = document.createElement("div");
-      card.className = "bg-white rounded-xl shadow overflow-hidden";
+      const photos = [item.foto_1, item.foto_2, item.foto_3, item.foto_4].filter(Boolean);
 
-      // IMAGE
+      /* CARD */
+      const card = document.createElement("div");
+      card.className = "bg-white rounded-xl shadow overflow-hidden cursor-pointer";
+
+      card.onclick = () => {
+        modalImage.src = photos[0] || "";
+        modalThumbs.innerHTML = "";
+
+        photos.forEach(p => {
+          const t = document.createElement("img");
+          t.src = p;
+          t.className = "h-20 w-full object-cover rounded cursor-pointer";
+          t.onclick = () => modalImage.src = p;
+          modalThumbs.appendChild(t);
+        });
+
+        modal.classList.remove("hidden");
+        modal.classList.add("flex");
+      };
+
+      /* IMAGE */
       const img = document.createElement("img");
       img.src = item.foto_1 || "https://via.placeholder.com/400";
       img.className = "w-full h-40 object-cover";
 
-      // BODY
+      /* BODY */
       const body = document.createElement("div");
       body.className = "p-4";
 
-      // NAMA BARANG
+      /* NAME */
       const name = document.createElement("h3");
       name.className = "font-bold text-sm uppercase mb-1";
       name.textContent = item.nama_barang;
 
-      // ✅ TIM BADGE (STEP B)
+      /* TIM BADGE */
       const tim = document.createElement("span");
       tim.textContent = item.tim || "-";
       tim.className = "inline-block text-xs font-semibold px-2 py-0.5 rounded mb-1";
@@ -65,26 +97,21 @@ fetch(API_URL)
         tim.className += " bg-purple-100 text-purple-700";
       } else if (item.tim && item.tim.indexOf("Kabel") !== -1) {
         tim.className += " bg-yellow-100 text-yellow-700";
-      } else if (item.tim && item.tim.indexOf("Toolbox") !== -1) {
-        tim.className += " bg-slate-200 text-slate-700";
       } else {
         tim.className += " bg-slate-100 text-slate-600";
       }
 
-      // KETERANGAN
+      /* DESC */
       const desc = document.createElement("p");
       desc.className = "text-xs italic text-slate-500 mb-2 mt-1";
-      desc.textContent =
-        item.keterangan && item.keterangan.trim() !== ""
-          ? item.keterangan
-          : "-";
+      desc.textContent = item.keterangan && item.keterangan.trim() !== ""
+        ? item.keterangan : "-";
 
-      // QTY
+      /* QTY */
       const qty = document.createElement("p");
       qty.className = "text-xs font-bold text-slate-800";
       qty.textContent = "QTY: " + item.jumlah;
 
-      // SUSUN
       body.appendChild(name);
       body.appendChild(tim);
       body.appendChild(desc);
@@ -103,4 +130,3 @@ fetch(API_URL)
 
 </body>
 </html>
-``
