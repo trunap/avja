@@ -9,7 +9,6 @@
     <style>
         .card-img { height: 220px; object-fit: cover; width: 100%; background-color: #f3f4f6; }
         .glass-nav { background: rgba(15, 23, 42, 0.9); backdrop-filter: blur(10px); }
-        .search-shadow:focus { box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.3); }
     </style>
 </head>
 <body class="bg-gray-50 font-sans text-slate-900">
@@ -25,28 +24,25 @@
         <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
             <div>
                 <h2 class="text-4xl font-extrabold text-slate-800 tracking-tight">Inventaris AV 2026</h2>
-                <p class="text-slate-500 mt-2">Database aset real-time terintegrasi dengan Telegram Bot.</p>
+                <p class="text-slate-500 mt-2">Data real-time: Gunting, Marning, Pulpen, dll.</p>
             </div>
-            
             <div class="relative w-full md:w-96">
                 <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                <input type="text" id="searchInput" placeholder="Cari alat..." 
-                    class="w-full pl-12 pr-4 py-4 rounded-2xl border-none shadow-lg outline-none transition-all search-shadow">
+                <input type="text" id="searchInput" placeholder="Cari nama barang..." 
+                    class="w-full pl-12 pr-4 py-4 rounded-2xl border-none shadow-lg outline-none focus:ring-2 focus:ring-blue-500">
             </div>
         </div>
 
         <div id="loading" class="flex flex-col items-center py-20">
             <div class="animate-spin rounded-full h-14 w-14 border-t-4 border-b-4 border-blue-600 mb-4"></div>
-            <p class="text-slate-400 font-medium animate-pulse">Menghubungkan ke database...</p>
+            <p class="text-slate-400 font-medium">Sinkronisasi Baris 3 Google Sheets...</p>
         </div>
 
-        <div id="inventoryGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-            </div>
+        <div id="inventoryGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"></div>
     </div>
 
     <script>
-        // URL API Terbaru Anda
-        const API_URL = "https://script.google.com/macros/s/AKfycbyfP6GZpi7Y-uHg_qY9MMXwFxfIqCl0cGRzVtiAKJhFbCfpQFQ6IIwY7mrYQshphu6P/exec"; 
+        const API_URL = "https://script.google.com/macros/s/AKfycbzeAf9mygx7ibmeFk1_-iFyTfkd8E9j2HkLjJdBzoyJA5PdUbNZeestONnXyAh_QYG7/exec"; 
 
         let inventoryData = [];
 
@@ -57,13 +53,7 @@
                 renderCards(inventoryData);
                 document.getElementById('loading').classList.add('hidden');
             } catch (error) {
-                console.error("Fetch Error:", error);
-                document.getElementById('loading').innerHTML = `
-                    <div class="bg-red-50 text-red-600 p-6 rounded-2xl border border-red-100 text-center">
-                        <i class="fas fa-exclamation-triangle text-3xl mb-2"></i>
-                        <p class="font-bold">Gagal Mengambil Data!</p>
-                        <p class="text-sm">Periksa apakah Web App Apps Script sudah dideploy sebagai 'Anyone'.</p>
-                    </div>`;
+                document.getElementById('loading').innerHTML = "<p class='text-red-500'>Koneksi gagal. Cek Deployment Apps Script.</p>";
             }
         }
 
@@ -72,45 +62,35 @@
             grid.innerHTML = "";
 
             data.forEach(item => {
-                // Mapping kolom sesuai Google Sheet Anda
                 const nama = item.nama_barang || "Tanpa Nama";
                 const jumlah = item.jumlah || "0";
                 const kondisi = item.kondisi || "Check";
-                const keterangan = item.keterangan || "-";
-                
-                // Mengambil Foto 1 dari Sheet
+                const tim = item.tim || "AVJA";
                 const foto = item.foto_1 || "https://via.placeholder.com/400x300?text=No+Photo";
                 
-                // Logika Warna Status
                 let badgeClass = "bg-gray-100 text-gray-700";
-                const kLower = kondisi.toLowerCase();
-                if(kLower.includes("bagus")) badgeClass = "bg-green-100 text-green-700";
-                else if(kLower.includes("rusak")) badgeClass = "bg-red-100 text-red-700";
-                else if(kLower.includes("periksa")) badgeClass = "bg-amber-100 text-amber-700";
+                if(kondisi.toLowerCase().includes("bagus")) badgeClass = "bg-green-100 text-green-700";
+                if(kondisi.toLowerCase().includes("rusak")) badgeClass = "bg-red-100 text-red-700";
 
                 grid.innerHTML += `
                     <div class="bg-white rounded-[2rem] overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 border border-gray-100 group">
                         <div class="relative overflow-hidden">
-                            <img src="${foto}" alt="${nama}" class="card-img group-hover:scale-110 transition-transform duration-700" onerror="this.src='https://via.placeholder.com/400x300?text=Image+Error'">
+                            <img src="${foto}" alt="${nama}" class="card-img group-hover:scale-110 transition-transform duration-700">
                             <div class="absolute top-5 left-5 bg-white/90 backdrop-blur-md px-4 py-1.5 rounded-xl text-[10px] font-black text-slate-800 shadow-sm uppercase tracking-widest">
-                                ASSET
+                                ${tim}
                             </div>
                         </div>
                         <div class="p-8">
-                            <h3 class="text-xl font-bold text-slate-800 uppercase tracking-tight mb-2 group-hover:text-blue-600 transition-colors">${nama}</h3>
-                            <p class="text-slate-400 text-xs font-medium mb-6 italic uppercase tracking-widest">"${keterangan}"</p>
-                            
+                            <h3 class="text-xl font-bold text-slate-800 uppercase leading-tight mb-2">${nama}</h3>
+                            <p class="text-slate-400 text-xs italic mb-6">"${item.keterangan || '-'}"</p>
                             <div class="flex items-center justify-between pt-6 border-t border-gray-50">
                                 <div>
-                                    <p class="text-[10px] font-bold text-slate-300 uppercase tracking-tighter font-bold">Qty</p>
+                                    <p class="text-[10px] font-bold text-slate-300 uppercase">Qty</p>
                                     <p class="text-3xl font-black text-slate-800">${jumlah}</p>
                                 </div>
-                                <div class="text-right">
-                                    <p class="text-[10px] font-bold text-slate-300 uppercase tracking-tighter mb-1 font-bold">Status</p>
-                                    <span class="px-4 py-2 rounded-xl text-[10px] font-black uppercase ${badgeClass}">
-                                        ${kondisi}
-                                    </span>
-                                </div>
+                                <span class="px-4 py-2 rounded-xl text-[10px] font-black uppercase ${badgeClass}">
+                                    ${kondisi}
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -118,13 +98,9 @@
             });
         }
 
-        // Fitur Pencarian Real-time
         document.getElementById('searchInput').addEventListener('input', (e) => {
             const val = e.target.value.toLowerCase();
-            const filtered = inventoryData.filter(item => 
-                (item.nama_barang && item.nama_barang.toLowerCase().includes(val)) ||
-                (item.keterangan && item.keterangan.toLowerCase().includes(val))
-            );
+            const filtered = inventoryData.filter(item => item.nama_barang.toLowerCase().includes(val));
             renderCards(filtered);
         });
 
