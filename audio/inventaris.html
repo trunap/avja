@@ -1,50 +1,177 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <title>Inventory</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Inventory Control 🚀</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
 
-  <!-- ✅ Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
+        :root {
+            --primary-orange: #FF7E27;
+            --soft-orange: #FFF0E5;
+            --primary-blue: #3A70E2;
+            --soft-blue: #E8EFFF;
+            --primary-purple: #8B5CF6;
+            --soft-purple: #EDE9FE;
+            --bg-color: #F4F5F7;
+            --text-dark: #1A1A1A;
+            --text-gray: #6B7280;
+            --card-radius: 24px;
+        }
+
+        * {
+            margin: 0; padding: 0; box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-color); color: var(--text-dark);
+            padding-bottom: 80px; overflow-x: hidden;
+        }
+
+        /* HEADER */
+        header { padding: 15px; position: sticky; top: 0; z-index: 100; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+        .nav-container {
+            max-width: 1200px; margin: 0 auto; background: rgba(255, 255, 255, 0.9);
+            border-radius: 100px; display: flex; align-items: center; padding: 8px 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05); border: 1px solid rgba(255,255,255,0.5);
+        }
+        .logo-combined { display: flex; text-decoration: none; border-radius: 10px; overflow: hidden; font-weight: 800; font-size: 18px; margin-right: 12px; }
+        .logo-part { padding: 6px 12px; display: flex; align-items: center; justify-content: center; }
+        .logo-audio { background-color: var(--primary-orange); color: white; }
+        .logo-video { background-color: var(--primary-blue); color: white; }
+        .site-title { font-size: 16px; font-weight: 700; margin-right: auto; }
+
+        /* HERO & FILTER */
+        .hero { max-width: 1200px; margin: 20px auto; padding: 0 20px; }
+        .hero h1 { font-size: 42px; font-weight: 800; line-height: 1.2; }
+        .hero h1 span { transform: rotate(-2deg); background: #FFE066; padding: 0 10px; border-radius: 8px; display: inline-block; }
+        .hero p { color: var(--text-gray); font-size: 16px; margin-top: 12px; line-height: 1.5; margin-bottom: 20px;}
+        
+        .filter-container {
+            display: flex; gap: 10px; flex-wrap: wrap; align-items: center;
+        }
+        .custom-input {
+            padding: 12px 20px; border-radius: 100px; border: 2px solid #E5E7EB;
+            font-family: inherit; font-size: 14px; font-weight: 600; outline: none;
+            transition: all 0.3s ease; background: white;
+        }
+        .custom-input:focus { border-color: var(--primary-blue); box-shadow: 0 0 0 4px var(--soft-blue); }
+        .search-bar { flex-grow: 1; max-width: 400px; }
+
+        /* SECTIONS & GRID */
+        .content-container { max-width: 1200px; margin: 0 auto; padding: 15px; }
+        .grid-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+
+        /* CARDS */
+        .mission-card {
+            background: #ffffff; border: 2px solid #F0F0F0; border-radius: var(--card-radius);
+            padding: 16px; transition: all 0.3s ease; height: 100%; position: relative;
+            display: flex; flex-direction: column; cursor: pointer;
+        }
+        .mission-card:hover { border-color: #D1D5DB; transform: translateY(-4px); box-shadow: 0 12px 24px rgba(0,0,0,0.04); }
+        .mission-card:active { transform: scale(0.98); }
+
+        .card-img {
+            width: 100%; height: 160px; object-fit: cover; border-radius: 16px;
+            margin-bottom: 15px; background: #F9FAFB;
+        }
+        
+        .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+        .mission-card h3 { font-size: 18px; font-weight: 800; color: var(--text-dark); text-transform: uppercase; }
+        .qty-badge { background: #1A1A1A; color: white; padding: 4px 10px; border-radius: 100px; font-size: 12px; font-weight: 800; }
+
+        .team-badge { 
+            display: inline-block; font-size: 11px; font-weight: 800; padding: 4px 10px; 
+            border-radius: 100px; letter-spacing: 0.5px; margin-bottom: 10px; align-self: flex-start;
+        }
+        .badge-blue { background: var(--soft-blue); color: var(--primary-blue); }
+        .badge-orange { background: var(--soft-orange); color: var(--primary-orange); }
+        .badge-purple { background: var(--soft-purple); color: var(--primary-purple); }
+        .badge-gray { background: #E5E7EB; color: #4B5563; }
+
+        .mission-card p { font-size: 13px; color: var(--text-gray); line-height: 1.4; font-style: italic; flex-grow: 1; }
+
+        /* MODAL GALERI */
+        .modal-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.85);
+            display: none; align-items: center; justify-content: center; z-index: 1000; padding: 20px;
+            backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px);
+        }
+        .modal-overlay.active { display: flex; }
+        
+        .modal-content {
+            background: white; border-radius: var(--card-radius); max-width: 600px; width: 100%;
+            padding: 20px; position: relative; animation: slideUp 0.3s ease;
+        }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        
+        .modal-close {
+            position: absolute; top: -40px; right: 0; background: none; border: none;
+            font-size: 32px; cursor: pointer; color: white; font-weight: bold;
+        }
+        
+        .modal-main-img { width: 100%; height: 300px; object-fit: contain; border-radius: 16px; margin-bottom: 12px; background: #F4F5F7; }
+        .modal-thumbs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+        .modal-thumb { width: 100%; height: 70px; object-fit: cover; border-radius: 12px; cursor: pointer; border: 2px solid transparent; transition: 0.2s; }
+        .modal-thumb:hover { border-color: var(--primary-blue); }
+
+        #loading { text-align: center; font-weight: 700; color: var(--text-gray); margin-top: 40px; }
+
+        /* MOBILE */
+        @media (max-width: 600px) {
+            .hero h1 { font-size: 32px; }
+            .search-bar { width: 100%; max-width: none; }
+            .modal-content { padding: 15px; }
+            .modal-main-img { height: 220px; }
+        }
+    </style>
 </head>
+<body>
 
-<body class="bg-slate-50 font-sans">
-
-<!-- NAVBAR -->
-<nav class="bg-slate-900 text-white p-4">
-  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-    <h1 class="font-bold uppercase">Inventory</h1>
-
-    <!-- ✅ FILTER & SEARCH -->
-    <div class="flex gap-2">
-      <select id="filterTim" class="text-black text-sm rounded px-2 py-1">
-        <option value="">Semua Tim</option>
-      </select>
-      <input
-        id="searchInput"
-        type="text"
-        placeholder="Cari barang..."
-        class="text-sm rounded px-2 py-1 text-black"
-      >
+<header>
+    <div class="nav-container">
+        <a href="#" class="logo-combined">
+            <div class="logo-part logo-audio">A</div>
+            <div class="logo-part logo-video">V</div>
+        </a>
+        <div class="site-title">Inventory Control</div>
     </div>
-  </div>
-</nav>
+</header>
 
-<!-- MODAL GALERI -->
-<div id="modal" class="fixed inset-0 bg-black/80 hidden items-center justify-center z-50">
-  <div class="bg-white rounded-xl max-w-3xl w-full p-4 relative">
-    <button id="closeModal" class="absolute top-3 right-3 text-xl">✕</button>
-    <img id="modalImage" class="w-full h-80 object-contain rounded bg-slate-100 mb-4">
-    <div id="modalThumbs" class="grid grid-cols-4 gap-2"></div>
-  </div>
-</div>
+<main>
+    <section class="hero">
+        <h1>Cek Logistik: <br><span>Ready for Action!</span> ⚡</h1>
+        <p>Pantau ketersediaan barang, cari peralatan, dan cek foto kondisi fisik alat di sini.</p>
+        
+        <div class="filter-container">
+            <select id="filterTim" class="custom-input">
+                <option value="">Semua Tim</option>
+            </select>
+            <input 
+                id="searchInput" 
+                type="text" 
+                placeholder="Cari nama barang..." 
+                class="custom-input search-bar"
+            >
+        </div>
+    </section>
 
-<!-- CONTENT -->
-<main class="p-4">
-  <p id="loading" class="text-slate-500">Sinkronisasi data...</p>
-  <div id="grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-4"></div>
+    <div class="content-container">
+        <p id="loading">⏳ Sinkronisasi data ke satelit...</p>
+        <div id="grid" class="grid-cards"></div>
+    </div>
 </main>
+
+<div id="modal" class="modal-overlay">
+    <div class="modal-content">
+        <button id="closeModal" class="modal-close">✕</button>
+        <img id="modalImage" class="modal-main-img" src="" alt="Preview">
+        <div id="modalThumbs" class="modal-thumbs"></div>
+    </div>
+</div>
 
 <script>
 const API_URL = "https://script.google.com/macros/s/AKfycbxV7gAAgt_i1cGkuLDgEOeyIyjmKMMWDpt1EUnF2A_3QOpS2TJtDysNdB1nHCLHko15/exec";
@@ -56,25 +183,28 @@ const searchInput = document.getElementById("searchInput");
 const modal = document.getElementById("modal");
 const modalImage = document.getElementById("modalImage");
 const modalThumbs = document.getElementById("modalThumbs");
-document.getElementById("closeModal").onclick = () => modal.classList.add("hidden");
+document.getElementById("closeModal").onclick = () => modal.classList.remove("active");
+
+// Tutup modal jika klik di luar box putih
+modal.addEventListener('click', (e) => {
+    if (e.target === modal) modal.classList.remove("active");
+});
 
 let allItems = [];
 
 fetch(API_URL)
   .then(res => res.json())
   .then(data => {
-    document.getElementById("loading").remove();
+    document.getElementById("loading").style.display = "none";
 
     // simpan data valid
-    allItems = data.filter(i =>
-      i.nama_barang && i.nama_barang !== "Nama Barang"
-    );
+    allItems = data.filter(i => i.nama_barang && i.nama_barang !== "Nama Barang");
 
     populateTimFilter();
     renderItems();
   })
   .catch(err => {
-    document.getElementById("loading").textContent = "Gagal memuat data";
+    document.getElementById("loading").textContent = "❌ Gagal memuat data. Cek koneksi internet.";
     console.error(err);
   });
 
@@ -93,7 +223,7 @@ function populateTimFilter() {
   });
 }
 
-/* ===== RENDER ===== */
+/* ===== RENDER KARTU ===== */
 function renderItems() {
   grid.innerHTML = "";
 
@@ -101,77 +231,80 @@ function renderItems() {
   const keyword = searchInput.value.toLowerCase();
 
   allItems.forEach(item => {
-    const cocokTim =
-      !timValue || (item.tim && item.tim.toLowerCase() === timValue);
-
-    const cocokSearch =
-      !keyword || item.nama_barang.toLowerCase().includes(keyword);
+    const cocokTim = !timValue || (item.tim && item.tim.toLowerCase() === timValue);
+    const cocokSearch = !keyword || item.nama_barang.toLowerCase().includes(keyword);
 
     if (!cocokTim || !cocokSearch) return;
 
     const photos = [item.foto_1, item.foto_2, item.foto_3, item.foto_4].filter(Boolean);
 
+    // Buat Container Kartu
     const card = document.createElement("div");
-    card.className = "bg-white rounded-xl shadow overflow-hidden cursor-pointer";
+    card.className = "mission-card";
 
+    // FUNGSI KLIK MODAL
     card.onclick = () => {
-      modalImage.src = photos[0] || "";
+      modalImage.src = photos[0] || "https://via.placeholder.com/600x400?text=No+Image";
       modalThumbs.innerHTML = "";
 
       photos.forEach(p => {
         const t = document.createElement("img");
         t.src = p;
-        t.className = "h-20 w-full object-cover rounded cursor-pointer";
-        t.onclick = () => modalImage.src = p;
+        t.className = "modal-thumb";
+        t.onclick = (e) => {
+            e.stopPropagation(); // Mencegah klik tembus ke bawah
+            modalImage.src = p;
+        }
         modalThumbs.appendChild(t);
       });
 
-      modal.classList.remove("hidden");
-      modal.classList.add("flex");
+      modal.classList.add("active");
     };
 
+    // Gambar Utama Kartu
     const img = document.createElement("img");
-    img.src = item.foto_1 || "https://via.placeholder.com/400";
-    img.className = "w-full h-40 object-cover";
+    img.src = item.foto_1 || "https://via.placeholder.com/400x300?text=No+Image";
+    img.className = "card-img";
 
-    const body = document.createElement("div");
-    body.className = "p-4";
-
+    // Header Kartu (Judul & QTY)
+    const headerDiv = document.createElement("div");
+    headerDiv.className = "card-header";
+    
     const name = document.createElement("h3");
-    name.className = "font-bold text-sm uppercase mb-1";
     name.textContent = item.nama_barang;
+    
+    const qty = document.createElement("span");
+    qty.className = "qty-badge";
+    qty.textContent = item.jumlah + "x";
 
+    headerDiv.appendChild(name);
+    headerDiv.appendChild(qty);
+
+    // Badge Tim (Warna sesuai tim)
     const tim = document.createElement("span");
-    tim.textContent = item.tim || "-";
-    tim.className = "inline-block text-xs font-semibold px-2 py-0.5 rounded mb-1";
+    tim.textContent = item.tim || "UMUM";
+    tim.className = "team-badge ";
 
     if (item.tim && item.tim.includes("Booth")) {
-      tim.className += " bg-blue-100 text-blue-700";
+      tim.className += "badge-blue";
     } else if (item.tim && item.tim.includes("Speaker")) {
-      tim.className += " bg-purple-100 text-purple-700";
+      tim.className += "badge-purple";
     } else if (item.tim && item.tim.includes("Kabel")) {
-      tim.className += " bg-yellow-100 text-yellow-700";
+      tim.className += "badge-orange";
     } else {
-      tim.className += " bg-slate-100 text-slate-600";
+      tim.className += "badge-gray";
     }
 
+    // Deskripsi
     const desc = document.createElement("p");
-    desc.className = "text-xs italic text-slate-500 mb-2 mt-1";
-    desc.textContent = item.keterangan && item.keterangan.trim() !== ""
-      ? item.keterangan
-      : "-";
+    desc.textContent = item.keterangan && item.keterangan.trim() !== "" ? item.keterangan : "Tidak ada keterangan tambahan.";
 
-    const qty = document.createElement("p");
-    qty.className = "text-xs font-bold text-slate-800";
-    qty.textContent = "QTY: " + item.jumlah;
-
-    body.appendChild(name);
-    body.appendChild(tim);
-    body.appendChild(desc);
-    body.appendChild(qty);
-
+    // Gabungkan ke dalam kartu
     card.appendChild(img);
-    card.appendChild(body);
+    card.appendChild(headerDiv);
+    card.appendChild(tim);
+    card.appendChild(desc);
+    
     grid.appendChild(card);
   });
 }
