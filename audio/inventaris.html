@@ -182,6 +182,7 @@
 </div>
 
 <script>
+<script>
 // Menambahkan parameter ?action=api agar Apps Script mengirim data format JSON
 const BASE_URL = "https://script.google.com/macros/s/AKfycbwNGJQ3nYwvKRZOFJtKSw39Aq7H3gNa1WRcsPaUCNkm_syiq5p_8eGpbiLnzo3Aj9rj/exec";
 const API_URL = BASE_URL + "?action=api";
@@ -250,6 +251,24 @@ function populateFilters() {
   });
 }
 
+/* ===== MESIN PEMBERSIH LINK FOTO (BARU) ===== */
+function getCleanImageUrl(rawString) {
+    if (!rawString) return null;
+    
+    // Cari pola ID file di dalam rumus =IMAGE("...")
+    const match = rawString.match(/id=([a-zA-Z0-9_-]+)/i);
+    if (match && match[1]) {
+        // Gunakan server khusus Google untuk menampilkan foto di web
+        return "https://lh3.googleusercontent.com/d/" + match[1];
+    }
+    
+    // Jika formatnya sudah link http bersih
+    if (rawString.startsWith("http") && !rawString.includes("=IMAGE")) {
+        return rawString;
+    }
+    return null;
+}
+
 /* ===== RENDER KARTU ===== */
 function renderItems() {
   grid.innerHTML = "";
@@ -265,7 +284,13 @@ function renderItems() {
 
     if (!cocokTim || !cocokMilik || !cocokSearch) return;
 
-    const photos = [item.foto_1, item.foto_2, item.foto_3, item.foto_4].filter(Boolean);
+    // Bersihkan semua foto yang masuk
+    const photos = [
+        getCleanImageUrl(item.foto_1), 
+        getCleanImageUrl(item.foto_2), 
+        getCleanImageUrl(item.foto_3), 
+        getCleanImageUrl(item.foto_4)
+    ].filter(Boolean);
 
     // Buat Container Kartu
     const card = document.createElement("div");
@@ -281,7 +306,7 @@ function renderItems() {
         t.src = p;
         t.className = "modal-thumb";
         t.onclick = (e) => {
-            e.stopPropagation(); // Mencegah klik tembus ke bawah
+            e.stopPropagation(); 
             modalImage.src = p;
         }
         modalThumbs.appendChild(t);
@@ -309,7 +334,7 @@ function renderItems() {
     headerDiv.appendChild(name);
     headerDiv.appendChild(qty);
 
-    // Grup Tag/Badge (Tim, Milik, Kondisi)
+    // Grup Tag/Badge
     const tagGroup = document.createElement("div");
     tagGroup.className = "tag-group";
 
@@ -358,6 +383,3 @@ filterTim.onchange = renderItems;
 filterMilik.onchange = renderItems;
 searchInput.oninput = renderItems;
 </script>
-
-</body>
-</html>
