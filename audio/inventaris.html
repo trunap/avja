@@ -108,6 +108,12 @@
             position: absolute; top: -40px; right: 0; background: none; border: none;
             font-size: 32px; cursor: pointer; color: white; font-weight: bold;
         }
+        
+        /* Modal Header Styles Baru */
+        .modal-info-header { text-align: center; margin-bottom: 15px; }
+        .modal-name { font-size: 22px; font-weight: 800; margin-bottom: 10px; text-transform: uppercase; color: var(--text-dark); }
+        .modal-tag-group { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; margin-bottom: 15px; }
+
         .modal-main-img { width: 100%; height: 300px; object-fit: contain; border-radius: 16px; margin-bottom: 12px; background: #F4F5F7; }
         .modal-thumbs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
         .modal-thumb { width: 100%; height: 70px; object-fit: cover; border-radius: 12px; cursor: pointer; border: 2px solid transparent; transition: 0.2s; }
@@ -121,6 +127,7 @@
             .custom-input { width: 100%; }
             .modal-content { padding: 15px; }
             .modal-main-img { height: 220px; }
+            .modal-name { font-size: 18px; }
         }
     </style>
 </head>
@@ -165,6 +172,12 @@
 <div id="modal" class="modal-overlay">
     <div class="modal-content">
         <button id="closeModal" class="modal-close">✕</button>
+        
+        <div class="modal-info-header">
+            <h2 id="modalName" class="modal-name">Nama Barang</h2>
+            <div id="modalTags" class="modal-tag-group"></div>
+        </div>
+
         <img id="modalImage" class="modal-main-img" src="" alt="Preview">
         <div id="modalThumbs" class="modal-thumbs"></div>
         <p id="modalDesc" style="margin-top: 15px; font-size: 14px; color: #6B7280; text-align: center; font-style: italic; background: #F4F5F7; padding: 10px; border-radius: 12px;"></p>
@@ -186,7 +199,9 @@ const searchInput = document.getElementById("searchInput");
 const modal = document.getElementById("modal");
 const modalImage = document.getElementById("modalImage");
 const modalThumbs = document.getElementById("modalThumbs");
-const modalDesc = document.getElementById("modalDesc"); // Variabel deskripsi galeri
+const modalName = document.getElementById("modalName"); // Elemen nama di modal
+const modalTags = document.getElementById("modalTags"); // Elemen badge di modal
+const modalDesc = document.getElementById("modalDesc"); 
 document.getElementById("closeModal").onclick = () => modal.classList.remove("active");
 
 modal.addEventListener('click', (e) => {
@@ -254,6 +269,38 @@ function getCleanImageUrl(rawString) {
     return null;
 }
 
+/* ===== FUNGSI PEMBUAT BADGE ===== */
+// Fungsi ini dibuat agar bisa dipakai di kartu depan dan di dalam modal
+function createBadges(item) {
+    const frag = document.createDocumentFragment();
+    
+    const timBadge = document.createElement("span");
+    timBadge.textContent = item.tim || "UMUM";
+    timBadge.className = "badge ";
+    const safeTim = String(item.tim || "");
+    if (safeTim.includes("Booth")) timBadge.className += "badge-blue";
+    else if (safeTim.includes("Speaker")) timBadge.className += "badge-purple";
+    else if (safeTim.includes("Kabel")) timBadge.className += "badge-orange";
+    else timBadge.className += "badge-gray";
+    frag.appendChild(timBadge);
+
+    if (item.barang_milik) {
+        const milikBadge = document.createElement("span");
+        milikBadge.textContent = item.barang_milik;
+        milikBadge.className = "badge badge-green";
+        frag.appendChild(milikBadge);
+    }
+    
+    if (item.kondisi) {
+        const kondisiBadge = document.createElement("span");
+        kondisiBadge.textContent = item.kondisi;
+        kondisiBadge.className = String(item.kondisi).toLowerCase() === "rusak" ? "badge badge-red" : "badge badge-gray";
+        frag.appendChild(kondisiBadge);
+    }
+    
+    return frag;
+}
+
 /* ===== RENDER KARTU ===== */
 function renderItems() {
   grid.innerHTML = "";
@@ -296,6 +343,7 @@ function renderItems() {
 
     // FUNGSI KLIK MODAL
     card.onclick = () => {
+      // Set Gambar
       modalImage.src = photos[0] || "https://via.placeholder.com/600x400?text=No+Image";
       modalThumbs.innerHTML = "";
       photos.forEach(p => {
@@ -305,17 +353,26 @@ function renderItems() {
         t.onclick = (e) => { e.stopPropagation(); modalImage.src = p; }
         modalThumbs.appendChild(t);
       });
-      // Mengisi deskripsi di dalam modal
+      
+      // Set Judul di Modal
+      modalName.textContent = item.nama_barang;
+      
+      // Set Badges di Modal
+      modalTags.innerHTML = "";
+      modalTags.appendChild(createBadges(item));
+
+      // Set Deskripsi di Modal
       modalDesc.textContent = item.keterangan && String(item.keterangan).trim() !== "" ? item.keterangan : "Tidak ada keterangan tambahan.";
+      
       modal.classList.add("active");
     };
 
-    // GAMBAR KARTU
+    // GAMBAR KARTU DEPAN
     const img = document.createElement("img");
     img.src = photos[0] || "https://via.placeholder.com/400x300?text=No+Image";
     img.className = "card-img";
 
-    // HEADER KARTU
+    // HEADER KARTU DEPAN
     const headerDiv = document.createElement("div");
     headerDiv.className = "card-header";
     
@@ -324,45 +381,21 @@ function renderItems() {
     
     const qty = document.createElement("span");
     qty.className = "qty-badge";
-    // MENGHILANGKAN HURUF "X"
     qty.textContent = item.jumlah; 
 
     headerDiv.appendChild(name);
     headerDiv.appendChild(qty);
 
-    // TAG/BADGE KARTU
+    // TAG/BADGE KARTU DEPAN
     const tagGroup = document.createElement("div");
     tagGroup.className = "tag-group";
+    tagGroup.appendChild(createBadges(item)); // Menggunakan fungsi pembuat badge
 
-    const timBadge = document.createElement("span");
-    timBadge.textContent = item.tim || "UMUM";
-    timBadge.className = "badge ";
-    const safeTim = String(item.tim || "");
-    if (safeTim.includes("Booth")) timBadge.className += "badge-blue";
-    else if (safeTim.includes("Speaker")) timBadge.className += "badge-purple";
-    else if (safeTim.includes("Kabel")) timBadge.className += "badge-orange";
-    else timBadge.className += "badge-gray";
-    tagGroup.appendChild(timBadge);
-
-    if (item.barang_milik) {
-        const milikBadge = document.createElement("span");
-        milikBadge.textContent = item.barang_milik;
-        milikBadge.className = "badge badge-green";
-        tagGroup.appendChild(milikBadge);
-    }
-    
-    if (item.kondisi) {
-        const kondisiBadge = document.createElement("span");
-        kondisiBadge.textContent = item.kondisi;
-        kondisiBadge.className = String(item.kondisi).toLowerCase() === "rusak" ? "badge badge-red" : "badge badge-gray";
-        tagGroup.appendChild(kondisiBadge);
-    }
-
-    // DESKRIPSI DI KARTU DEPAN
+    // DESKRIPSI KARTU DEPAN
     const desc = document.createElement("p");
     desc.textContent = item.keterangan && String(item.keterangan).trim() !== "" ? item.keterangan : "Tidak ada keterangan tambahan.";
 
-    // GABUNGKAN SEMUA KE DALAM KARTU
+    // GABUNGKAN SEMUA
     card.appendChild(img);
     card.appendChild(headerDiv);
     card.appendChild(tagGroup);
