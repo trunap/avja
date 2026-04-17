@@ -83,14 +83,12 @@
 
         .tag-group { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
         .badge { font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 100px; letter-spacing: 0.5px; }
-        .badge-blue { background: var(--soft-blue); color: var(--primary-blue); }
-        .badge-orange { background: var(--soft-orange); color: var(--primary-orange); }
-        .badge-purple { background: var(--soft-purple); color: var(--primary-purple); }
+        
         .badge-green { background: #D1FAE5; color: #059669; }
         .badge-gray { background: #E5E7EB; color: #4B5563; }
         .badge-red { background: #FEE2E2; color: #DC2626; }
 
-        .mission-card p { font-size: 13px; color: var(--text-gray); line-height: 1.4; font-style: italic; flex-grow: 1; }
+        .mission-card p { font-size: 13px; color: var(--text-gray); line-height: 1.4; font-style: italic; flex-grow: 1; margin-top: 5px; }
 
         /* MODAL GALERI */
         .modal-overlay {
@@ -101,7 +99,7 @@
         .modal-overlay.active { display: flex; }
         .modal-content {
             background: white; border-radius: var(--card-radius); max-width: 600px; width: 100%;
-            padding: 20px; position: relative; animation: slideUp 0.3s ease;
+            padding: 20px; position: relative; animation: slideUp 0.3s ease; max-height: 90vh; overflow-y: auto;
         }
         @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         .modal-close {
@@ -109,7 +107,7 @@
             font-size: 32px; cursor: pointer; color: white; font-weight: bold;
         }
         
-        /* Modal Header Styles Baru */
+        /* Modal Header Styles */
         .modal-info-header { text-align: center; margin-bottom: 15px; }
         .modal-name { font-size: 22px; font-weight: 800; margin-bottom: 10px; text-transform: uppercase; color: var(--text-dark); }
         .modal-tag-group { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; margin-bottom: 15px; }
@@ -199,8 +197,8 @@ const searchInput = document.getElementById("searchInput");
 const modal = document.getElementById("modal");
 const modalImage = document.getElementById("modalImage");
 const modalThumbs = document.getElementById("modalThumbs");
-const modalName = document.getElementById("modalName"); // Elemen nama di modal
-const modalTags = document.getElementById("modalTags"); // Elemen badge di modal
+const modalName = document.getElementById("modalName");
+const modalTags = document.getElementById("modalTags");
 const modalDesc = document.getElementById("modalDesc"); 
 document.getElementById("closeModal").onclick = () => modal.classList.remove("active");
 
@@ -255,7 +253,7 @@ function populateFilters() {
   });
 }
 
-/* ===== PEMBERSIH FOTO ANTI-ERROR ===== */
+/* ===== PEMBERSIH FOTO ===== */
 function getCleanImageUrl(rawString) {
     if (!rawString) return null;
     const str = String(rawString);
@@ -269,46 +267,41 @@ function getCleanImageUrl(rawString) {
     return null;
 }
 
-/* ===== FUNGSI PEMBUAT BADGE ===== */
+/* ===== FUNGSI PEMBUAT BADGE DENGAN WARNA SPESIFIK ===== */
 function createBadges(item) {
     const frag = document.createDocumentFragment();
     
-    // 1. BADGE TIM (DENGAN WARNA SPESIFIK)
+    // 1. BADGE TIM
     const timBadge = document.createElement("span");
     const safeTim = String(item.tim || "UMUM");
     timBadge.textContent = safeTim;
-    timBadge.className = "badge"; // Class dasar untuk bentuknya
+    timBadge.className = "badge";
 
-    // Kamus Warna berdasarkan Nama Tim
     const nameLower = safeTim.toLowerCase();
-    let bgColor = "#E5E7EB"; // Default abu-abu
-    let textColor = "#1A1A1A"; // Default teks gelap
+    let bgColor = "#E5E7EB"; 
+    let textColor = "#1A1A1A"; 
 
-    // A. DETEKSI TIM AUDIO
     if (nameLower.includes("audio")) {
-        if (nameLower.includes("booth")) { bgColor = "#4A1B0E"; textColor = "#FFFFFF"; } // Dark Chocolate
-        else if (nameLower.includes("kabel")) { bgColor = "#FFD300"; textColor = "#1A1A1A"; } // Vibrant Yellow
-        else if (nameLower.includes("speaker")) { bgColor = "#A0522D"; textColor = "#FFFFFF"; } // Sienna
-        else if (nameLower.includes("inv") || nameLower.includes("inventaris")) { bgColor = "#708090"; textColor = "#FFFFFF"; } // Slate Grey
-        else { bgColor = "#F28500"; textColor = "#FFFFFF"; } // Tangerine Orange (Utama)
+        if (nameLower.includes("booth")) { bgColor = "#4A1B0E"; textColor = "#FFFFFF"; } 
+        else if (nameLower.includes("kabel")) { bgColor = "#FFD300"; textColor = "#1A1A1A"; } 
+        else if (nameLower.includes("speaker")) { bgColor = "#A0522D"; textColor = "#FFFFFF"; } 
+        else if (nameLower.includes("inv") || nameLower.includes("inventaris")) { bgColor = "#708090"; textColor = "#FFFFFF"; } 
+        else { bgColor = "#F28500"; textColor = "#FFFFFF"; } 
     }
-    // B. DETEKSI TIM VIDEO / VISUAL
     else if (nameLower.includes("video") || nameLower.includes("visual")) {
-        if (nameLower.includes("led") || nameLower.includes("tv") || nameLower.includes("layar")) { bgColor = "#003153"; textColor = "#FFFFFF"; } // Obsidian Blue
-        else if (nameLower.includes("kabel")) { bgColor = "#1A936F"; textColor = "#FFFFFF"; } // Vibrant Jade
-        else if (nameLower.includes("booth") || nameLower.includes("kamera")) { bgColor = "#00BFFF"; textColor = "#1A1A1A"; } // Electric Sky Blue
-        else if (nameLower.includes("inv") || nameLower.includes("inventaris")) { bgColor = "#C2C2E0"; textColor = "#1A1A1A"; } // Periwinkle Light
-        else { bgColor = "#003366"; textColor = "#FFFFFF"; } // Deep Navy (Utama)
+        if (nameLower.includes("led") || nameLower.includes("tv") || nameLower.includes("layar")) { bgColor = "#003153"; textColor = "#FFFFFF"; } 
+        else if (nameLower.includes("kabel")) { bgColor = "#1A936F"; textColor = "#FFFFFF"; } 
+        else if (nameLower.includes("booth") || nameLower.includes("kamera")) { bgColor = "#00BFFF"; textColor = "#1A1A1A"; } 
+        else if (nameLower.includes("inv") || nameLower.includes("inventaris")) { bgColor = "#C2C2E0"; textColor = "#1A1A1A"; } 
+        else { bgColor = "#003366"; textColor = "#FFFFFF"; } 
     }
-    // C. JIKA NAMA TIM TIDAK MENYEBUT AUDIO/VIDEO (Hanya divisinya saja)
     else {
-        if (nameLower.includes("booth")) { bgColor = "#4A1B0E"; textColor = "#FFFFFF"; } // Default Booth ke Audio
+        if (nameLower.includes("booth")) { bgColor = "#4A1B0E"; textColor = "#FFFFFF"; } 
         else if (nameLower.includes("speaker")) { bgColor = "#A0522D"; textColor = "#FFFFFF"; }
         else if (nameLower.includes("led") || nameLower.includes("tv")) { bgColor = "#003153"; textColor = "#FFFFFF"; }
         else if (nameLower.includes("kamera")) { bgColor = "#00BFFF"; textColor = "#1A1A1A"; }
     }
 
-    // Terapkan warna hex ke badge
     timBadge.style.backgroundColor = bgColor;
     timBadge.style.color = textColor;
     frag.appendChild(timBadge);
@@ -374,7 +367,6 @@ function renderItems() {
 
     // FUNGSI KLIK MODAL
     card.onclick = () => {
-      // Set Gambar
       modalImage.src = photos[0] || "https://via.placeholder.com/600x400?text=No+Image";
       modalThumbs.innerHTML = "";
       photos.forEach(p => {
@@ -385,14 +377,11 @@ function renderItems() {
         modalThumbs.appendChild(t);
       });
       
-      // Set Judul di Modal
       modalName.textContent = item.nama_barang;
       
-      // Set Badges di Modal
       modalTags.innerHTML = "";
       modalTags.appendChild(createBadges(item));
 
-      // Set Deskripsi di Modal
       modalDesc.textContent = item.keterangan && String(item.keterangan).trim() !== "" ? item.keterangan : "Tidak ada keterangan tambahan.";
       
       modal.classList.add("active");
@@ -420,7 +409,7 @@ function renderItems() {
     // TAG/BADGE KARTU DEPAN
     const tagGroup = document.createElement("div");
     tagGroup.className = "tag-group";
-    tagGroup.appendChild(createBadges(item)); // Menggunakan fungsi pembuat badge
+    tagGroup.appendChild(createBadges(item)); 
 
     // DESKRIPSI KARTU DEPAN
     const desc = document.createElement("p");
