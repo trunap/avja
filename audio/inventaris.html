@@ -54,12 +54,12 @@
             display: flex; gap: 10px; flex-wrap: wrap; align-items: center;
         }
         .custom-input {
-            padding: 12px 20px; border-radius: 100px; border: 2px solid #E5E7EB;
+            padding: 12px 16px; border-radius: 100px; border: 2px solid #E5E7EB;
             font-family: inherit; font-size: 14px; font-weight: 600; outline: none;
-            transition: all 0.3s ease; background: white;
+            transition: all 0.3s ease; background: white; cursor: pointer;
         }
         .custom-input:focus { border-color: var(--primary-blue); box-shadow: 0 0 0 4px var(--soft-blue); }
-        .search-bar { flex-grow: 1; max-width: 400px; }
+        .search-bar { flex-grow: 1; min-width: 200px; cursor: text; }
 
         /* SECTIONS & GRID */
         .content-container { max-width: 1200px; margin: 0 auto; padding: 15px; }
@@ -83,14 +83,18 @@
         .mission-card h3 { font-size: 18px; font-weight: 800; color: var(--text-dark); text-transform: uppercase; }
         .qty-badge { background: #1A1A1A; color: white; padding: 4px 10px; border-radius: 100px; font-size: 12px; font-weight: 800; }
 
-        .team-badge { 
-            display: inline-block; font-size: 11px; font-weight: 800; padding: 4px 10px; 
-            border-radius: 100px; letter-spacing: 0.5px; margin-bottom: 10px; align-self: flex-start;
+        .tag-group { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+        .badge { 
+            font-size: 11px; font-weight: 800; padding: 4px 10px; 
+            border-radius: 100px; letter-spacing: 0.5px; 
         }
+        
         .badge-blue { background: var(--soft-blue); color: var(--primary-blue); }
         .badge-orange { background: var(--soft-orange); color: var(--primary-orange); }
         .badge-purple { background: var(--soft-purple); color: var(--primary-purple); }
+        .badge-green { background: #D1FAE5; color: #059669; }
         .badge-gray { background: #E5E7EB; color: #4B5563; }
+        .badge-red { background: #FEE2E2; color: #DC2626; }
 
         .mission-card p { font-size: 13px; color: var(--text-gray); line-height: 1.4; font-style: italic; flex-grow: 1; }
 
@@ -123,7 +127,8 @@
         /* MOBILE */
         @media (max-width: 600px) {
             .hero h1 { font-size: 32px; }
-            .search-bar { width: 100%; max-width: none; }
+            .filter-container { flex-direction: column; align-items: stretch; }
+            .custom-input { width: 100%; }
             .modal-content { padding: 15px; }
             .modal-main-img { height: 220px; }
         }
@@ -148,12 +153,15 @@
         
         <div class="filter-container">
             <select id="filterTim" class="custom-input">
-                <option value="">Semua Tim</option>
+                <option value="">🎯 Semua Tim</option>
+            </select>
+            <select id="filterMilik" class="custom-input">
+                <option value="">🏢 Semua Kepemilikan</option>
             </select>
             <input 
                 id="searchInput" 
                 type="text" 
-                placeholder="Cari nama barang..." 
+                placeholder="🔍 Cari nama barang..." 
                 class="custom-input search-bar"
             >
         </div>
@@ -174,10 +182,13 @@
 </div>
 
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbwNGJQ3nYwvKRZOFJtKSw39Aq7H3gNa1WRcsPaUCNkm_syiq5p_8eGpbiLnzo3Aj9rj/exec";
+// Menambahkan parameter ?action=api agar Apps Script mengirim data format JSON
+const BASE_URL = "https://script.google.com/macros/s/AKfycbwNGJQ3nYwvKRZOFJtKSw39Aq7H3gNa1WRcsPaUCNkm_syiq5p_8eGpbiLnzo3Aj9rj/exec";
+const API_URL = BASE_URL + "?action=api";
 
 const grid = document.getElementById("grid");
 const filterTim = document.getElementById("filterTim");
+const filterMilik = document.getElementById("filterMilik");
 const searchInput = document.getElementById("searchInput");
 
 const modal = document.getElementById("modal");
@@ -196,30 +207,46 @@ fetch(API_URL)
   .then(res => res.json())
   .then(data => {
     document.getElementById("loading").style.display = "none";
+    
+    // Cek error dari server Apps Script
+    if(data.error) {
+        document.getElementById("loading").style.display = "block";
+        document.getElementById("loading").textContent = "❌ Error dari database: " + data.error;
+        return;
+    }
 
     // simpan data valid
     allItems = data.filter(i => i.nama_barang && i.nama_barang !== "Nama Barang");
 
-    populateTimFilter();
+    populateFilters();
     renderItems();
   })
   .catch(err => {
+    document.getElementById("loading").style.display = "block";
     document.getElementById("loading").textContent = "❌ Gagal memuat data. Cek koneksi internet.";
     console.error(err);
   });
 
-/* ===== FILTER TIM ===== */
-function populateTimFilter() {
+/* ===== FILTER POPULASI (Tim & Kepemilikan) ===== */
+function populateFilters() {
   const timSet = new Set();
+  const milikSet = new Set();
+  
   allItems.forEach(i => {
-    if (i.tim) timSet.add(i.tim);
+    if (i.tim && i.tim.trim() !== "") timSet.add(i.tim);
+    if (i.barang_milik && i.barang_milik.trim() !== "") milikSet.add(i.barang_milik);
   });
 
   timSet.forEach(t => {
     const opt = document.createElement("option");
-    opt.value = t;
-    opt.textContent = t;
+    opt.value = t; opt.textContent = t;
     filterTim.appendChild(opt);
+  });
+
+  milikSet.forEach(m => {
+    const opt = document.createElement("option");
+    opt.value = m; opt.textContent = m;
+    filterMilik.appendChild(opt);
   });
 }
 
@@ -228,13 +255,15 @@ function renderItems() {
   grid.innerHTML = "";
 
   const timValue = filterTim.value.toLowerCase();
+  const milikValue = filterMilik.value.toLowerCase();
   const keyword = searchInput.value.toLowerCase();
 
   allItems.forEach(item => {
     const cocokTim = !timValue || (item.tim && item.tim.toLowerCase() === timValue);
+    const cocokMilik = !milikValue || (item.barang_milik && item.barang_milik.toLowerCase() === milikValue);
     const cocokSearch = !keyword || item.nama_barang.toLowerCase().includes(keyword);
 
-    if (!cocokTim || !cocokSearch) return;
+    if (!cocokTim || !cocokMilik || !cocokSearch) return;
 
     const photos = [item.foto_1, item.foto_2, item.foto_3, item.foto_4].filter(Boolean);
 
@@ -263,7 +292,7 @@ function renderItems() {
 
     // Gambar Utama Kartu
     const img = document.createElement("img");
-    img.src = item.foto_1 || "https://via.placeholder.com/400x300?text=No+Image";
+    img.src = photos[0] || "https://via.placeholder.com/400x300?text=No+Image";
     img.className = "card-img";
 
     // Header Kartu (Judul & QTY)
@@ -280,19 +309,34 @@ function renderItems() {
     headerDiv.appendChild(name);
     headerDiv.appendChild(qty);
 
-    // Badge Tim (Warna sesuai tim)
-    const tim = document.createElement("span");
-    tim.textContent = item.tim || "UMUM";
-    tim.className = "team-badge ";
+    // Grup Tag/Badge (Tim, Milik, Kondisi)
+    const tagGroup = document.createElement("div");
+    tagGroup.className = "tag-group";
 
-    if (item.tim && item.tim.includes("Booth")) {
-      tim.className += "badge-blue";
-    } else if (item.tim && item.tim.includes("Speaker")) {
-      tim.className += "badge-purple";
-    } else if (item.tim && item.tim.includes("Kabel")) {
-      tim.className += "badge-orange";
-    } else {
-      tim.className += "badge-gray";
+    // 1. Badge Tim
+    const timBadge = document.createElement("span");
+    timBadge.textContent = item.tim || "UMUM";
+    timBadge.className = "badge ";
+    if (item.tim && item.tim.includes("Booth")) timBadge.className += "badge-blue";
+    else if (item.tim && item.tim.includes("Speaker")) timBadge.className += "badge-purple";
+    else if (item.tim && item.tim.includes("Kabel")) timBadge.className += "badge-orange";
+    else timBadge.className += "badge-gray";
+    tagGroup.appendChild(timBadge);
+
+    // 2. Badge Kepemilikan
+    if (item.barang_milik) {
+        const milikBadge = document.createElement("span");
+        milikBadge.textContent = item.barang_milik;
+        milikBadge.className = "badge badge-green";
+        tagGroup.appendChild(milikBadge);
+    }
+    
+    // 3. Badge Kondisi
+    if (item.kondisi) {
+        const kondisiBadge = document.createElement("span");
+        kondisiBadge.textContent = item.kondisi;
+        kondisiBadge.className = item.kondisi.toLowerCase() === "rusak" ? "badge badge-red" : "badge badge-gray";
+        tagGroup.appendChild(kondisiBadge);
     }
 
     // Deskripsi
@@ -302,7 +346,7 @@ function renderItems() {
     // Gabungkan ke dalam kartu
     card.appendChild(img);
     card.appendChild(headerDiv);
-    card.appendChild(tim);
+    card.appendChild(tagGroup);
     card.appendChild(desc);
     
     grid.appendChild(card);
@@ -311,6 +355,7 @@ function renderItems() {
 
 /* ===== EVENTS ===== */
 filterTim.onchange = renderItems;
+filterMilik.onchange = renderItems;
 searchInput.oninput = renderItems;
 </script>
 
