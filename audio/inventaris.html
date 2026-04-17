@@ -270,20 +270,50 @@ function getCleanImageUrl(rawString) {
 }
 
 /* ===== FUNGSI PEMBUAT BADGE ===== */
-// Fungsi ini dibuat agar bisa dipakai di kartu depan dan di dalam modal
 function createBadges(item) {
     const frag = document.createDocumentFragment();
     
+    // 1. BADGE TIM (DENGAN WARNA SPESIFIK)
     const timBadge = document.createElement("span");
-    timBadge.textContent = item.tim || "UMUM";
-    timBadge.className = "badge ";
-    const safeTim = String(item.tim || "");
-    if (safeTim.includes("Booth")) timBadge.className += "badge-blue";
-    else if (safeTim.includes("Speaker")) timBadge.className += "badge-purple";
-    else if (safeTim.includes("Kabel")) timBadge.className += "badge-orange";
-    else timBadge.className += "badge-gray";
+    const safeTim = String(item.tim || "UMUM");
+    timBadge.textContent = safeTim;
+    timBadge.className = "badge"; // Class dasar untuk bentuknya
+
+    // Kamus Warna berdasarkan Nama Tim
+    const nameLower = safeTim.toLowerCase();
+    let bgColor = "#E5E7EB"; // Default abu-abu
+    let textColor = "#1A1A1A"; // Default teks gelap
+
+    // A. DETEKSI TIM AUDIO
+    if (nameLower.includes("audio")) {
+        if (nameLower.includes("booth")) { bgColor = "#4A1B0E"; textColor = "#FFFFFF"; } // Dark Chocolate
+        else if (nameLower.includes("kabel")) { bgColor = "#FFD300"; textColor = "#1A1A1A"; } // Vibrant Yellow
+        else if (nameLower.includes("speaker")) { bgColor = "#A0522D"; textColor = "#FFFFFF"; } // Sienna
+        else if (nameLower.includes("inv") || nameLower.includes("inventaris")) { bgColor = "#708090"; textColor = "#FFFFFF"; } // Slate Grey
+        else { bgColor = "#F28500"; textColor = "#FFFFFF"; } // Tangerine Orange (Utama)
+    }
+    // B. DETEKSI TIM VIDEO / VISUAL
+    else if (nameLower.includes("video") || nameLower.includes("visual")) {
+        if (nameLower.includes("led") || nameLower.includes("tv") || nameLower.includes("layar")) { bgColor = "#003153"; textColor = "#FFFFFF"; } // Obsidian Blue
+        else if (nameLower.includes("kabel")) { bgColor = "#1A936F"; textColor = "#FFFFFF"; } // Vibrant Jade
+        else if (nameLower.includes("booth") || nameLower.includes("kamera")) { bgColor = "#00BFFF"; textColor = "#1A1A1A"; } // Electric Sky Blue
+        else if (nameLower.includes("inv") || nameLower.includes("inventaris")) { bgColor = "#C2C2E0"; textColor = "#1A1A1A"; } // Periwinkle Light
+        else { bgColor = "#003366"; textColor = "#FFFFFF"; } // Deep Navy (Utama)
+    }
+    // C. JIKA NAMA TIM TIDAK MENYEBUT AUDIO/VIDEO (Hanya divisinya saja)
+    else {
+        if (nameLower.includes("booth")) { bgColor = "#4A1B0E"; textColor = "#FFFFFF"; } // Default Booth ke Audio
+        else if (nameLower.includes("speaker")) { bgColor = "#A0522D"; textColor = "#FFFFFF"; }
+        else if (nameLower.includes("led") || nameLower.includes("tv")) { bgColor = "#003153"; textColor = "#FFFFFF"; }
+        else if (nameLower.includes("kamera")) { bgColor = "#00BFFF"; textColor = "#1A1A1A"; }
+    }
+
+    // Terapkan warna hex ke badge
+    timBadge.style.backgroundColor = bgColor;
+    timBadge.style.color = textColor;
     frag.appendChild(timBadge);
 
+    // 2. BADGE KEPEMILIKAN
     if (item.barang_milik) {
         const milikBadge = document.createElement("span");
         milikBadge.textContent = item.barang_milik;
@@ -291,6 +321,7 @@ function createBadges(item) {
         frag.appendChild(milikBadge);
     }
     
+    // 3. BADGE KONDISI
     if (item.kondisi) {
         const kondisiBadge = document.createElement("span");
         kondisiBadge.textContent = item.kondisi;
