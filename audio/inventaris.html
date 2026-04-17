@@ -258,11 +258,11 @@ function getCleanImageUrl(rawString) {
     // Cari pola ID file di dalam rumus =IMAGE("...")
     const match = rawString.match(/id=([a-zA-Z0-9_-]+)/i);
     if (match && match[1]) {
-        // Gunakan server khusus Google untuk menampilkan foto di web
-        return "https://lh3.googleusercontent.com/d/" + match[1];
+        // MENGGUNAKAN HTTPS agar tidak diblokir oleh GitHub Pages
+        return "https://drive.google.com/thumbnail?id=" + match[1] + "&sz=w800";
     }
     
-    // Jika formatnya sudah link http bersih
+    // Jika formatnya sudah link bersih
     if (rawString.startsWith("http") && !rawString.includes("=IMAGE")) {
         return rawString;
     }
