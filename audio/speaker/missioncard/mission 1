@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Mission One: Speaker Team 🚀</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
+
+        :root {
+            --primary-orange: #FF7E27;
+            --soft-orange: #FFF0E5;
+            --primary-blue: #3A70E2;
+            --soft-blue: #E8EFFF;
+            --bg-color: #F4F5F7;
+            --text-dark: #1A1A1A;
+            --text-gray: #6B7280;
+            --card-radius: 24px;
+        }
+
+        * {
+            margin: 0; padding: 0; box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-color); color: var(--text-dark);
+            padding-bottom: 40px; overflow-x: hidden;
+        }
+
+        /* HEADER */
+        header { padding: 15px; position: sticky; top: 0; z-index: 100; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+        .nav-container {
+            max-width: 1200px; margin: 0 auto; background: rgba(255, 255, 255, 0.9);
+            border-radius: 100px; display: flex; align-items: center; padding: 8px 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05); border: 1px solid rgba(255,255,255,0.5);
+        }
+        .logo-combined { display: flex; text-decoration: none; border-radius: 10px; overflow: hidden; font-weight: 800; font-size: 14px; margin-right: 12px; }
+        .logo-part { padding: 4px 10px; display: flex; align-items: center; justify-content: center; }
+        .logo-audio { background-color: var(--primary-orange); color: white; }
+        .logo-video { background-color: var(--primary-blue); color: white; }
+        .site-title { font-size: 13px; font-weight: 700; color: var(--text-gray); }
+
+        /* HERO */
+        .hero { max-width: 1200px; margin: 20px auto; padding: 0 20px; }
+        .mission-badge { 
+            display: inline-block; background: var(--soft-orange); color: var(--primary-orange); 
+            padding: 4px 12px; border-radius: 100px; font-size: 12px; font-weight: 800; margin-bottom: 10px;
+        }
+        .hero h1 { font-size: 32px; font-weight: 800; line-height: 1.2; margin-bottom: 5px; }
+        .hero h1 span { transform: rotate(-1deg); background: #FFE066; padding: 0 8px; border-radius: 8px; display: inline-block; }
+        .hero p.team-label { color: var(--primary-blue); font-weight: 700; font-size: 18px; margin-bottom: 15px; }
+        
+        /* INFO BOX */
+        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
+        .info-box { background: white; padding: 15px; border-radius: 20px; border: 2px solid #EEE; }
+        .info-box h4 { font-size: 11px; text-transform: uppercase; color: var(--text-gray); margin-bottom: 5px; letter-spacing: 1px; }
+        .info-box p { font-size: 13px; font-weight: 700; color: var(--text-dark); }
+
+        /* MISSION LIST */
+        .content-container { max-width: 1200px; margin: 0 auto; padding: 15px; }
+        .grid-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; }
+
+        .mission-card {
+            background: #ffffff; border: 2px solid #F0F0F0; border-radius: var(--card-radius);
+            padding: 18px; transition: all 0.3s ease; position: relative;
+            display: flex; align-items: center; cursor: pointer;
+        }
+        .mission-card.checked { border-color: var(--primary-blue); background: var(--soft-blue); }
+
+        /* CUSTOM CHECKBOX */
+        .check-wrapper { position: relative; width: 32px; height: 32px; flex-shrink: 0; }
+        .mission-card input[type="checkbox"] {
+            position: absolute; opacity: 0; cursor: pointer; height: 0; width: 0;
+        }
+        .checkmark {
+            position: absolute; top: 0; left: 0; height: 32px; width: 32px;
+            background-color: #EEE; border-radius: 10px; transition: 0.2s;
+        }
+        .mission-card input:checked ~ .checkmark { background-color: var(--primary-blue); }
+        .checkmark:after {
+            content: ""; position: absolute; display: none;
+            left: 12px; top: 7px; width: 7px; height: 13px;
+            border: solid white; border-width: 0 3px 3px 0; transform: rotate(45deg);
+        }
+        .mission-card input:checked ~ .checkmark:after { display: block; }
+
+        .mission-text { margin-left: 15px; }
+        .mission-text h3 { font-size: 15px; font-weight: 700; transition: 0.2s; }
+        .mission-card.checked h3 { color: var(--primary-blue); text-decoration: line-through; opacity: 0.7; }
+        
+        #sync-toast {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            background: var(--text-dark); color: white; padding: 10px 20px;
+            border-radius: 100px; font-size: 12px; font-weight: 700;
+            display: none; z-index: 1000; box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="nav-container">
+            <div class="logo-combined">
+                <div class="logo-part logo-audio">A</div>
+                <div class="logo-part logo-video">V</div>
+            </div>
+            <div class="site-title">Tim Speaker Dashboard</div>
+        </div>
+    </header>
+
+    <div class="hero">
+        <span class="mission-badge">MISSION ONE (1)</span>
+        <p class="team-label">Tim Speaker</p>
+        <h1><span>TARGET:</span> 4 Speaker Array Terpasang</h1>
+        
+        <div class="info-grid">
+            <div class="info-box" style="border-left: 4px solid var(--primary-orange);">
+                <h4>Tools & APD</h4>
+                <p>Kunci Pas Ring, Helm, Sarung Tangan</p>
+            </div>
+            <div class="info-box" style="border-left: 4px solid var(--primary-blue);">
+                <h4>Location</h4>
+                <p>Blok A-D (Sayap Kiri-Kanan)</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-container">
+        <div class="grid-cards" id="mission-container">
+            </div>
+    </div>
+
+    <div id="sync-toast">☁️ SYNCING DATA...</div>
+
+    <script>
+        const SCRIPT_URL = 'URL_SCRIPT_ANDA'; 
+
+        const missions = [
+            "Merakit stand speaker Array HX-2 (4 pcs)",
+            "Merakit bracket speaker Array HX-2 (4 pcs)",
+            "Mounting Speaker ke Bracket (Unit A & B)",
+            "Mounting Speaker ke Bracket (Unit C & D)",
+            "Wiring Power & Audio Signal",
+            "Pointing & Angle Adjustment",
+            "Final System Sound Check"
+        ];
+
+        const container = document.getElementById('mission-container');
+
+        missions.forEach((task, i) => {
+            const id = `task-${i + 1}`;
+            const card = document.createElement('div');
+            card.className = 'mission-card';
+            card.id = `card-${id}`;
+            card.onclick = () => {
+                const cb = document.getElementById(id);
+                cb.checked = !cb.checked;
+                handleToggle(task, cb);
+            };
+
+            card.innerHTML = `
+                <div class="check-wrapper">
+                    <input type="checkbox" id="${id}" onchange="event.stopPropagation(); handleToggle('${task}', this)">
+                    <span class="checkmark"></span>
+                </div>
+                <div class="mission-text">
+                    <h3>${task}</h3>
+                </div>
+            `;
+            container.appendChild(card);
+        });
+
+        window.onload = () => {
+            missions.forEach((_, i) => {
+                const id = `task-${i + 1}`;
+                if (localStorage.getItem(id) === 'done') {
+                    document.getElementById(id).checked = true;
+                    document.getElementById(`card-${id}`).classList.add('checked');
+                }
+            });
+            syncOffline();
+        };
+
+        function handleToggle(name, el) {
+            const isDone = el.checked;
+            const card = document.getElementById(`card-${el.id}`);
+            if (isDone) card.classList.add('checked');
+            else card.classList.remove('checked');
+
+            localStorage.setItem(el.id, isDone ? 'done' : 'undone');
+
+            const payload = {
+                team: "Speaker",
+                mission: "One",
+                task: name,
+                status: isDone ? 'DONE' : 'UNCHECK',
+                time: new Date().toLocaleString('id-ID')
+            };
+
+            if (navigator.onLine) pushData(payload);
+            else saveQueue(payload);
+        }
+
+        function pushData(data) {
+            const toast = document.getElementById('sync-toast');
+            toast.style.display = 'block';
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                body: JSON.stringify(data)
+            }).then(() => {
+                setTimeout(() => toast.style.display = 'none', 1000);
+            }).catch(() => {
+                saveQueue(data);
+                toast.style.display = 'none';
+            });
+        }
+
+        function saveQueue(data) {
+            let queue = JSON.parse(localStorage.getItem('sync_queue') || '[]');
+            queue.push(data);
+            localStorage.setItem('sync_queue', JSON.stringify(queue));
+        }
+
+        function syncOffline() {
+            if (!navigator.onLine) return;
+            let queue = JSON.parse(localStorage.getItem('sync_queue') || '[]');
+            if (queue.length > 0) {
+                queue.forEach(item => pushData(item));
+                localStorage.removeItem('sync_queue');
+            }
+        }
+        window.addEventListener('online', syncOffline);
+    </script>
+</body>
+</html>
