@@ -135,7 +135,7 @@
     <div id="sync-toast">☁️ SYNCING DATA...</div>
 
     <script>
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyLKfuOv5vL39iGOSHFdEtjG7PMcd2iHcOFBInxTXOawHas8pTdUeb6r7FdYSoi3Z8aDA/exec'; 
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbylJc7RYkmzC7sF0aXbt2_uAnGKY1LFr9I-IYaAae2pEuV1_cLEsgLXgHrCoil3p1OlpQ/exec'; 
 
         const missions = [
             "Merakit stand speaker Array HX-2 (4 pcs)",
@@ -204,19 +204,25 @@
         }
 
         function pushData(data) {
-            const toast = document.getElementById('sync-toast');
-            toast.style.display = 'block';
-            fetch(SCRIPT_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                body: JSON.stringify(data)
-            }).then(() => {
-                setTimeout(() => toast.style.display = 'none', 1000);
-            }).catch(() => {
-                saveQueue(data);
-                toast.style.display = 'none';
-            });
-        }
+    const toast = document.getElementById('sync-toast');
+    toast.style.display = 'block';
+
+    fetch(SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors', // Wajib untuk Apps Script
+        body: JSON.stringify(data) // Mengirim data sebagai string JSON
+    })
+    .then(() => {
+        // Karena mode no-cors, kita berasumsi sukses jika tidak ada error jaringan
+        console.log("Data terkirim ke antrian Google");
+        setTimeout(() => toast.style.display = 'none', 1000);
+    })
+    .catch((err) => {
+        console.error("Gagal kirim:", err);
+        saveQueue(data); // Simpan di offline mode jika gagal
+        toast.style.display = 'none';
+    });
+}
 
         function saveQueue(data) {
             let queue = JSON.parse(localStorage.getItem('sync_queue') || '[]');
